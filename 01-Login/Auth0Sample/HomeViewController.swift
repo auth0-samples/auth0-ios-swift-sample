@@ -1,5 +1,5 @@
 // HomeViewController.swift
-// 01-Login
+// Auth0Sample
 //
 // Copyright (c) 2016 Auth0 (http://auth0.com)
 //
