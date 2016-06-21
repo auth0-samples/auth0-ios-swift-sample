@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		51626D651D11A6F500CF162C /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51626D641D11A6F500CF162C /* LoginViewController.swift */; };
 		51626D671D11BFA200CF162C /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51626D661D11BFA200CF162C /* SignUpViewController.swift */; };
+		51992FC81D19AFE400140478 /* Auth0.plist in Resources */ = {isa = PBXBuildFile; fileRef = 51992FC71D19AFE400140478 /* Auth0.plist */; };
+		51992FCA1D19B8A500140478 /* ErrorHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51992FC91D19B8A500140478 /* ErrorHandling.swift */; };
 		51A8A0B81D0B4C07000E53CC /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51A8A0B71D0B4C07000E53CC /* HomeViewController.swift */; };
 		51A8A0BA1D0B4C0C000E53CC /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51A8A0B91D0B4C0C000E53CC /* ProfileViewController.swift */; };
 		51B9EA3C1D13119A00E14FDB /* DismissSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51B9EA3B1D13119A00E14FDB /* DismissSegue.swift */; };
@@ -24,6 +26,8 @@
 		1C4852CE5D44031F8977BD84 /* Pods-Auth0Sample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Auth0Sample.release.xcconfig"; path = "Pods/Target Support Files/Pods-Auth0Sample/Pods-Auth0Sample.release.xcconfig"; sourceTree = "<group>"; };
 		51626D641D11A6F500CF162C /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		51626D661D11BFA200CF162C /* SignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
+		51992FC71D19AFE400140478 /* Auth0.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Auth0.plist; sourceTree = "<group>"; };
+		51992FC91D19B8A500140478 /* ErrorHandling.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorHandling.swift; sourceTree = "<group>"; };
 		51A8A0B71D0B4C07000E53CC /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		51A8A0B91D0B4C0C000E53CC /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		51B9EA3B1D13119A00E14FDB /* DismissSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DismissSegue.swift; sourceTree = "<group>"; };
@@ -54,7 +58,6 @@
 			isa = PBXGroup;
 			children = (
 				51E4B6B01D0B4819000D9038 /* Auth0Sample */,
-				51E4B6AF1D0B4819000D9038 /* Products */,
 				C644964102E2ADAE7E20BE68 /* Pods */,
 				78C4A42A996A2278E0D46F71 /* Frameworks */,
 			);
@@ -66,6 +69,7 @@
 				51E4B6AE1D0B4819000D9038 /* Auth0Sample.app */,
 			);
 			name = Products;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		51E4B6B01D0B4819000D9038 /* Auth0Sample */ = {
@@ -82,6 +86,9 @@
 				51E4B6BD1D0B4819000D9038 /* Info.plist */,
 				51626D661D11BFA200CF162C /* SignUpViewController.swift */,
 				51B9EA3B1D13119A00E14FDB /* DismissSegue.swift */,
+				51992FC91D19B8A500140478 /* ErrorHandling.swift */,
+				51E4B6AF1D0B4819000D9038 /* Products */,
+				51992FC71D19AFE400140478 /* Auth0.plist */,
 			);
 			path = Auth0Sample;
 			sourceTree = "<group>";
@@ -167,6 +174,7 @@
 				51E4B6BC1D0B4819000D9038 /* LaunchScreen.storyboard in Resources */,
 				51E4B6B91D0B4819000D9038 /* Assets.xcassets in Resources */,
 				51E4B6B71D0B4819000D9038 /* Main.storyboard in Resources */,
+				51992FC81D19AFE400140478 /* Auth0.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -230,6 +238,7 @@
 				51B9EA3C1D13119A00E14FDB /* DismissSegue.swift in Sources */,
 				51E4B6B21D0B4819000D9038 /* AppDelegate.swift in Sources */,
 				51A8A0BA1D0B4C0C000E53CC /* ProfileViewController.swift in Sources */,
+				51992FCA1D19B8A500140478 /* ErrorHandling.swift in Sources */,
 				51626D651D11A6F500CF162C /* LoginViewController.swift in Sources */,
 				51A8A0B81D0B4C07000E53CC /* HomeViewController.swift in Sources */,
 			);

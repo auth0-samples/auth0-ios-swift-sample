@@ -22,12 +22,16 @@
 // THE SOFTWARE.
 
 import UIKit
+import Auth0
 
 class LoginViewController: UIViewController {
     
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var loginButton: UIButton!
+    @IBOutlet weak var spinner: UIActivityIndicatorView!
+    
+    // MARK: - IBAction
     
     @IBAction func login(sender: UIButton) {
         self.performLogin()
@@ -37,15 +41,40 @@ class LoginViewController: UIViewController {
         self.validateForm()
     }
     
+    // MARK: - Segue
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        guard let profileViewController = segue.destinationViewController as? ProfileViewController else {
+            return
+        }
+        profileViewController.loginCredentials = self.retrievedCedentials!
+    }
+    
+    // MARK: - Private
+    
+    private var retrievedCedentials: Credentials?
+    
     private func performLogin() {
         self.view.endEditing(true)
-        let request = self.loginRequest()
-        let session = NSURLSession.sharedSession()
-        let task = session.dataTaskWithRequest(request) { data, response, error in
-            // parse response
-            print("x")
+        self.spinner.startAnimating()
+        Auth0
+            .authentication()
+            .login(self.emailTextField.text!,
+                password: self.passwordTextField.text!,
+                connection: "Username-Password-Authentication"
+            )
+            .start { result in
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.spinner.stopAnimating()
+                    switch result {
+                    case .Success(let credentials):
+                        self.retrievedCedentials = credentials
+                        self.performSegueWithIdentifier("ShowProfile", sender: nil)
+                    case .Failure(let error):
+                        self.showAlertForError(error)
+                    }
+                }
         }
-        task.resume()
     }
     
     private func validateForm() {
@@ -56,31 +85,6 @@ class LoginViewController: UIViewController {
         return self.emailTextField.hasText() && self.passwordTextField.hasText()
     }
     
-    private func loginRequest() -> NSURLRequest {
-        let infoPlist = NSBundle.mainBundle().infoDictionary!
-        let domain = infoPlist["Auth0Domain"]!
-        let clientID = infoPlist["Auth0ClientId"]!
-        
-        let url = NSURL(string: "https://\(domain)/oauth/ro")!
-        
-        let request = NSMutableURLRequest(URL: url)
-        request.HTTPMethod = "POST"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        let parameters = ["client_id": clientID,
-                          "username": self.emailTextField.text!,
-                          "password": self.passwordTextField.text!,
-                          "id_token": "",
-                          "connection": "Username-Password-Authentication",
-                          "grant_type": "password",
-                          "scope": "openid",
-                          "device": ""]
-        
-        let body = try! NSJSONSerialization.dataWithJSONObject(parameters, options: .PrettyPrinted)
-        request.HTTPBody = body
-        return request
-    }
-
 }
 
 extension LoginViewController: UITextFieldDelegate {

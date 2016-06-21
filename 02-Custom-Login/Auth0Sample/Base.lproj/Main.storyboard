@@ -20,7 +20,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nSn-qC-KOH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-514" y="357"/>
+            <point key="canvasLocation" x="-528" y="744"/>
         </scene>
         <!--Home View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -196,6 +196,9 @@
                                     <segue destination="pPF-fs-8AG" kind="presentation" id="Nli-9g-0ma"/>
                                 </connections>
                             </button>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="t7b-BG-JdF">
+                                <rect key="frame" x="290" y="236" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -208,7 +211,9 @@
                             <constraint firstItem="lo5-Fm-w6P" firstAttribute="top" secondItem="Xqx-61-aYD" secondAttribute="bottom" constant="20" id="TMm-Yy-ZkN"/>
                             <constraint firstItem="QS3-X9-9BV" firstAttribute="top" secondItem="d7X-LJ-bNN" secondAttribute="bottom" constant="8" id="XHE-As-8Fr"/>
                             <constraint firstItem="d7X-LJ-bNN" firstAttribute="leading" secondItem="6nF-r7-WjV" secondAttribute="leading" constant="20" id="hJL-Lf-ILN"/>
+                            <constraint firstItem="t7b-BG-JdF" firstAttribute="centerX" secondItem="6nF-r7-WjV" secondAttribute="centerX" id="j08-XU-F4C"/>
                             <constraint firstAttribute="trailing" secondItem="lo5-Fm-w6P" secondAttribute="trailing" constant="20" id="kvI-l5-eSm"/>
+                            <constraint firstItem="t7b-BG-JdF" firstAttribute="top" secondItem="E79-bC-1V1" secondAttribute="bottom" constant="8" id="tFg-lD-hxV"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Custom UI Login" id="QKT-5y-rXc">
@@ -223,6 +228,7 @@
                         <outlet property="emailTextField" destination="lo5-Fm-w6P" id="cbd-e3-zUq"/>
                         <outlet property="loginButton" destination="QS3-X9-9BV" id="FuR-dH-C7y"/>
                         <outlet property="passwordTextField" destination="d7X-LJ-bNN" id="iZq-Nc-CkK"/>
+                        <outlet property="spinner" destination="t7b-BG-JdF" id="SjI-oP-hRa"/>
                         <segue destination="Wx9-md-nxp" kind="show" identifier="ShowProfile" id="MaZ-5b-K6y"/>
                     </connections>
                 </viewController>
@@ -336,14 +342,14 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bmv-Xh-6CC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3153" y="-772"/>
+            <point key="canvasLocation" x="3203" y="-772"/>
         </scene>
     </scenes>
     <resources>
         <image name="badge" width="152" height="168"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="bX4-5Y-QMI"/>
+        <segue reference="ie6-Dd-y0d"/>
         <segue reference="bYG-Ei-iNa"/>
     </inferredMetricsTieBreakers>
 </document>

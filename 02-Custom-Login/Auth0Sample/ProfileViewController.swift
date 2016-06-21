@@ -22,34 +22,59 @@
 // THE SOFTWARE.
 
 import UIKit
-import Lock
+import Auth0
 
 class ProfileViewController: UIViewController {
     
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var welcomeLabel: UILabel!
     
-    var profile: A0UserProfile!
+    var loginCredentials: Credentials!
     
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.welcomeLabel.text = "Welcome, \(self.profile.name)"
-        self.retrieveDataFromURL(self.profile.picture) { data, response, error in
-            dispatch_async(dispatch_get_main_queue()) {
-                guard let data = data where error == nil else { return }
-                self.avatarImageView.image = UIImage(data: data)
-            }
-        }
+        self.welcomeLabel.text = ""
+        self.retrieveProfile()
     }
     
     // MARK: - Private
+    
+    private func retrieveProfile() {
+        print(self.loginCredentials)
+        guard let idToken = loginCredentials.idToken else {
+            self.showErrorRetrievingProfileAlert()
+            self.navigationController?.popViewControllerAnimated(true)
+            return
+        }
+        Auth0
+            .authentication()
+            .tokenInfo(idToken)
+            .start { result in
+                switch result {
+                case .Success(let profile):
+                    self.welcomeLabel.text = "Welcome, \(profile.name)"
+                    self.retrieveDataFromURL(profile.pictureURL) { data, response, error in
+                        dispatch_async(dispatch_get_main_queue()) {
+                            guard let data = data where error == nil else { return }
+                            self.avatarImageView.image = UIImage(data: data)
+                        }
+                    }
+                case .Failure(let error):
+                    self.showAlertForError(error)
+                }
+        }
+    }
     
     private func retrieveDataFromURL(url:NSURL, completion: ((data: NSData?, response: NSURLResponse?, error: NSError? ) -> Void)) {
         NSURLSession.sharedSession().dataTaskWithURL(url) { (data, response, error) in
             completion(data: data, response: response, error: error)
             }.resume()
     }
-        
+    
+    private func showErrorRetrievingProfileAlert() {
+        print("errorrrr")
+    }
+
 }
