@@ -37,10 +37,6 @@ class LoginViewController: UIViewController {
         self.validateForm()
     }
     
-    @IBAction func dismiss(sender: UIBarButtonItem) {
-        self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
-    }
-    
     private func performLogin() {
         self.view.endEditing(true)
         let request = self.loginRequest()

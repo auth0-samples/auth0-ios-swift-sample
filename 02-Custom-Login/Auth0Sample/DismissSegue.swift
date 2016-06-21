@@ -1,4 +1,4 @@
-// HomeViewController.swift
+// DismissSegue.swift
 // Auth0Sample
 //
 // Copyright (c) 2016 Auth0 (http://auth0.com)
@@ -23,6 +23,10 @@
 
 import UIKit
 
-class HomeViewController: UIViewController {
+class DismissSegue: UIStoryboardSegue {
+    
+    override func perform() {
+        self.sourceViewController.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+    }
     
 }

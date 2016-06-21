@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="o2u-JV-6ys">
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -50,15 +49,8 @@
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Uqw-sS-VgY">
-                                <rect key="frame" x="237" y="550" width="127" height="30"/>
-                                <state key="normal" title="Sign In (with Lock)"/>
-                                <connections>
-                                    <action selector="showLoginController:" destination="BYZ-38-t0r" eventType="touchUpInside" id="J1E-bS-rYM"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JP4-gv-hTK">
-                                <rect key="frame" x="217" y="512" width="166" height="30"/>
+                                <rect key="frame" x="217" y="550" width="166" height="30"/>
                                 <state key="normal" title="Sign In (with Custom UI)"/>
                                 <connections>
                                     <segue destination="Hqo-VA-xM6" kind="show" id="sz7-XQ-ess"/>
@@ -67,26 +59,21 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="JP4-gv-hTK" secondAttribute="bottom" constant="20" id="7yG-fL-Kf4"/>
                             <constraint firstItem="JP4-gv-hTK" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="HgW-vr-WWq"/>
                             <constraint firstItem="2ZO-tL-qgp" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="Ot8-fm-6Ws"/>
-                            <constraint firstItem="Uqw-sS-VgY" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="TJA-E6-Sh6"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="Uqw-sS-VgY" secondAttribute="bottom" constant="20" id="Xw9-4Q-2ti"/>
                             <constraint firstItem="2ZO-tL-qgp" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="eDb-q0-Urn"/>
                             <constraint firstItem="ZZy-jN-Gwr" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="hmG-iU-TRA"/>
-                            <constraint firstItem="Uqw-sS-VgY" firstAttribute="top" secondItem="JP4-gv-hTK" secondAttribute="bottom" constant="8" id="qcD-hS-1Db"/>
                             <constraint firstItem="ZZy-jN-Gwr" firstAttribute="top" secondItem="2ZO-tL-qgp" secondAttribute="bottom" constant="8" id="vn4-3l-vIa"/>
                             <constraint firstItem="TVh-mr-tl4" firstAttribute="top" secondItem="ZZy-jN-Gwr" secondAttribute="bottom" constant="8" id="yQL-X2-Nsh"/>
                             <constraint firstItem="TVh-mr-tl4" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="zmh-GT-ZR2"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="cMj-s7-y0X"/>
-                    <connections>
-                        <segue destination="Wx9-md-nxp" kind="show" identifier="ShowProfile" id="saa-ny-PhM"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="306" y="357"/>
+            <point key="canvasLocation" x="304" y="744"/>
         </scene>
         <!--Profile View Controller-->
         <scene sceneID="sZI-lT-jb7">
@@ -147,7 +134,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x8y-fX-diU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1034" y="50"/>
+            <point key="canvasLocation" x="2550" y="744"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="qkx-eG-J9O">
@@ -206,7 +193,7 @@
                                 <rect key="frame" x="195" y="198" width="210" height="30"/>
                                 <state key="normal" title="Don't have a user yet? Sign Up"/>
                                 <connections>
-                                    <segue destination="hEH-eC-nKs" kind="show" id="auM-8d-3lR"/>
+                                    <segue destination="pPF-fs-8AG" kind="presentation" id="Nli-9g-0ma"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -228,7 +215,7 @@
                         <barButtonItem key="backBarButtonItem" title="Back" id="3WN-92-Gmy"/>
                         <barButtonItem key="leftBarButtonItem" title="Cancel" id="wbV-OG-N8l">
                             <connections>
-                                <action selector="dismiss:" destination="fQA-tU-NNF" id="bcp-sU-UVk"/>
+                                <segue destination="BYZ-38-t0r" kind="custom" customClass="DismissSegue" customModule="Auth0Sample" customModuleProvider="target" id="bYG-Ei-iNa"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -236,11 +223,28 @@
                         <outlet property="emailTextField" destination="lo5-Fm-w6P" id="cbd-e3-zUq"/>
                         <outlet property="loginButton" destination="QS3-X9-9BV" id="FuR-dH-C7y"/>
                         <outlet property="passwordTextField" destination="d7X-LJ-bNN" id="iZq-Nc-CkK"/>
+                        <segue destination="Wx9-md-nxp" kind="show" identifier="ShowProfile" id="MaZ-5b-K6y"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qEV-mI-Z9C" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1732" y="744"/>
+            <point key="canvasLocation" x="1748" y="-40"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="t3R-YA-hJu">
+            <objects>
+                <navigationController id="pPF-fs-8AG" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="V21-Nk-7mc">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="hEH-eC-nKs" kind="relationship" relationship="rootViewController" id="MMv-al-xU0"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cnO-Ix-HIl" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2510" y="-772"/>
         </scene>
         <!--Custom UI Sign Up-->
         <scene sceneID="dBH-gU-r6h">
@@ -327,14 +331,19 @@
                         <outletCollection property="textFields" destination="xpZ-zh-WXv" collectionClass="NSMutableArray" id="cyw-jY-SMe"/>
                         <outletCollection property="textFields" destination="AZI-8k-KEa" collectionClass="NSMutableArray" id="rLj-fE-MmL"/>
                         <outletCollection property="textFields" destination="X5h-ff-UX9" collectionClass="NSMutableArray" id="o33-KJ-prg"/>
+                        <segue destination="fQA-tU-NNF" kind="custom" customClass="DismissSegue" customModule="Auth0Sample" customModuleProvider="target" id="ie6-Dd-y0d"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bmv-Xh-6CC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2421" y="744"/>
+            <point key="canvasLocation" x="3153" y="-772"/>
         </scene>
     </scenes>
     <resources>
         <image name="badge" width="152" height="168"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="bX4-5Y-QMI"/>
+        <segue reference="bYG-Ei-iNa"/>
+    </inferredMetricsTieBreakers>
 </document>

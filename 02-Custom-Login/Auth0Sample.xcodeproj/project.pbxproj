@@ -11,6 +11,7 @@
 		51626D671D11BFA200CF162C /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51626D661D11BFA200CF162C /* SignUpViewController.swift */; };
 		51A8A0B81D0B4C07000E53CC /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51A8A0B71D0B4C07000E53CC /* HomeViewController.swift */; };
 		51A8A0BA1D0B4C0C000E53CC /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51A8A0B91D0B4C0C000E53CC /* ProfileViewController.swift */; };
+		51B9EA3C1D13119A00E14FDB /* DismissSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51B9EA3B1D13119A00E14FDB /* DismissSegue.swift */; };
 		51E4B6B21D0B4819000D9038 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51E4B6B11D0B4819000D9038 /* AppDelegate.swift */; };
 		51E4B6B41D0B4819000D9038 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51E4B6B31D0B4819000D9038 /* ViewController.swift */; };
 		51E4B6B71D0B4819000D9038 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 51E4B6B51D0B4819000D9038 /* Main.storyboard */; };
@@ -25,6 +26,7 @@
 		51626D661D11BFA200CF162C /* SignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		51A8A0B71D0B4C07000E53CC /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		51A8A0B91D0B4C0C000E53CC /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		51B9EA3B1D13119A00E14FDB /* DismissSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DismissSegue.swift; sourceTree = "<group>"; };
 		51E4B6AE1D0B4819000D9038 /* Auth0Sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Auth0Sample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		51E4B6B11D0B4819000D9038 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		51E4B6B31D0B4819000D9038 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -79,6 +81,7 @@
 				51E4B6BA1D0B4819000D9038 /* LaunchScreen.storyboard */,
 				51E4B6BD1D0B4819000D9038 /* Info.plist */,
 				51626D661D11BFA200CF162C /* SignUpViewController.swift */,
+				51B9EA3B1D13119A00E14FDB /* DismissSegue.swift */,
 			);
 			path = Auth0Sample;
 			sourceTree = "<group>";
@@ -224,6 +227,7 @@
 			files = (
 				51626D671D11BFA200CF162C /* SignUpViewController.swift in Sources */,
 				51E4B6B41D0B4819000D9038 /* ViewController.swift in Sources */,
+				51B9EA3C1D13119A00E14FDB /* DismissSegue.swift in Sources */,
 				51E4B6B21D0B4819000D9038 /* AppDelegate.swift in Sources */,
 				51A8A0BA1D0B4C0C000E53CC /* ProfileViewController.swift in Sources */,
 				51626D651D11A6F500CF162C /* LoginViewController.swift in Sources */,
