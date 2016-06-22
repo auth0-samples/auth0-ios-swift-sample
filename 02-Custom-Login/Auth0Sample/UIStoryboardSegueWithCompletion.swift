@@ -1,4 +1,4 @@
-// DismissSegue.swift
+// UIStoryboardSegueWithCompletion.swift
 // Auth0Sample
 //
 // Copyright (c) 2016 Auth0 (http://auth0.com)
@@ -23,10 +23,13 @@
 
 import UIKit
 
-class DismissSegue: UIStoryboardSegue {
+class UIStoryboardSegueWithCompletion: UIStoryboardSegue {
+    
+    var completion: (() -> Void)?
     
     override func perform() {
-        self.sourceViewController.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+        super.perform()
+        self.completion?()
     }
     
 }

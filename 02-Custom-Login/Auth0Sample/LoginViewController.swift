@@ -41,18 +41,28 @@ class LoginViewController: UIViewController {
         self.validateForm()
     }
     
+    @IBAction func unwindToLogin(segue: UIStoryboardSegueWithCompletion) {
+        guard let
+        controller = segue.sourceViewController as? SignUpViewController,
+        credentials = controller.retrievedCredentials
+        else { return  }
+        segue.completion = {
+            self.loginWithCredentials(credentials)
+        }
+    }
+    
     // MARK: - Segue
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         guard let profileViewController = segue.destinationViewController as? ProfileViewController else {
             return
         }
-        profileViewController.loginCredentials = self.retrievedCedentials!
+        profileViewController.loginCredentials = self.retrievedCredentials!
     }
     
     // MARK: - Private
     
-    private var retrievedCedentials: Credentials?
+    private var retrievedCredentials: Credentials?
     
     private func performLogin() {
         self.view.endEditing(true)
@@ -68,13 +78,17 @@ class LoginViewController: UIViewController {
                     self.spinner.stopAnimating()
                     switch result {
                     case .Success(let credentials):
-                        self.retrievedCedentials = credentials
-                        self.performSegueWithIdentifier("ShowProfile", sender: nil)
+                        self.loginWithCredentials(credentials)
                     case .Failure(let error):
                         self.showAlertForError(error)
                     }
                 }
         }
+    }
+    
+    private func loginWithCredentials(credentials: Credentials) {
+        self.retrievedCredentials = credentials
+        self.performSegueWithIdentifier("ShowProfile", sender: nil)
     }
     
     private func validateForm() {
@@ -90,11 +104,13 @@ class LoginViewController: UIViewController {
 extension LoginViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
-        if textField == self.emailTextField {
+        switch textField {
+        case self.emailTextField:
             self.passwordTextField.becomeFirstResponder()
-        } else if textField == self.passwordTextField
-            && self.formIsValid {
+        case self.passwordTextField where self.formIsValid:
             self.performLogin()
+        default:
+            break
         }
         return true
     }

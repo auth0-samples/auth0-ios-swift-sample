@@ -1,4 +1,4 @@
-// ViewController.swift
+// DismissNavigation.swift
 // Auth0Sample
 //
 // Copyright (c) 2016 Auth0 (http://auth0.com)
@@ -23,18 +23,10 @@
 
 import UIKit
 
-class ViewController: UIViewController {
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+extension UIViewController {
+    
+    @IBAction func dismiss(sender: UIBarButtonItem) {
+        self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-
+    
 }
-

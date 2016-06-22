@@ -117,7 +117,7 @@ public struct ConcatRequest<F, S, Error: ErrorType>: Requestable {
 
      - parameter callback: called when the request finishes and yield it's result
      */
-    func start(callback: Result<S, Error> -> ()) {
+    public func start(callback: Result<S, Error> -> ()) {
         let second = self.second
         first.start { result in
             switch result {

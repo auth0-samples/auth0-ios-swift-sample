@@ -75,7 +75,7 @@
             </objects>
             <point key="canvasLocation" x="304" y="744"/>
         </scene>
-        <!--Profile View Controller-->
+        <!--Your Profile-->
         <scene sceneID="sZI-lT-jb7">
             <objects>
                 <viewController id="Wx9-md-nxp" customClass="ProfileViewController" customModule="Auth0Sample" customModuleProvider="target" sceneMemberID="viewController">
@@ -127,6 +127,7 @@
                             <constraint firstItem="lV6-Ob-gUG" firstAttribute="top" secondItem="FTD-W9-f7s" secondAttribute="bottom" constant="40" id="wUi-nt-Ler"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" title="Your Profile" id="6ZD-jO-Br8"/>
                     <connections>
                         <outlet property="avatarImageView" destination="FTD-W9-f7s" id="FeB-SL-xjR"/>
                         <outlet property="welcomeLabel" destination="lV6-Ob-gUG" id="7GH-lB-MP4"/>
@@ -134,7 +135,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x8y-fX-diU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2550" y="744"/>
+            <point key="canvasLocation" x="2502" y="744"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="qkx-eG-J9O">
@@ -182,13 +183,6 @@
                                     <outlet property="delegate" destination="fQA-tU-NNF" id="nHQ-dC-0Zb"/>
                                 </connections>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QS3-X9-9BV">
-                                <rect key="frame" x="277" y="160" width="47" height="30"/>
-                                <state key="normal" title="Sign In"/>
-                                <connections>
-                                    <action selector="login:" destination="fQA-tU-NNF" eventType="touchUpInside" id="VNI-Ws-Hep"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E79-bC-1V1">
                                 <rect key="frame" x="195" y="198" width="210" height="30"/>
                                 <state key="normal" title="Don't have a user yet? Sign Up"/>
@@ -199,6 +193,13 @@
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="t7b-BG-JdF">
                                 <rect key="frame" x="290" y="236" width="20" height="20"/>
                             </activityIndicatorView>
+                            <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QS3-X9-9BV">
+                                <rect key="frame" x="277" y="160" width="47" height="30"/>
+                                <state key="normal" title="Sign In"/>
+                                <connections>
+                                    <action selector="login:" destination="fQA-tU-NNF" eventType="touchUpInside" id="VNI-Ws-Hep"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -220,7 +221,7 @@
                         <barButtonItem key="backBarButtonItem" title="Back" id="3WN-92-Gmy"/>
                         <barButtonItem key="leftBarButtonItem" title="Cancel" id="wbV-OG-N8l">
                             <connections>
-                                <segue destination="BYZ-38-t0r" kind="custom" customClass="DismissSegue" customModule="Auth0Sample" customModuleProvider="target" id="bYG-Ei-iNa"/>
+                                <action selector="dismiss:" destination="fQA-tU-NNF" id="5or-9F-31f"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -234,7 +235,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qEV-mI-Z9C" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1748" y="-40"/>
+            <point key="canvasLocation" x="1748" y="744"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="t3R-YA-hJu">
@@ -250,7 +251,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cnO-Ix-HIl" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2510" y="-772"/>
+            <point key="canvasLocation" x="2502" y="-40"/>
         </scene>
         <!--Custom UI Sign Up-->
         <scene sceneID="dBH-gU-r6h">
@@ -282,74 +283,53 @@
                                     <outlet property="delegate" destination="hEH-eC-nKs" id="3zT-Bb-Z0H"/>
                                 </connections>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Last Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="X5h-ff-UX9">
-                                <rect key="frame" x="20" y="198" width="560" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" spellCheckingType="no" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
-                                <connections>
-                                    <action selector="textFieldEditingChanged:" destination="hEH-eC-nKs" eventType="editingChanged" id="myk-kP-mw7"/>
-                                    <outlet property="delegate" destination="hEH-eC-nKs" id="fzN-8m-Xic"/>
-                                </connections>
-                            </textField>
                             <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OTe-ZP-YaU">
-                                <rect key="frame" x="272" y="236" width="57" height="30"/>
+                                <rect key="frame" x="272" y="160" width="57" height="30"/>
                                 <state key="normal" title="Register"/>
                                 <connections>
                                     <action selector="register:" destination="hEH-eC-nKs" eventType="touchUpInside" id="fzi-FM-hOk"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="First Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="AZI-8k-KEa">
-                                <rect key="frame" x="20" y="160" width="560" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" spellCheckingType="no" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
-                                <connections>
-                                    <action selector="textFieldEditingChanged:" destination="hEH-eC-nKs" eventType="editingChanged" id="v90-Qy-BTR"/>
-                                    <outlet property="delegate" destination="hEH-eC-nKs" id="reA-Fc-4Jr"/>
-                                </connections>
-                            </textField>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="9RC-Xz-BZY">
+                                <rect key="frame" x="290" y="198" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="AZI-8k-KEa" firstAttribute="top" secondItem="xpZ-zh-WXv" secondAttribute="bottom" constant="8" id="38R-nI-dbD"/>
-                            <constraint firstAttribute="trailing" secondItem="AZI-8k-KEa" secondAttribute="trailing" constant="20" id="6AU-xu-egF"/>
+                            <constraint firstItem="9RC-Xz-BZY" firstAttribute="top" secondItem="OTe-ZP-YaU" secondAttribute="bottom" constant="8" id="Cwk-BT-qig"/>
                             <constraint firstItem="xpZ-zh-WXv" firstAttribute="leading" secondItem="jnv-1j-Yad" secondAttribute="leading" constant="20" id="Ld7-IR-Akk"/>
-                            <constraint firstItem="X5h-ff-UX9" firstAttribute="leading" secondItem="jnv-1j-Yad" secondAttribute="leading" constant="20" id="NwC-Qg-yGA"/>
-                            <constraint firstAttribute="trailing" secondItem="X5h-ff-UX9" secondAttribute="trailing" constant="20" id="OHn-ah-Vgz"/>
                             <constraint firstAttribute="trailing" secondItem="xpZ-zh-WXv" secondAttribute="trailing" constant="20" id="PAr-vC-GZa"/>
                             <constraint firstItem="xpZ-zh-WXv" firstAttribute="top" secondItem="Hhw-2G-zLL" secondAttribute="bottom" constant="8" id="Peo-gc-o8l"/>
+                            <constraint firstItem="OTe-ZP-YaU" firstAttribute="top" secondItem="xpZ-zh-WXv" secondAttribute="bottom" constant="8" id="Tcg-wm-LOY"/>
+                            <constraint firstItem="9RC-Xz-BZY" firstAttribute="centerX" secondItem="jnv-1j-Yad" secondAttribute="centerX" id="hZy-xK-23J"/>
                             <constraint firstItem="OTe-ZP-YaU" firstAttribute="centerX" secondItem="jnv-1j-Yad" secondAttribute="centerX" id="iNA-p1-p18"/>
                             <constraint firstItem="Hhw-2G-zLL" firstAttribute="leading" secondItem="jnv-1j-Yad" secondAttribute="leading" constant="20" id="mYv-W3-MNs"/>
-                            <constraint firstItem="X5h-ff-UX9" firstAttribute="top" secondItem="AZI-8k-KEa" secondAttribute="bottom" constant="8" id="mgK-iC-RWL"/>
-                            <constraint firstItem="OTe-ZP-YaU" firstAttribute="top" secondItem="X5h-ff-UX9" secondAttribute="bottom" constant="8" id="pzG-3f-Ixc"/>
                             <constraint firstItem="Hhw-2G-zLL" firstAttribute="top" secondItem="Lal-HF-sqJ" secondAttribute="bottom" constant="20" id="rO9-HE-xYv"/>
                             <constraint firstAttribute="trailing" secondItem="Hhw-2G-zLL" secondAttribute="trailing" constant="20" id="smx-cm-R9p"/>
-                            <constraint firstItem="AZI-8k-KEa" firstAttribute="leading" secondItem="jnv-1j-Yad" secondAttribute="leading" constant="20" id="zUn-HA-E8S"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Custom UI Sign Up" id="sdo-CD-aIw"/>
+                    <navigationItem key="navigationItem" title="Custom UI Sign Up" id="sdo-CD-aIw">
+                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="vYw-Ce-HR4">
+                            <connections>
+                                <action selector="dismiss:" destination="hEH-eC-nKs" id="ZbR-t1-Ndy"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="emailTextField" destination="Hhw-2G-zLL" id="Rbz-Vr-Rka"/>
-                        <outlet property="firstNameTextField" destination="AZI-8k-KEa" id="2ou-y1-vWB"/>
-                        <outlet property="lastNameTextField" destination="X5h-ff-UX9" id="EDG-Jf-Z2g"/>
                         <outlet property="passwordTextField" destination="xpZ-zh-WXv" id="wU4-g2-mOV"/>
                         <outlet property="signUpButton" destination="OTe-ZP-YaU" id="bJf-yQ-hcj"/>
-                        <outletCollection property="textFields" destination="Hhw-2G-zLL" collectionClass="NSMutableArray" id="1We-8m-o2L"/>
-                        <outletCollection property="textFields" destination="xpZ-zh-WXv" collectionClass="NSMutableArray" id="cyw-jY-SMe"/>
-                        <outletCollection property="textFields" destination="AZI-8k-KEa" collectionClass="NSMutableArray" id="rLj-fE-MmL"/>
-                        <outletCollection property="textFields" destination="X5h-ff-UX9" collectionClass="NSMutableArray" id="o33-KJ-prg"/>
-                        <segue destination="fQA-tU-NNF" kind="custom" customClass="DismissSegue" customModule="Auth0Sample" customModuleProvider="target" id="ie6-Dd-y0d"/>
+                        <outlet property="spinner" destination="9RC-Xz-BZY" id="FTu-68-cTO"/>
+                        <segue destination="Kga-io-4qO" kind="unwind" identifier="DismissSignUp" customClass="UIStoryboardSegueWithCompletion" customModule="Auth0Sample" customModuleProvider="target" unwindAction="unwindToLogin:" id="6w7-uD-5QG"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bmv-Xh-6CC" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="Kga-io-4qO" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="3203" y="-772"/>
+            <point key="canvasLocation" x="3255" y="-40"/>
         </scene>
     </scenes>
     <resources>
         <image name="badge" width="152" height="168"/>
     </resources>
-    <inferredMetricsTieBreakers>
-        <segue reference="ie6-Dd-y0d"/>
-        <segue reference="bYG-Ei-iNa"/>
-    </inferredMetricsTieBreakers>
 </document>

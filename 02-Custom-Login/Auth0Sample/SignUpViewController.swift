@@ -22,17 +22,19 @@
 // THE SOFTWARE.
 
 import UIKit
+import Auth0
 
 class SignUpViewController: UIViewController {
     
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
-    @IBOutlet weak var firstNameTextField: UITextField!
-    @IBOutlet weak var lastNameTextField: UITextField!
     @IBOutlet weak var signUpButton: UIButton!
+    @IBOutlet weak var spinner: UIActivityIndicatorView!
     
-    @IBOutlet var textFields: [UITextField]!
-
+    var retrievedCredentials: Credentials?
+    
+    // MARK: - IBAction
+    
     @IBAction func register(sender: UIButton) {
         self.performRegister()
     }
@@ -40,10 +42,30 @@ class SignUpViewController: UIViewController {
     @IBAction func textFieldEditingChanged(sender: UITextField) {
         self.validateForm()
     }
+
+    // MARK: - Private
     
     private func performRegister() {
         self.view.endEditing(true)
-        print("registering...")
+        self.spinner.startAnimating()
+        Auth0
+            .authentication()
+            .signUp(self.emailTextField.text!,
+                password: self.passwordTextField.text!,
+                connection: "Username-Password-Authentication"
+            )
+            .start { result in
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.spinner.stopAnimating()
+                    switch result {
+                    case .Success(let credentials):
+                        self.retrievedCredentials = credentials
+                        self.performSegueWithIdentifier("DismissSignUp", sender: nil)
+                    case .Failure(let error):
+                        self.showAlertForError(error)
+                    }
+                }
+        }
     }
     
     private func validateForm() {
@@ -51,7 +73,7 @@ class SignUpViewController: UIViewController {
     }
     
     private var formIsValid: Bool {
-        return self.textFields.filter { $0.hasText() }.count == self.textFields.count
+        return self.emailTextField.hasText() && self.passwordTextField.hasText()
     }
     
 }
@@ -62,11 +84,7 @@ extension SignUpViewController: UITextFieldDelegate {
         switch textField {
         case self.emailTextField:
             self.passwordTextField.becomeFirstResponder()
-        case self.passwordTextField:
-            self.firstNameTextField.becomeFirstResponder()
-        case self.firstNameTextField:
-            self.lastNameTextField.becomeFirstResponder()
-        case self.lastNameTextField where self.formIsValid:
+        case self.passwordTextField where self.formIsValid:
             self.performRegister()
         default:
             break
