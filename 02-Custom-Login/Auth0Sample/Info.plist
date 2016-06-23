@@ -43,9 +43,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>Auth0ClientId</key>
-	<string>OjRZYD9LvOzvY50Zzz3uFKyKpGylU4Hm</string>
-	<key>Auth0Domain</key>
-	<string>pablovillar.auth0.com</string>
 </dict>
 </plist>
