@@ -68,13 +68,11 @@ class ProfileViewController: UIViewController {
     }
     
     private func retrieveDataFromURL(url:NSURL, completion: ((data: NSData?, response: NSURLResponse?, error: NSError? ) -> Void)) {
-        NSURLSession.sharedSession().dataTaskWithURL(url) { (data, response, error) in
-            completion(data: data, response: response, error: error)
-            }.resume()
+        NSURLSession.sharedSession().dataTaskWithURL(url, completionHandler: completion).resume()
     }
     
     private func showErrorRetrievingProfileAlert() {
-        print("errorrrr")
+        print("Error retrieving profile")
     }
 
 }
