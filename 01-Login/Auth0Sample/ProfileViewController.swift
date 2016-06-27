@@ -36,20 +36,12 @@ class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.welcomeLabel.text = "Welcome, \(self.profile.name)"
-        self.retrieveDataFromURL(self.profile.picture) { data, response, error in
+        NSURLSession.sharedSession().dataTaskWithURL(self.profile.picture, completionHandler: { data, response, error in
             dispatch_async(dispatch_get_main_queue()) {
                 guard let data = data where error == nil else { return }
                 self.avatarImageView.image = UIImage(data: data)
             }
-        }
-    }
-    
-    // MARK: - Private
-    
-    private func retrieveDataFromURL(url:NSURL, completion: ((data: NSData?, response: NSURLResponse?, error: NSError? ) -> Void)) {
-        NSURLSession.sharedSession().dataTaskWithURL(url) { (data, response, error) in
-            completion(data: data, response: response, error: error)
-            }.resume()
+        }).resume()
     }
         
 }
