@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>Auth0ClientId</key>
-	<string>OjRZYD9LvOzvY50Zzz3uFKyKpGylU4Hm</string>
+	<string>{CLIENT_ID}</string>
 	<key>Auth0Domain</key>
-	<string>pablovillar.auth0.com</string>
+	<string>{DOMAIN}</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleExecutable</key>
