@@ -38,7 +38,7 @@ class SessionManager {
                                            success: { profile in
                                             // id_token is still valid
                                             // We update the user profile
-                                            self.keychain.setData(NSKeyedArchiver.archivedDataWithRootObject(profile), forKey: "profile")
+                                            self.saveProfile(profile)
                                             completion(self.storedSession)
             }, failure: { error in
                 // id_token is no longer valid
@@ -78,6 +78,14 @@ class SessionManager {
     
     func logout() {
         self.keychain.clearAll()
+    }
+    
+    var storedProfile: A0UserProfile? {
+        return self.storedSession?.profile
+    }
+    
+    func saveProfile(profile: A0UserProfile) {
+        self.keychain.setData(NSKeyedArchiver.archivedDataWithRootObject(profile), forKey: "profile")
     }
     
     // MARK: - Private

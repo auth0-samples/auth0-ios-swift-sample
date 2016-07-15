@@ -50,17 +50,7 @@ class HomeViewController: UIViewController {
         }
         A0Lock.sharedLock().presentLockController(controller, fromController: self)
     }
-    
-    // MARK: - Segue
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        guard let
-            navigationController = segue.destinationViewController as? UINavigationController,
-            profileController = navigationController.viewControllers.first as? ProfileViewController
-            else { return }
-        profileController.profile = self.retrievedProfile!
-    }
-    
+
     // MARK: - Private
     
     private var retrievedProfile: A0UserProfile?
