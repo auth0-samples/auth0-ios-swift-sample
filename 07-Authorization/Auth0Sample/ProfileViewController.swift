@@ -35,6 +35,7 @@ class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.profile = SessionManager().storedProfile
         self.welcomeLabel.text = "Welcome, \(self.profile.name)"
         self.retrieveDataFromURL(self.profile.picture) { data, response, error in
             dispatch_async(dispatch_get_main_queue()) {
