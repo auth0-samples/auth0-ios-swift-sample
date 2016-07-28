@@ -28,6 +28,8 @@ class SignUpViewController: UIViewController {
     
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
+    @IBOutlet weak var firstNameTextField: UITextField!
+    @IBOutlet weak var lastNameTextField: UITextField!
     @IBOutlet weak var signUpButton: UIButton!
     @IBOutlet weak var spinner: UIActivityIndicatorView!
     
@@ -39,8 +41,16 @@ class SignUpViewController: UIViewController {
         self.performRegister()
     }
     
+    @IBAction func registerWithFacebook(sender: UIButton) {
+        self.performFacebookSignUp()
+    }
+    
     @IBAction func textFieldEditingChanged(sender: UITextField) {
         self.validateForm()
+    }
+    
+    @IBAction func dismissKeyboard(sender: UITapGestureRecognizer) {
+        self.view.endEditing(true)
     }
 
     // MARK: - Private
@@ -52,8 +62,31 @@ class SignUpViewController: UIViewController {
             .authentication()
             .signUp(self.emailTextField.text!,
                 password: self.passwordTextField.text!,
-                connection: "Username-Password-Authentication"
+                connection: "Username-Password-Authentication",
+                userMetadata: ["first_name": self.firstNameTextField.text!,
+                    "last_name": self.lastNameTextField.text!]
             )
+            .start { result in
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.spinner.stopAnimating()
+                    switch result {
+                    case .Success(let credentials):
+                        self.retrievedCredentials = credentials
+                        self.performSegueWithIdentifier("DismissSignUp", sender: nil)
+                    case .Failure(let error):
+                        self.showAlertForError(error)
+                    }
+                }
+        }
+    }
+    
+    private func performFacebookSignUp() {
+        self.view.endEditing(true)
+        self.spinner.startAnimating()
+        Auth0
+            .webAuth()
+            .connection("facebook")
+            .scope("openid")
             .start { result in
                 dispatch_async(dispatch_get_main_queue()) {
                     self.spinner.stopAnimating()
@@ -84,7 +117,11 @@ extension SignUpViewController: UITextFieldDelegate {
         switch textField {
         case self.emailTextField:
             self.passwordTextField.becomeFirstResponder()
-        case self.passwordTextField where self.formIsValid:
+        case self.passwordTextField:
+            self.firstNameTextField.becomeFirstResponder()
+        case self.firstNameTextField:
+            self.lastNameTextField.becomeFirstResponder()
+        case self.lastNameTextField where self.formIsValid:
             self.performRegister()
         default:
             break

@@ -37,6 +37,10 @@ class LoginViewController: UIViewController {
         self.performLogin()
     }
     
+    @IBAction func loginWithFacebook(sender: UIButton) {
+        self.performFacebookAuthentication()
+    }
+    
     @IBAction func textFieldEditingChanged(sender: UITextField) {
         self.validateForm()
     }
@@ -49,6 +53,10 @@ class LoginViewController: UIViewController {
         segue.completion = {
             self.loginWithCredentials(credentials)
         }
+    }
+    
+    @IBAction func dismissKeyboard(sender: UITapGestureRecognizer) {
+        self.view.endEditing(true)
     }
     
     // MARK: - Segue
@@ -73,6 +81,26 @@ class LoginViewController: UIViewController {
                 password: self.passwordTextField.text!,
                 connection: "Username-Password-Authentication"
             )
+            .start { result in
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.spinner.stopAnimating()
+                    switch result {
+                    case .Success(let credentials):
+                        self.loginWithCredentials(credentials)
+                    case .Failure(let error):
+                        self.showAlertForError(error)
+                    }
+                }
+        }
+    }
+    
+    private func performFacebookAuthentication() {
+        self.view.endEditing(true)
+        self.spinner.startAnimating()
+        Auth0
+            .webAuth()
+            .connection("facebook")
+            .scope("openid")
             .start { result in
                 dispatch_async(dispatch_get_main_queue()) {
                     self.spinner.stopAnimating()

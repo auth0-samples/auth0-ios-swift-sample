@@ -104,7 +104,9 @@ private func performRegister() {
         .authentication()
         .signUp(self.emailTextField.text!,
             password: self.passwordTextField.text!,
-            connection: "Username-Password-Authentication"
+            connection: "Username-Password-Authentication",
+            userMetadata: ["first_name": self.firstNameTextField.text!,
+                "last_name": self.lastNameTextField.text!]
         )
         .start { result in
             dispatch_async(dispatch_get_main_queue()) {
@@ -119,6 +121,7 @@ private func performRegister() {
             }
     }
 }
+
 ```
 
 Notice that the credentials are stored in the `retrievedCredentials` instance variable.
@@ -142,3 +145,36 @@ In `LoginViewController.swift`:
 ```
 
 Notice how the `retrievedCredentials` mentioned in the step 4 are used here.
+
+##### 6. Perform Social Authentication using webauth
+
+In order to get credentials from a social provider, whether it's for sign in or sign up purposes, you present the user a webauth social authentication dialog by just using this snippet, which you can get from `LoginViewController.swift`:
+
+```swift
+private func performFacebookAuthentication() {
+    self.view.endEditing(true)
+    self.spinner.startAnimating()
+    Auth0
+        .webAuth()
+        .connection("facebook")
+        .scope("openid")
+        .start { result in
+            dispatch_async(dispatch_get_main_queue()) {
+                self.spinner.stopAnimating()
+                switch result {
+                case .Success(let credentials):
+                    self.loginWithCredentials(credentials)
+                case .Failure(let error):
+                    self.showAlertForError(error)
+                }
+            }
+    }
+}
+```
+
+Replace `"facebook"` with any social provider that you need (as long as it appears in [Auth0 identity providers](https://auth0.com/docs/identityproviders)).
+
+
+
+
+
