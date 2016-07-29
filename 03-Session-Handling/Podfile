@@ -1,0 +1,7 @@
+inhibit_all_warnings!
+use_frameworks!
+
+target 'Auth0Sample' do
+	pod 'Lock', '~> 1.24'
+	pod 'SimpleKeychain', '~> 0.7'
+end
