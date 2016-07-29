@@ -28,6 +28,7 @@ class ProfileViewController: UIViewController {
     
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var welcomeLabel: UILabel!
+    @IBOutlet weak var userMetadataTextView: UITextView!
     
     var loginCredentials: Credentials!
     
@@ -36,13 +37,13 @@ class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.welcomeLabel.text = ""
+        self.userMetadataTextView.text = ""
         self.retrieveProfile()
     }
     
     // MARK: - Private
     
     private func retrieveProfile() {
-        print(self.loginCredentials)
         guard let idToken = loginCredentials.idToken else {
             self.showErrorRetrievingProfileAlert()
             self.navigationController?.popViewControllerAnimated(true)
@@ -52,17 +53,21 @@ class ProfileViewController: UIViewController {
             .authentication()
             .tokenInfo(idToken)
             .start { result in
-                switch result {
-                case .Success(let profile):
-                    self.welcomeLabel.text = "Welcome, \(profile.name)"
-                    self.retrieveDataFromURL(profile.pictureURL) { data, response, error in
-                        dispatch_async(dispatch_get_main_queue()) {
-                            guard let data = data where error == nil else { return }
-                            self.avatarImageView.image = UIImage(data: data)
+                dispatch_async(dispatch_get_main_queue()) {
+                    switch result {
+                    case .Success(let profile):
+                        
+                        self.welcomeLabel.text = "Welcome, \(profile.name)"
+                        self.retrieveDataFromURL(profile.pictureURL) { data, response, error in
+                            dispatch_async(dispatch_get_main_queue()) {
+                                guard let data = data where error == nil else { return }
+                                self.avatarImageView.image = UIImage(data: data)
+                            }
                         }
+                        self.userMetadataTextView.text = String(profile.userMetadata)
+                    case .Failure(let error):
+                        self.showAlertForError(error)
                     }
-                case .Failure(let error):
-                    self.showAlertForError(error)
                 }
         }
     }

@@ -112,14 +112,26 @@
                                     <constraint firstAttribute="height" constant="128" id="Iuf-uG-7Jj"/>
                                 </constraints>
                             </imageView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="j7b-nJ-eJw">
+                                <rect key="frame" x="20" y="433" width="560" height="147"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" name="Menlo-Regular" family="Menlo" pointSize="12"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="lV6-Ob-gUG" firstAttribute="centerX" secondItem="vd7-Qy-c6C" secondAttribute="centerX" id="EgB-PU-nPl"/>
                             <constraint firstItem="VVg-sp-234" firstAttribute="top" secondItem="tYw-v0-XcE" secondAttribute="bottom" constant="24" id="F1W-Ml-UCj"/>
+                            <constraint firstAttribute="trailing" secondItem="j7b-nJ-eJw" secondAttribute="trailing" constant="20" id="Hyg-JF-N3E"/>
+                            <constraint firstItem="xwZ-6c-NXu" firstAttribute="top" secondItem="j7b-nJ-eJw" secondAttribute="bottom" constant="20" id="JIK-b2-CJC"/>
                             <constraint firstItem="lV6-Ob-gUG" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="vd7-Qy-c6C" secondAttribute="leadingMargin" constant="20" id="Pa7-cy-CL2"/>
+                            <constraint firstItem="j7b-nJ-eJw" firstAttribute="leading" secondItem="vd7-Qy-c6C" secondAttribute="leading" constant="20" id="Z42-oa-wXc"/>
                             <constraint firstItem="xwZ-6c-NXu" firstAttribute="top" relation="greaterThanOrEqual" secondItem="lV6-Ob-gUG" secondAttribute="bottom" constant="20" id="c36-aA-la4"/>
                             <constraint firstItem="FTD-W9-f7s" firstAttribute="centerX" secondItem="vd7-Qy-c6C" secondAttribute="centerX" id="f1d-Ar-BPc"/>
+                            <constraint firstItem="j7b-nJ-eJw" firstAttribute="top" secondItem="lV6-Ob-gUG" secondAttribute="bottom" constant="8" id="gdM-9I-cal"/>
                             <constraint firstItem="VVg-sp-234" firstAttribute="width" secondItem="VVg-sp-234" secondAttribute="height" multiplier="51:55" id="hNb-sc-vNe"/>
                             <constraint firstItem="VVg-sp-234" firstAttribute="centerX" secondItem="vd7-Qy-c6C" secondAttribute="centerX" id="oNO-1B-AZc"/>
                             <constraint firstItem="FTD-W9-f7s" firstAttribute="centerY" secondItem="vd7-Qy-c6C" secondAttribute="centerY" id="qk5-cs-DrD"/>
@@ -130,6 +142,7 @@
                     <navigationItem key="navigationItem" title="Your Profile" id="6ZD-jO-Br8"/>
                     <connections>
                         <outlet property="avatarImageView" destination="FTD-W9-f7s" id="FeB-SL-xjR"/>
+                        <outlet property="userMetadataTextView" destination="j7b-nJ-eJw" id="vA7-gJ-v0I"/>
                         <outlet property="welcomeLabel" destination="lV6-Ob-gUG" id="7GH-lB-MP4"/>
                     </connections>
                 </viewController>
@@ -184,7 +197,7 @@
                                 </connections>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E79-bC-1V1">
-                                <rect key="frame" x="195" y="198" width="210" height="30"/>
+                                <rect key="frame" x="195" y="550" width="210" height="30"/>
                                 <state key="normal" title="Don't have a user yet? Sign Up"/>
                                 <connections>
                                     <segue destination="pPF-fs-8AG" kind="presentation" id="Nli-9g-0ma"/>
@@ -200,22 +213,35 @@
                                     <action selector="login:" destination="fQA-tU-NNF" eventType="touchUpInside" id="VNI-Ws-Hep"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HbH-xL-bBN">
+                                <rect key="frame" x="207" y="198" width="186" height="30"/>
+                                <state key="normal" title="Or... Sign In With Facebook"/>
+                                <connections>
+                                    <action selector="loginWithFacebook:" destination="fQA-tU-NNF" eventType="touchUpInside" id="sKG-O5-ShK"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="lo5-Fm-w6P" firstAttribute="leading" secondItem="6nF-r7-WjV" secondAttribute="leading" constant="20" id="0eG-fY-mcV"/>
+                            <constraint firstItem="BwQ-mH-vq0" firstAttribute="top" secondItem="E79-bC-1V1" secondAttribute="bottom" constant="20" id="0us-bF-65V"/>
                             <constraint firstItem="d7X-LJ-bNN" firstAttribute="top" secondItem="lo5-Fm-w6P" secondAttribute="bottom" constant="8" id="0zo-1g-fy9"/>
                             <constraint firstItem="QS3-X9-9BV" firstAttribute="centerX" secondItem="6nF-r7-WjV" secondAttribute="centerX" id="8c1-oL-u4W"/>
                             <constraint firstAttribute="trailing" secondItem="d7X-LJ-bNN" secondAttribute="trailing" constant="20" id="DJv-CL-vEy"/>
-                            <constraint firstItem="E79-bC-1V1" firstAttribute="centerX" secondItem="6nF-r7-WjV" secondAttribute="centerX" id="EB0-nw-PSF"/>
-                            <constraint firstItem="E79-bC-1V1" firstAttribute="top" secondItem="QS3-X9-9BV" secondAttribute="bottom" constant="8" id="PlS-5G-ltr"/>
+                            <constraint firstItem="HbH-xL-bBN" firstAttribute="top" secondItem="QS3-X9-9BV" secondAttribute="bottom" constant="8" id="K6K-ZU-psG"/>
                             <constraint firstItem="lo5-Fm-w6P" firstAttribute="top" secondItem="Xqx-61-aYD" secondAttribute="bottom" constant="20" id="TMm-Yy-ZkN"/>
                             <constraint firstItem="QS3-X9-9BV" firstAttribute="top" secondItem="d7X-LJ-bNN" secondAttribute="bottom" constant="8" id="XHE-As-8Fr"/>
+                            <constraint firstItem="t7b-BG-JdF" firstAttribute="centerX" secondItem="6nF-r7-WjV" secondAttribute="centerX" id="byb-sm-ydz"/>
                             <constraint firstItem="d7X-LJ-bNN" firstAttribute="leading" secondItem="6nF-r7-WjV" secondAttribute="leading" constant="20" id="hJL-Lf-ILN"/>
-                            <constraint firstItem="t7b-BG-JdF" firstAttribute="centerX" secondItem="6nF-r7-WjV" secondAttribute="centerX" id="j08-XU-F4C"/>
                             <constraint firstAttribute="trailing" secondItem="lo5-Fm-w6P" secondAttribute="trailing" constant="20" id="kvI-l5-eSm"/>
-                            <constraint firstItem="t7b-BG-JdF" firstAttribute="top" secondItem="E79-bC-1V1" secondAttribute="bottom" constant="8" id="tFg-lD-hxV"/>
+                            <constraint firstItem="t7b-BG-JdF" firstAttribute="top" secondItem="HbH-xL-bBN" secondAttribute="bottom" constant="8" id="mxr-IO-Z4T"/>
+                            <constraint firstItem="E79-bC-1V1" firstAttribute="centerX" secondItem="6nF-r7-WjV" secondAttribute="centerX" id="uzU-av-ekh"/>
+                            <constraint firstItem="HbH-xL-bBN" firstAttribute="centerX" secondItem="6nF-r7-WjV" secondAttribute="centerX" id="xL1-LU-PJn"/>
                         </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="COt-Q8-q5y" appends="YES" id="Q5c-Y2-vEZ"/>
+                        </connections>
                     </view>
                     <navigationItem key="navigationItem" title="Custom UI Login" id="QKT-5y-rXc">
                         <barButtonItem key="backBarButtonItem" title="Back" id="3WN-92-Gmy"/>
@@ -234,6 +260,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qEV-mI-Z9C" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="COt-Q8-q5y">
+                    <connections>
+                        <action selector="dismissKeyboard:" destination="fQA-tU-NNF" id="YgD-Ll-qoT"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1748" y="744"/>
         </scene>
@@ -283,30 +314,67 @@
                                     <outlet property="delegate" destination="hEH-eC-nKs" id="3zT-Bb-Z0H"/>
                                 </connections>
                             </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="First Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="S29-lX-Jzl">
+                                <rect key="frame" x="20" y="160" width="560" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" spellCheckingType="no" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
+                                <connections>
+                                    <action selector="textFieldEditingChanged:" destination="hEH-eC-nKs" eventType="editingChanged" id="UUn-RT-aMh"/>
+                                    <outlet property="delegate" destination="hEH-eC-nKs" id="EdU-f7-Whc"/>
+                                </connections>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Last Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="R4c-MB-pr5">
+                                <rect key="frame" x="20" y="198" width="560" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" spellCheckingType="no" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
+                                <connections>
+                                    <action selector="textFieldEditingChanged:" destination="hEH-eC-nKs" eventType="editingChanged" id="L4B-sd-a5R"/>
+                                    <outlet property="delegate" destination="hEH-eC-nKs" id="Hk7-rV-g26"/>
+                                </connections>
+                            </textField>
                             <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OTe-ZP-YaU">
-                                <rect key="frame" x="272" y="160" width="57" height="30"/>
+                                <rect key="frame" x="272" y="236" width="57" height="30"/>
                                 <state key="normal" title="Register"/>
                                 <connections>
                                     <action selector="register:" destination="hEH-eC-nKs" eventType="touchUpInside" id="fzi-FM-hOk"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nmm-bt-byl">
+                                <rect key="frame" x="220" y="274" width="161" height="30"/>
+                                <state key="normal" title="Sign Up With Facebook"/>
+                                <connections>
+                                    <action selector="registerWithFacebook:" destination="hEH-eC-nKs" eventType="touchUpInside" id="gH5-hW-ga1"/>
+                                </connections>
+                            </button>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="9RC-Xz-BZY">
-                                <rect key="frame" x="290" y="198" width="20" height="20"/>
+                                <rect key="frame" x="290" y="312" width="20" height="20"/>
                             </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="9RC-Xz-BZY" firstAttribute="top" secondItem="OTe-ZP-YaU" secondAttribute="bottom" constant="8" id="Cwk-BT-qig"/>
+                            <constraint firstItem="S29-lX-Jzl" firstAttribute="top" secondItem="xpZ-zh-WXv" secondAttribute="bottom" constant="8" id="0Ui-bT-xZD"/>
+                            <constraint firstItem="9RC-Xz-BZY" firstAttribute="top" secondItem="nmm-bt-byl" secondAttribute="bottom" constant="8" id="5eC-pc-Vl3"/>
+                            <constraint firstItem="nmm-bt-byl" firstAttribute="top" secondItem="OTe-ZP-YaU" secondAttribute="bottom" constant="8" id="Ew5-d5-iQO"/>
+                            <constraint firstAttribute="trailing" secondItem="S29-lX-Jzl" secondAttribute="trailing" constant="20" id="Hl2-Sp-Neq"/>
+                            <constraint firstItem="R4c-MB-pr5" firstAttribute="leading" secondItem="jnv-1j-Yad" secondAttribute="leading" constant="20" id="IWx-94-sld"/>
                             <constraint firstItem="xpZ-zh-WXv" firstAttribute="leading" secondItem="jnv-1j-Yad" secondAttribute="leading" constant="20" id="Ld7-IR-Akk"/>
                             <constraint firstAttribute="trailing" secondItem="xpZ-zh-WXv" secondAttribute="trailing" constant="20" id="PAr-vC-GZa"/>
                             <constraint firstItem="xpZ-zh-WXv" firstAttribute="top" secondItem="Hhw-2G-zLL" secondAttribute="bottom" constant="8" id="Peo-gc-o8l"/>
-                            <constraint firstItem="OTe-ZP-YaU" firstAttribute="top" secondItem="xpZ-zh-WXv" secondAttribute="bottom" constant="8" id="Tcg-wm-LOY"/>
-                            <constraint firstItem="9RC-Xz-BZY" firstAttribute="centerX" secondItem="jnv-1j-Yad" secondAttribute="centerX" id="hZy-xK-23J"/>
-                            <constraint firstItem="OTe-ZP-YaU" firstAttribute="centerX" secondItem="jnv-1j-Yad" secondAttribute="centerX" id="iNA-p1-p18"/>
+                            <constraint firstItem="S29-lX-Jzl" firstAttribute="leading" secondItem="jnv-1j-Yad" secondAttribute="leading" constant="20" id="QHp-pl-6sz"/>
+                            <constraint firstItem="OTe-ZP-YaU" firstAttribute="top" secondItem="R4c-MB-pr5" secondAttribute="bottom" constant="8" id="Qrw-AM-dfx"/>
+                            <constraint firstItem="nmm-bt-byl" firstAttribute="centerX" secondItem="jnv-1j-Yad" secondAttribute="centerX" id="USF-Sm-Sc5"/>
+                            <constraint firstItem="R4c-MB-pr5" firstAttribute="top" secondItem="S29-lX-Jzl" secondAttribute="bottom" constant="8" id="XSU-Eg-t46"/>
+                            <constraint firstItem="9RC-Xz-BZY" firstAttribute="centerX" secondItem="jnv-1j-Yad" secondAttribute="centerX" id="ZIf-z9-a4b"/>
+                            <constraint firstAttribute="trailing" secondItem="R4c-MB-pr5" secondAttribute="trailing" constant="20" id="ap3-AA-yia"/>
                             <constraint firstItem="Hhw-2G-zLL" firstAttribute="leading" secondItem="jnv-1j-Yad" secondAttribute="leading" constant="20" id="mYv-W3-MNs"/>
                             <constraint firstItem="Hhw-2G-zLL" firstAttribute="top" secondItem="Lal-HF-sqJ" secondAttribute="bottom" constant="20" id="rO9-HE-xYv"/>
                             <constraint firstAttribute="trailing" secondItem="Hhw-2G-zLL" secondAttribute="trailing" constant="20" id="smx-cm-R9p"/>
+                            <constraint firstItem="OTe-ZP-YaU" firstAttribute="centerX" secondItem="jnv-1j-Yad" secondAttribute="centerX" id="tLo-vL-zxM"/>
                         </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="Pzw-Xh-iYX" appends="YES" id="5Et-IT-GEm"/>
+                        </connections>
                     </view>
                     <navigationItem key="navigationItem" title="Custom UI Sign Up" id="sdo-CD-aIw">
                         <barButtonItem key="leftBarButtonItem" title="Cancel" id="vYw-Ce-HR4">
@@ -317,6 +385,8 @@
                     </navigationItem>
                     <connections>
                         <outlet property="emailTextField" destination="Hhw-2G-zLL" id="Rbz-Vr-Rka"/>
+                        <outlet property="firstNameTextField" destination="S29-lX-Jzl" id="rze-Rs-9Rp"/>
+                        <outlet property="lastNameTextField" destination="R4c-MB-pr5" id="wi8-S8-Akc"/>
                         <outlet property="passwordTextField" destination="xpZ-zh-WXv" id="wU4-g2-mOV"/>
                         <outlet property="signUpButton" destination="OTe-ZP-YaU" id="bJf-yQ-hcj"/>
                         <outlet property="spinner" destination="9RC-Xz-BZY" id="FTu-68-cTO"/>
@@ -325,6 +395,11 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bmv-Xh-6CC" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="Kga-io-4qO" userLabel="Exit" sceneMemberID="exit"/>
+                <tapGestureRecognizer id="Pzw-Xh-iYX">
+                    <connections>
+                        <action selector="dismissKeyboard:" destination="hEH-eC-nKs" id="K9t-ep-RX5"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="3255" y="-40"/>
         </scene>
