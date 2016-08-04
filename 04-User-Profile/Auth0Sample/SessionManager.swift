@@ -24,6 +24,8 @@
 import Lock
 import SimpleKeychain
 
+// swiftlint:disable function_body_length
+
 /// A class that encapsulates the process of session handling
 class SessionManager {
     

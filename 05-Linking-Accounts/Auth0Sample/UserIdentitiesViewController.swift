@@ -36,8 +36,7 @@ class UserIdentitiesViewController: UIViewController {
         self.updateIdentities()
     }
     
-    @IBAction func switchEditingMode(sender:
-        UIBarButtonItem) {
+    @IBAction func switchEditingMode(sender: UIBarButtonItem) {
         let editing = !self.tableView.editing
         self.tableView.setEditing(editing, animated: true)
         sender.title = editing ? "Done" : "Edit"
