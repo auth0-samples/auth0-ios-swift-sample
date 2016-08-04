@@ -1,0 +1,59 @@
+PODS:
+  - AFNetworking (3.1.0):
+    - AFNetworking/NSURLSession (= 3.1.0)
+    - AFNetworking/Reachability (= 3.1.0)
+    - AFNetworking/Security (= 3.1.0)
+    - AFNetworking/Serialization (= 3.1.0)
+    - AFNetworking/UIKit (= 3.1.0)
+  - AFNetworking/NSURLSession (3.1.0):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (3.1.0)
+  - AFNetworking/Security (3.1.0)
+  - AFNetworking/Serialization (3.1.0)
+  - AFNetworking/UIKit (3.1.0):
+    - AFNetworking/NSURLSession
+  - Auth0 (1.0.0-beta.5)
+  - CocoaLumberjack (2.3.0):
+    - CocoaLumberjack/Default (= 2.3.0)
+    - CocoaLumberjack/Extensions (= 2.3.0)
+  - CocoaLumberjack/Core (2.3.0)
+  - CocoaLumberjack/Default (2.3.0):
+    - CocoaLumberjack/Core
+  - CocoaLumberjack/Extensions (2.3.0):
+    - CocoaLumberjack/Default
+  - Lock (1.26.1):
+    - CocoaLumberjack (~> 2.0)
+    - Lock/Core (= 1.26.1)
+    - Lock/UI (= 1.26.1)
+    - Lock/WebView (= 1.26.1)
+  - Lock/Core (1.26.1):
+    - AFNetworking (~> 3.0)
+    - CocoaLumberjack (~> 2.0)
+  - Lock/CoreUI (1.26.1):
+    - CocoaLumberjack (~> 2.0)
+    - Lock/Core
+    - Masonry (~> 0.6)
+  - Lock/UI (1.26.1):
+    - CocoaLumberjack (~> 2.0)
+    - Lock/CoreUI
+  - Lock/WebView (1.26.1):
+    - CocoaLumberjack (~> 2.0)
+    - Lock/CoreUI
+  - Masonry (0.6.4)
+
+DEPENDENCIES:
+  - Auth0 (= 1.0.0-beta.5)
+  - Lock (~> 1.24)
+
+SPEC CHECKSUMS:
+  AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
+  Auth0: a80a4b800beb1a105b893b3da584f0226dc00be4
+  CocoaLumberjack: 97fab7ee5f507fe54445cca7ea80f926729cfd15
+  Lock: d981a23c9ea7d2a77d7637ea83826b751df4e2f2
+  Masonry: 281802d04d787ea2973179ee8bcb50500579ede2
+
+PODFILE CHECKSUM: d18518042e18aa69fa98c55bb8539fa6b1687be2
+
+COCOAPODS: 1.0.1

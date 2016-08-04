@@ -7,14 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		51002B2F1D4BB71900E71A72 /* Auth0.plist in Resources */ = {isa = PBXBuildFile; fileRef = 51002B2E1D4BB71900E71A72 /* Auth0.plist */; };
 		51E4B6B21D0B4819000D9038 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51E4B6B11D0B4819000D9038 /* AppDelegate.swift */; };
 		51E4B6B41D0B4819000D9038 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51E4B6B31D0B4819000D9038 /* ViewController.swift */; };
 		51E4B6B71D0B4819000D9038 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 51E4B6B51D0B4819000D9038 /* Main.storyboard */; };
 		51E4B6B91D0B4819000D9038 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 51E4B6B81D0B4819000D9038 /* Assets.xcassets */; };
 		51E4B6BC1D0B4819000D9038 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 51E4B6BA1D0B4819000D9038 /* LaunchScreen.storyboard */; };
+		CF54DF4B61822FED0D4A4178 /* Pods_Auth0Sample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13EBF8B362966F828781698C /* Pods_Auth0Sample.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		13EBF8B362966F828781698C /* Pods_Auth0Sample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Auth0Sample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		51002B2E1D4BB71900E71A72 /* Auth0.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Auth0.plist; sourceTree = "<group>"; };
 		51E4B6AE1D0B4819000D9038 /* Auth0Sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Auth0Sample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		51E4B6B11D0B4819000D9038 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		51E4B6B31D0B4819000D9038 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -22,6 +26,8 @@
 		51E4B6B81D0B4819000D9038 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		51E4B6BB1D0B4819000D9038 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		51E4B6BD1D0B4819000D9038 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6B88FA2787567B10E11FE7BB /* Pods-Auth0Sample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Auth0Sample.release.xcconfig"; path = "Pods/Target Support Files/Pods-Auth0Sample/Pods-Auth0Sample.release.xcconfig"; sourceTree = "<group>"; };
+		771A53CD52C33889CAD7C5E1 /* Pods-Auth0Sample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Auth0Sample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Auth0Sample/Pods-Auth0Sample.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,17 +35,37 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CF54DF4B61822FED0D4A4178 /* Pods_Auth0Sample.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1809F4CDA2E39AA7585F1F08 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				771A53CD52C33889CAD7C5E1 /* Pods-Auth0Sample.debug.xcconfig */,
+				6B88FA2787567B10E11FE7BB /* Pods-Auth0Sample.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		1D34268AEE85827B788E06F4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				13EBF8B362966F828781698C /* Pods_Auth0Sample.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		51E4B6A51D0B4819000D9038 = {
 			isa = PBXGroup;
 			children = (
 				51E4B6B01D0B4819000D9038 /* Auth0Sample */,
 				51E4B6AF1D0B4819000D9038 /* Products */,
+				1809F4CDA2E39AA7585F1F08 /* Pods */,
+				1D34268AEE85827B788E06F4 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -60,6 +86,7 @@
 				51E4B6B81D0B4819000D9038 /* Assets.xcassets */,
 				51E4B6BA1D0B4819000D9038 /* LaunchScreen.storyboard */,
 				51E4B6BD1D0B4819000D9038 /* Info.plist */,
+				51002B2E1D4BB71900E71A72 /* Auth0.plist */,
 			);
 			path = Auth0Sample;
 			sourceTree = "<group>";
@@ -71,9 +98,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 51E4B6C01D0B4819000D9038 /* Build configuration list for PBXNativeTarget "Auth0Sample" */;
 			buildPhases = (
+				07BDAC50DD44AC0A8B49ED10 /* [CP] Check Pods Manifest.lock */,
 				51E4B6AA1D0B4819000D9038 /* Sources */,
 				51E4B6AB1D0B4819000D9038 /* Frameworks */,
 				51E4B6AC1D0B4819000D9038 /* Resources */,
+				BB242D37AD74341639F02525 /* [CP] Embed Pods Frameworks */,
+				1678C70F26682D81DF7217B6 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -125,10 +155,59 @@
 				51E4B6BC1D0B4819000D9038 /* LaunchScreen.storyboard in Resources */,
 				51E4B6B91D0B4819000D9038 /* Assets.xcassets in Resources */,
 				51E4B6B71D0B4819000D9038 /* Main.storyboard in Resources */,
+				51002B2F1D4BB71900E71A72 /* Auth0.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		07BDAC50DD44AC0A8B49ED10 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		1678C70F26682D81DF7217B6 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Auth0Sample/Pods-Auth0Sample-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BB242D37AD74341639F02525 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Auth0Sample/Pods-Auth0Sample-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		51E4B6AA1D0B4819000D9038 /* Sources */ = {
@@ -249,10 +328,11 @@
 		};
 		51E4B6C11D0B4819000D9038 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 771A53CD52C33889CAD7C5E1 /* Pods-Auth0Sample.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Auth0Sample/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = auth0.samples.Auth0Sample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -261,10 +341,11 @@
 		};
 		51E4B6C21D0B4819000D9038 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6B88FA2787567B10E11FE7BB /* Pods-Auth0Sample.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Auth0Sample/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = auth0.samples.Auth0Sample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -290,6 +371,7 @@
 				51E4B6C21D0B4819000D9038 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
