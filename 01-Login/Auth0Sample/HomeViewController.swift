@@ -40,6 +40,9 @@ class HomeViewController: UIViewController {
             controller.dismissViewControllerAnimated(true, completion: nil)
             self.performSegueWithIdentifier("ShowProfile", sender: nil)
         }
+        controller.onUserDismissBlock = {
+            //The user dismisses the Login screen
+        }
         A0Lock.sharedLock().presentLockController(controller, fromController: self)
     }
     
