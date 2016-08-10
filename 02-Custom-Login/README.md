@@ -15,7 +15,7 @@ In `LoginViewController.swift`:
 ```swift
 private func performLogin() {
     self.view.endEditing(true)
-    self.spinner.startAnimating()
+    self.loading = true
     Auth0
         .authentication()
         .login(self.emailTextField.text!,
@@ -24,7 +24,7 @@ private func performLogin() {
         )
         .start { result in
             dispatch_async(dispatch_get_main_queue()) {
-                self.spinner.stopAnimating()
+                self.loading = true
                 switch result {
                 case .Success(let credentials):
                     self.loginWithCredentials(credentials)
@@ -99,7 +99,7 @@ In `SignUpViewController.swift`:
 ```swift
 private func performRegister() {
     self.view.endEditing(true)
-    self.spinner.startAnimating()
+    self.loading = true
     Auth0
         .authentication()
         .signUp(self.emailTextField.text!,
@@ -110,7 +110,7 @@ private func performRegister() {
         )
         .start { result in
             dispatch_async(dispatch_get_main_queue()) {
-                self.spinner.stopAnimating()
+                self.loading = false
                 switch result {
                 case .Success(let credentials):
                     self.retrievedCredentials = credentials
@@ -121,7 +121,6 @@ private func performRegister() {
             }
     }
 }
-
 ```
 
 Notice that the credentials are stored in the `retrievedCredentials` instance variable.
@@ -153,14 +152,14 @@ In order to get credentials from a social provider, whether it's for sign in or 
 ```swift
 private func performFacebookAuthentication() {
     self.view.endEditing(true)
-    self.spinner.startAnimating()
+    self.loading = true
     Auth0
         .webAuth()
         .connection("facebook")
         .scope("openid")
         .start { result in
             dispatch_async(dispatch_get_main_queue()) {
-                self.spinner.stopAnimating()
+                self.loading = false
                 switch result {
                 case .Success(let credentials):
                     self.loginWithCredentials(credentials)
