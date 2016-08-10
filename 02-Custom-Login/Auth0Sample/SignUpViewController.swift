@@ -32,8 +32,25 @@ class SignUpViewController: UIViewController {
     @IBOutlet weak var lastNameTextField: UITextField!
     @IBOutlet weak var signUpButton: UIButton!
     @IBOutlet weak var spinner: UIActivityIndicatorView!
+    @IBOutlet weak var facebookButton: UIButton!
+    @IBOutlet weak var twitterButton: UIButton!
     
+    @IBOutlet var actionButtons: [UIButton]!
+    @IBOutlet var textFields: [UITextField]!
+
     var retrievedCredentials: Credentials?
+    
+    // MARK: - Lifecycle
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.actionButtons.forEach { $0.roundLaterals() }
+        self.textFields.forEach { $0.setPlaceholderTextColor(.lightVioletColor()) }
+    }
+    
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return .LightContent
+    }
     
     // MARK: - IBAction
     
@@ -45,19 +62,33 @@ class SignUpViewController: UIViewController {
         self.performFacebookSignUp()
     }
     
-    @IBAction func textFieldEditingChanged(sender: UITextField) {
-        self.validateForm()
+    @IBAction func registerWithTwitter(sender: UIButton) {
+        self.performTwitterSignUp()
     }
     
-    @IBAction func dismissKeyboard(sender: UITapGestureRecognizer) {
-        self.view.endEditing(true)
+    @IBAction func textFieldEditingChanged(sender: UITextField) {
+        self.validateForm()
     }
 
     // MARK: - Private
     
+    private var loading: Bool = false {
+        didSet {
+            dispatch_async(dispatch_get_main_queue()) {
+                if self.loading {
+                    self.spinner.startAnimating()
+                    self.actionButtons.forEach { $0.enabled = false }
+                } else {
+                    self.spinner.stopAnimating()
+                    self.actionButtons.forEach { $0.enabled = true }
+                }
+            }
+        }
+    }
+    
     private func performRegister() {
         self.view.endEditing(true)
-        self.spinner.startAnimating()
+        self.loading = true
         Auth0
             .authentication()
             .signUp(self.emailTextField.text!,
@@ -68,7 +99,7 @@ class SignUpViewController: UIViewController {
             )
             .start { result in
                 dispatch_async(dispatch_get_main_queue()) {
-                    self.spinner.stopAnimating()
+                    self.loading = false
                     switch result {
                     case .Success(let credentials):
                         self.retrievedCredentials = credentials
@@ -82,14 +113,35 @@ class SignUpViewController: UIViewController {
     
     private func performFacebookSignUp() {
         self.view.endEditing(true)
-        self.spinner.startAnimating()
+        self.loading = true
         Auth0
             .webAuth()
             .connection("facebook")
             .scope("openid")
             .start { result in
                 dispatch_async(dispatch_get_main_queue()) {
-                    self.spinner.stopAnimating()
+                    self.loading = false
+                    switch result {
+                    case .Success(let credentials):
+                        self.retrievedCredentials = credentials
+                        self.performSegueWithIdentifier("DismissSignUp", sender: nil)
+                    case .Failure(let error):
+                        self.showAlertForError(error)
+                    }
+                }
+        }
+    }
+    
+    private func performTwitterSignUp() {
+        self.view.endEditing(true)
+        self.loading = true
+        Auth0
+            .webAuth()
+            .connection("twitter")
+            .scope("openid")
+            .start { result in
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.loading = false
                     switch result {
                     case .Success(let credentials):
                         self.retrievedCredentials = credentials

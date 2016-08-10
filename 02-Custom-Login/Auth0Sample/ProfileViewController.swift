@@ -72,7 +72,7 @@ class ProfileViewController: UIViewController {
         }
     }
     
-    private func retrieveDataFromURL(url: NSURL, completion: ((data: NSData?, response: NSURLResponse?, error: NSError? ) -> Void)) {
+    private func retrieveDataFromURL(url:NSURL, completion: ((data: NSData?, response: NSURLResponse?, error: NSError? ) -> Void)) {
         NSURLSession.sharedSession().dataTaskWithURL(url, completionHandler: completion).resume()
     }
     
