@@ -67,23 +67,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // 2. Customize the 'Login' text appearance:
         theme.registerColor(.whiteColor(), forKey: A0ThemeTitleTextColor)
-        theme.registerFont(.appFontOfSize(24), forKey: A0ThemeTitleFont)
+        theme.registerFont(.systemFontOfSize(24, weight: UIFontWeightThin), forKey: A0ThemeTitleFont)
         
         // 3. Customize the 'OR' text appearance:
         theme.registerColor(.whiteColor(), forKey: A0ThemeSeparatorTextColor)
-        theme.registerFont(.appFontOfSize(18), forKey: A0ThemeSeparatorTextFont)
+        theme.registerFont(.systemFontOfSize(12, weight: UIFontWeightSemibold), forKey: A0ThemeSeparatorTextFont)
         
         // 4. Customize the text fields:
         theme.registerColor(.lightVioletColor(), forKey: A0ThemeTextFieldIconColor)
         theme.registerColor(.lightVioletColor(), forKey: A0ThemeTextFieldPlaceholderTextColor)
         theme.registerColor(.whiteColor(), forKey: A0ThemeTextFieldTextColor)
-        theme.registerFont(.appFontOfSize(14), forKey: A0ThemeTextFieldFont)
+        theme.registerFont(.systemFontOfSize(14, weight: UIFontWeightRegular), forKey: A0ThemeTextFieldFont)
         
         // 5. Customize the primary button (ACCESS):
         theme.registerColor(.whiteColor(), forKey: A0ThemePrimaryButtonNormalColor)
         theme.registerColor(.lightVioletColor(), forKey: A0ThemePrimaryButtonHighlightedColor)
         theme.registerColor(.darkVioletColor(), forKey: A0ThemePrimaryButtonTextColor)
-        theme.registerFont(.boldSystemFontOfSize(20), forKey: A0ThemePrimaryButtonFont)
+        theme.registerFont(.systemFontOfSize(20, weight: UIFontWeightBold), forKey: A0ThemePrimaryButtonFont)
         
         // 6. Configure the secondary buttons (sign up / reset password):
         theme.registerColor(.lightVioletColor(), forKey: A0ThemeSecondaryButtonBackgroundColor)
@@ -102,14 +102,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         A0Theme.sharedInstance().registerTheme(theme)
     }
     
-}
-
-extension UIFont {
-    
-    class func appFontOfSize(size: CGFloat) -> UIFont {
-        return UIFont(name: "Trebuchet MS", size: size)!
-    }
-
 }
 
 extension UIColor {
