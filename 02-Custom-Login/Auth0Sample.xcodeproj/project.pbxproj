@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		512FCB651D5A6B90004092B8 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 512FCB641D5A6B90004092B8 /* Extensions.swift */; };
 		51626D651D11A6F500CF162C /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51626D641D11A6F500CF162C /* LoginViewController.swift */; };
 		51626D671D11BFA200CF162C /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51626D661D11BFA200CF162C /* SignUpViewController.swift */; };
 		51992FC81D19AFE400140478 /* Auth0.plist in Resources */ = {isa = PBXBuildFile; fileRef = 51992FC71D19AFE400140478 /* Auth0.plist */; };
@@ -14,7 +15,6 @@
 		51A8A0B81D0B4C07000E53CC /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51A8A0B71D0B4C07000E53CC /* HomeViewController.swift */; };
 		51A8A0BA1D0B4C0C000E53CC /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51A8A0B91D0B4C0C000E53CC /* ProfileViewController.swift */; };
 		51B8DDF01D1B0D4D001299EC /* UIStoryboardSegueWithCompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51B8DDEF1D1B0D4D001299EC /* UIStoryboardSegueWithCompletion.swift */; };
-		51B8DDF21D1B0F74001299EC /* DismissNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51B8DDF11D1B0F74001299EC /* DismissNavigation.swift */; };
 		51E4B6B21D0B4819000D9038 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51E4B6B11D0B4819000D9038 /* AppDelegate.swift */; };
 		51E4B6B71D0B4819000D9038 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 51E4B6B51D0B4819000D9038 /* Main.storyboard */; };
 		51E4B6B91D0B4819000D9038 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 51E4B6B81D0B4819000D9038 /* Assets.xcassets */; };
@@ -24,6 +24,7 @@
 
 /* Begin PBXFileReference section */
 		1C4852CE5D44031F8977BD84 /* Pods-Auth0Sample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Auth0Sample.release.xcconfig"; path = "Pods/Target Support Files/Pods-Auth0Sample/Pods-Auth0Sample.release.xcconfig"; sourceTree = "<group>"; };
+		512FCB641D5A6B90004092B8 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		51626D641D11A6F500CF162C /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		51626D661D11BFA200CF162C /* SignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		51992FC71D19AFE400140478 /* Auth0.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Auth0.plist; sourceTree = "<group>"; };
@@ -31,7 +32,6 @@
 		51A8A0B71D0B4C07000E53CC /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		51A8A0B91D0B4C0C000E53CC /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		51B8DDEF1D1B0D4D001299EC /* UIStoryboardSegueWithCompletion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIStoryboardSegueWithCompletion.swift; sourceTree = "<group>"; };
-		51B8DDF11D1B0F74001299EC /* DismissNavigation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DismissNavigation.swift; sourceTree = "<group>"; };
 		51E4B6AE1D0B4819000D9038 /* Auth0Sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Auth0Sample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		51E4B6B11D0B4819000D9038 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		51E4B6B61D0B4819000D9038 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -59,7 +59,7 @@
 			children = (
 				51B8DDEF1D1B0D4D001299EC /* UIStoryboardSegueWithCompletion.swift */,
 				51992FC91D19B8A500140478 /* ErrorHandling.swift */,
-				51B8DDF11D1B0F74001299EC /* DismissNavigation.swift */,
+				512FCB641D5A6B90004092B8 /* Extensions.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -249,7 +249,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				51B8DDF21D1B0F74001299EC /* DismissNavigation.swift in Sources */,
+				512FCB651D5A6B90004092B8 /* Extensions.swift in Sources */,
 				51B8DDF01D1B0D4D001299EC /* UIStoryboardSegueWithCompletion.swift in Sources */,
 				51626D671D11BFA200CF162C /* SignUpViewController.swift in Sources */,
 				51E4B6B21D0B4819000D9038 /* AppDelegate.swift in Sources */,

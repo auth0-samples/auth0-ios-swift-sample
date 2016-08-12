@@ -29,7 +29,24 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var loginButton: UIButton!
+    @IBOutlet weak var facebookButton: UIButton!
+    @IBOutlet weak var twitterButton: UIButton!
     @IBOutlet weak var spinner: UIActivityIndicatorView!
+
+    @IBOutlet var actionButtons: [UIButton]!
+    @IBOutlet var textFields: [UITextField]!
+
+    // MARK: - Lifecycle
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.actionButtons.forEach { $0.roundLaterals() }
+        self.textFields.forEach { $0.setPlaceholderTextColor(.lightVioletColor()) }
+    }
+    
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return .LightContent
+    }
     
     // MARK: - IBAction
     
@@ -39,6 +56,10 @@ class LoginViewController: UIViewController {
     
     @IBAction func loginWithFacebook(sender: UIButton) {
         self.performFacebookAuthentication()
+    }
+    
+    @IBAction func loginWithTwitter(sender: UIButton) {
+        self.performTwitterAuthentication()
     }
     
     @IBAction func textFieldEditingChanged(sender: UITextField) {
@@ -55,10 +76,6 @@ class LoginViewController: UIViewController {
         }
     }
     
-    @IBAction func dismissKeyboard(sender: UITapGestureRecognizer) {
-        self.view.endEditing(true)
-    }
-    
     // MARK: - Segue
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -72,15 +89,49 @@ class LoginViewController: UIViewController {
     
     private var retrievedCredentials: Credentials?
     
+    private var loading: Bool = false {
+        didSet {
+            dispatch_async(dispatch_get_main_queue()) {
+                if self.loading {
+                    self.spinner.startAnimating()
+                    self.actionButtons.forEach { $0.enabled = false }
+                } else {
+                    self.spinner.stopAnimating()
+                    self.actionButtons.forEach { $0.enabled = true }
+                }
+            }
+        }
+    }
+    
     private func performLogin() {
         self.view.endEditing(true)
-        self.spinner.startAnimating()
+        self.loading = true
         Auth0
             .authentication()
             .login(self.emailTextField.text!,
                 password: self.passwordTextField.text!,
                 connection: "Username-Password-Authentication"
             )
+            .start { result in
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.loading = false
+                    switch result {
+                    case .Success(let credentials):
+                        self.loginWithCredentials(credentials)
+                    case .Failure(let error):
+                        self.showAlertForError(error)
+                    }
+                }
+        }
+    }
+    
+    private func performFacebookAuthentication() {
+        self.view.endEditing(true)
+        self.loading = true
+        Auth0
+            .webAuth()
+            .connection("facebook")
+            .scope("openid")
             .start { result in
                 dispatch_async(dispatch_get_main_queue()) {
                     self.spinner.stopAnimating()
@@ -94,12 +145,12 @@ class LoginViewController: UIViewController {
         }
     }
     
-    private func performFacebookAuthentication() {
+    private func performTwitterAuthentication() {
         self.view.endEditing(true)
         self.spinner.startAnimating()
         Auth0
             .webAuth()
-            .connection("facebook")
+            .connection("twitter")
             .scope("openid")
             .start { result in
                 dispatch_async(dispatch_get_main_queue()) {
