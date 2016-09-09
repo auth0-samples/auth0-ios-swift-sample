@@ -51,7 +51,7 @@ class ProfileViewController: UIViewController {
         }
         Auth0
             .authentication()
-            .tokenInfo(idToken)
+            .tokenInfo(token: idToken)
             .start { result in
                 dispatch_async(dispatch_get_main_queue()) {
                     switch result {

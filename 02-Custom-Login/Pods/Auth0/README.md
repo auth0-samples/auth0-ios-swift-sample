@@ -21,7 +21,7 @@ Auth0.swift is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod "Auth0", '~> 1.0.0-beta.2'
+pod "Auth0", '1.0.0-rc.2'
 ```
 
 ###Carthage
@@ -29,7 +29,7 @@ pod "Auth0", '~> 1.0.0-beta.2'
 In your Cartfile add this line
 
 ```
-github "auth0/Auth0.swift"
+github "auth0/Auth0.swift" "1.0.0-rc.2"
 ```
 
 ## Usage
@@ -61,7 +61,7 @@ To avoid specifying clientId & domain you can add a `Auth0.plist` file to your m
 Auth0
    .authentication()
    .login(
-       "support@auth0.com", 
+       emailOrUsername: "support@auth0.com", 
        password: "a secret password", 
        connection: "Username-Password-Authentication"
        )
@@ -96,7 +96,7 @@ Auth0
 Auth0
    .authentication()
    .login(
-       "support@auth0.com", 
+       emailOrUsername: "support@auth0.com", 
        password: "email OTP", 
        connection: "email"
        )
@@ -117,7 +117,7 @@ Auth0
 Auth0
    .authentication()
    .signUp(
-       "support@auth0.com", 
+       email: "support@auth0.com", 
        password: "a secret password", 
        connection: "Username-Password-Authentication"
        )
@@ -137,7 +137,7 @@ Auth0
 ```swift
 Auth0
    .authentication()
-   .tokenInfo("user id_token")
+   .tokenInfo(token: "user id_token")
    .start { result in
        switch result {
        case .Success(let profile):
@@ -164,6 +164,22 @@ Auth0
             print(error)
         }
     }
+```
+
+#### Link users
+
+```swift
+Auth0
+   .users(token: "user token")
+   .link(userId, withOtherUserToken: "another user token")
+   .start { result in
+      switch result {
+      case .Success(let userInfo):
+         print("user: \(userInfo)")
+      case .Failure(let error):
+         print(error)
+      }
+   }
 ```
 
 ### Web-based Auth (iOS Only)
@@ -252,10 +268,11 @@ Auth0
 
 ### Logging
 
-To enable Auth0.swift to log HTTP request and OAuth2 flow for debugging just add the following:
+To enable Auth0.swift to log HTTP request and OAuth2 flow for debugging you can call the following method in either `WebAuth`, `Authentication` or `Users` object:
 
 ```swift
-Auth0.enableLogging()
+var auth0 = Auth0.authentication()
+auth0.logging(emnabled: true)
 ```
 
 Then for a OAuth2 authentication you'll see in the console:

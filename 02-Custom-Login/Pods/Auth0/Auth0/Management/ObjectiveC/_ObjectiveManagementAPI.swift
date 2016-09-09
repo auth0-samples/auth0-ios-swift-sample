@@ -25,7 +25,11 @@ import Foundation
 @objc(A0ManagementAPI)
 public class _ObjectiveManagementAPI: NSObject {
 
-    private let management: Management
+    private var management: Management
+
+    public init(token: String) {
+        self.management = Auth0.management(token: token)
+    }
 
     public convenience init(token: String, url: NSURL) {
         self.init(token: token, url: url, session: NSURLSession.sharedSession())
@@ -44,8 +48,10 @@ public class _ObjectiveManagementAPI: NSObject {
                 switch result {
                 case .Success(let payload):
                     callback(nil, payload)
+                case .Failure(let cause as ManagementError):
+                    callback(cause.newFoundationError(), nil)
                 case .Failure(let cause):
-                    callback(cause.foundationError, nil)
+                    callback(cause as NSError, nil)
                 }
         }
     }
@@ -59,10 +65,39 @@ public class _ObjectiveManagementAPI: NSObject {
                 switch result {
                 case .Success(let payload):
                     callback(nil, payload)
+                case .Failure(let cause as ManagementError):
+                    callback(cause.newFoundationError(), nil)
                 case .Failure(let cause):
-                    callback(cause.foundationError, nil)
+                    callback(cause as NSError, nil)
+                }
+        }
+    }
+    
+    @objc(unlinkUserWithIdentifier:provider:fromUserId:callback:)
+    public func unlink(identifier: String, provider: String, fromUserId userId: String, callback: (NSError?, [[String: AnyObject]]?) -> ()) {
+        self.management
+            .users()
+            .unlink(identityId: identifier, provider: provider, fromUserId:userId)
+            .start { result in
+                switch result {
+                case .Success(let payload):
+                    callback(nil, payload)
+                case .Failure(let cause as ManagementError):
+                    callback(cause.newFoundationError(), nil)
+                case .Failure(let cause):
+                    callback(cause as NSError, nil)
                 }
         }
     }
 
+
+    /**
+     Avoid Auth0.swift sending its version on every request to Auth0 API.
+     By default we collect our libraries and SDKs versions to help us during support and evaluate usage.
+
+     - parameter enabled: if Auth0.swift should send it's version on every request.
+     */
+    public func setTelemetryEnabled(enabled: Bool) {
+        self.management.enableTelemetry(enabled: enabled)
+    }
 }

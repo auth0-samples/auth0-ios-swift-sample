@@ -25,20 +25,26 @@ import SafariServices
 
 /**
  Represents an on going OAuth2 session with Auth0.
- 
+
  It will handle result from the redirect URL configured when the OAuth2 flow was started,
  so we need to handle when the configured URL is opened in your Application's `AppDelegate`
- 
+
  ```
  func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
-    let session = //retrieve current OAuth2 session
-    return session.resume(url, options: options)
+ let session = //retrieve current OAuth2 session
+ return session.resume(url, options: options)
  }
  ```
  */
-class OAuth2Session: NSObject {
+protocol OAuth2Session {
+    var state: String? { get }
+    func resume(url: NSURL, options: [String: AnyObject]) -> Bool
+    func cancel()
+}
 
-    typealias FinishSession = Result<Credentials, Authentication.Error> -> ()
+class SafariSession: NSObject, OAuth2Session {
+
+    typealias FinishSession = Result<Credentials> -> ()
 
     weak var controller: UIViewController?
 
@@ -46,13 +52,15 @@ class OAuth2Session: NSObject {
     let state: String?
     let finish: FinishSession
     let handler: OAuth2Grant
+    let logger: Logger?
 
-    init(controller: SFSafariViewController, redirectURL: NSURL, state: String? = nil, handler: OAuth2Grant, finish: FinishSession) {
+    init(controller: SFSafariViewController, redirectURL: NSURL, state: String? = nil, handler: OAuth2Grant, finish: FinishSession, logger: Logger?) {
         self.controller = controller
         self.redirectURL = redirectURL
         self.state = state
         self.finish = finish
         self.handler = handler
+        self.logger = logger
         super.init()
         controller.delegate = self
     }
@@ -66,22 +74,19 @@ class OAuth2Session: NSObject {
      - returns: `true` if the url completed (successfuly or not) this session, `false` otherwise
      */
     func resume(url: NSURL, options: [String: AnyObject] = [:]) -> Bool {
+        self.logger?.trace(url, source: "iOS Safari") // FIXME: better source name
         guard url.absoluteString.lowercaseString.hasPrefix(self.redirectURL.absoluteString.lowercaseString) else { return false }
 
         guard
             let components = NSURLComponents(URL: url, resolvingAgainstBaseURL: true)
             else {
-                self.finish(.Failure(error: .InvalidResponse(response: url.absoluteString.dataUsingEncoding(NSUTF8StringEncoding))))
+                self.finish(.Failure(error: AuthenticationError(string: url.absoluteString, statusCode: 200)))
                 return false
             }
         let items = components.a0_values
         guard self.state == nil || items["state"] == self.state else { return false }
-        if let error = items["error"] {
-            guard let description = items["error_description"] else {
-                self.finish(.Failure(error: .InvalidResponse(response: url.absoluteString.dataUsingEncoding(NSUTF8StringEncoding))))
-                return true
-            }
-            self.finish(.Failure(error: .Response(code: error, description: description, name: nil, extras: nil)))
+        if let _ = items["error"] {
+            self.finish(.Failure(error: AuthenticationError(info: items, statusCode: 0)))
         } else {
             self.handler.credentials(items, callback: self.finish)
         }
@@ -89,11 +94,11 @@ class OAuth2Session: NSObject {
     }
 
     func cancel() {
-        self.finish(Result.Failure(error: .Cancelled))
+        self.finish(Result.Failure(error: WebAuthError.UserCancelled))
     }
 }
 
-extension OAuth2Session: SFSafariViewControllerDelegate {
+extension SafariSession: SFSafariViewControllerDelegate {
     func safariViewControllerDidFinish(controller: SFSafariViewController) {
         SessionStorage.sharedInstance.cancel(self)
     }

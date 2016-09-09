@@ -108,7 +108,8 @@ class LoginViewController: UIViewController {
         self.loading = true
         Auth0
             .authentication()
-            .login(self.emailTextField.text!,
+            .login(
+                usernameOrEmail: self.emailTextField.text!,
                 password: self.passwordTextField.text!,
                 connection: "Username-Password-Authentication"
             )

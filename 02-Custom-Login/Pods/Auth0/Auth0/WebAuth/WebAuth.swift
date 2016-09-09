@@ -45,11 +45,13 @@ import SafariServices
  </plist>
  ```
 
+ - parameter bundle:    bundle used to locate the `Auth0.plist` file. By default is the main bundle
+
  - returns: Auth0 WebAuth component
  - important: Calling this method without a valid `Auth0.plist` will crash your application
  */
-public func webAuth() -> WebAuth {
-    let values = plistValues()!
+public func webAuth(bundle bundle: NSBundle = NSBundle.mainBundle()) -> WebAuth {
+    let values = plistValues(bundle: bundle)!
     return webAuth(clientId: values.clientId, domain: values.domain)
 }
 
@@ -66,7 +68,7 @@ public func webAuth() -> WebAuth {
  - returns: Auth0 WebAuth component
  */
 public func webAuth(clientId clientId: String, domain: String) -> WebAuth {
-    return WebAuth(clientId: clientId, url: .a0_url(domain))
+    return _WebAuth(clientId: clientId, url: .a0_url(domain))
 }
 
 /**
@@ -82,56 +84,30 @@ public func resumeAuth(url: NSURL, options: [String: AnyObject]) -> Bool {
 }
 
 /// OAuth2 Authentication using Auth0
-public class WebAuth {
+public protocol WebAuth: Trackable, Loggable {
+    var clientId: String { get }
+    var url: NSURL { get }
+    var telemetry: Telemetry { get set }
 
-    private static let NoBundleIdentifier = "com.auth0.this-is-no-bundle"
-
-    let clientId: String
-    let url: NSURL
-    let presenter: ControllerModalPresenter
-    let storage: SessionStorage
-    let logger: Logger?
-    var state = generateDefaultState()
-    var parameters: [String: String] = [:]
-    var universalLink = false
-    var usePKCE = true
-
-    public convenience init(clientId: String, url: NSURL, presenter: ControllerModalPresenter = ControllerModalPresenter()) {
-        self.init(clientId: clientId, url: url, presenter: presenter, storage: SessionStorage.sharedInstance)
-    }
-
-    init(clientId: String, url: NSURL, presenter: ControllerModalPresenter, storage: SessionStorage, logger: Logger? = Auth0Logger.sharedInstance.logger) {
-        self.clientId = clientId
-        self.url = url
-        self.presenter = presenter
-        self.storage = storage
-        self.logger = logger
-    }
     /**
      For redirect url instead of a custom scheme it will use `https` and iOS 9 Universal Links.
-     
+
      Before enabling this flag you'll need to configure Universal Links
 
      - returns: the same OAuth2 instance to allow method chaining
      */
-    public func useUniversalLink() -> WebAuth {
-        self.universalLink = true
-        return self
-    }
+    func useUniversalLink() -> Self
 
     /**
      Specify a connection name to be used to authenticate.
-     
+
      By default no connection is specified, so the hosted login page will be displayed
 
      - parameter connection: name of the connection to use
 
      - returns: the same OAuth2 instance to allow method chaining
      */
-    public func connection(connection: String) -> WebAuth {
-        self.parameters["connection"] = connection
-        return self
-    }
+    func connection(connection: String) -> Self
 
     /**
      Scopes that will be requested during auth
@@ -140,25 +116,19 @@ public class WebAuth {
 
      - returns: the same OAuth2 instance to allow method chaining
      */
-    public func scope(scope: String) -> WebAuth {
-        self.parameters["scope"] = scope
-        return self
-    }
+    func scope(scope: String) -> Self
 
     /**
-     State value that will be echoed after authentication 
+     State value that will be echoed after authentication
      in order to check that the response is from your request and not other.
-     
+
      By default a random value is used.
 
      - parameter state: a state value to send with the auth request
 
      - returns: the same OAuth2 instance to allow method chaining
      */
-    public func state(state: String) -> WebAuth {
-        self.state = state
-        return self
-    }
+    func state(state: String) -> Self
 
     /**
      Send additional parameters for authentication.
@@ -167,34 +137,28 @@ public class WebAuth {
 
      - returns: the same OAuth2 instance to allow method chaining
      */
-    public func parameters(parameters: [String: String]) -> WebAuth {
-        parameters.forEach { self.parameters[$0] = $1 }
-        return self
-    }
+    func parameters(parameters: [String: String]) -> Self
 
     /**
      Change the default grant used for auth from `code` (w/PKCE) to `token` (implicit grant)
 
      - returns: the same OAuth2 instance to allow method chaining
      */
-    public func usingImplicitGrant() -> WebAuth {
-        self.usePKCE = false
-        return self
-    }
+    func usingImplicitGrant() -> Self
 
     /**
      Starts the OAuth2 flow by modally presenting a ViewController in the top-most controller.
-     
+
      ```
      Auth0
-        .oauth2(clientId: clientId, domain: "samples.auth0.com")
-        .start { result in
-            print(result)
-        }
+     .oauth2(clientId: clientId, domain: "samples.auth0.com")
+     .start { result in
+        print(result)
+     }
      ```
-     
+
      Then from `AppDelegate` we just need to resume the OAuth2 Auth like this
-     
+
      ```
      func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
         return Auth0.resumeAuth(url, options: options)
@@ -206,31 +170,92 @@ public class WebAuth {
 
      - parameter callback: callback called with the result of the OAuth2 flow
      */
-    public func start(callback: Result<Credentials, Authentication.Error> -> ()) {
+    func start(callback: Result<Credentials> -> ())
+}
+
+class _WebAuth: WebAuth {
+
+    private static let NoBundleIdentifier = "com.auth0.this-is-no-bundle"
+
+    let clientId: String
+    let url: NSURL
+    var telemetry: Telemetry
+
+    let presenter: ControllerModalPresenter
+    let storage: SessionStorage
+    var logger: Logger?
+    var state = generateDefaultState()
+    var parameters: [String: String] = [:]
+    var universalLink = false
+    var usePKCE = true
+
+    convenience init(clientId: String, url: NSURL, presenter: ControllerModalPresenter = ControllerModalPresenter(), telemetry: Telemetry = Telemetry()) {
+        self.init(clientId: clientId, url: url, presenter: presenter, storage: SessionStorage.sharedInstance, telemetry: telemetry)
+    }
+
+    init(clientId: String, url: NSURL, presenter: ControllerModalPresenter, storage: SessionStorage, telemetry: Telemetry) {
+        self.clientId = clientId
+        self.url = url
+        self.presenter = presenter
+        self.storage = storage
+        self.telemetry = telemetry
+    }
+
+    func useUniversalLink() -> Self {
+        self.universalLink = true
+        return self
+    }
+
+    func connection(connection: String) -> Self {
+        self.parameters["connection"] = connection
+        return self
+    }
+
+    func scope(scope: String) -> Self {
+        self.parameters["scope"] = scope
+        return self
+    }
+
+    func state(state: String) -> Self {
+        self.state = state
+        return self
+    }
+
+    func parameters(parameters: [String: String]) -> Self {
+        parameters.forEach { self.parameters[$0] = $1 }
+        return self
+    }
+
+    func usingImplicitGrant() -> Self {
+        self.usePKCE = false
+        return self
+    }
+
+    func start(callback: Result<Credentials> -> ()) {
         guard
             let redirectURL = self.redirectURL
-            where !redirectURL.absoluteString.hasPrefix(WebAuth.NoBundleIdentifier)
+            where !redirectURL.absoluteString.hasPrefix(_WebAuth.NoBundleIdentifier)
             else {
-                return callback(Result.Failure(error: .RequestFailed(cause: failureCause("Cannot find iOS Application Bundle Identifier"))))
+                return callback(Result.Failure(error: WebAuthError.NoBundleIdentifierFound))
             }
         let handler = self.handler(redirectURL)
         let authorizeURL = self.buildAuthorizeURL(withRedirectURL: redirectURL, defaults: handler.defaults)
         let (controller, finish) = newSafari(authorizeURL, callback: callback)
-        let session = OAuth2Session(controller: controller, redirectURL: redirectURL, state: self.state, handler: handler, finish: finish)
+        let session = SafariSession(controller: controller, redirectURL: redirectURL, state: self.state, handler: handler, finish: finish, logger: self.logger)
         controller.delegate = session
         logger?.trace(authorizeURL, source: "Safari")
         self.presenter.present(controller)
         self.storage.store(session)
     }
 
-    func newSafari(authorizeURL: NSURL, callback: Result<Credentials, Authentication.Error> -> ()) -> (SFSafariViewController, Result<Credentials, Authentication.Error> -> ()) {
+    func newSafari(authorizeURL: NSURL, callback: Result<Credentials> -> ()) -> (SFSafariViewController, Result<Credentials> -> ()) {
         let controller = SFSafariViewController(URL: authorizeURL)
-        let finish: Result<Credentials, Authentication.Error> -> () = { [weak controller] (result: Result<Credentials, Authentication.Error>) -> () in
+        let finish: Result<Credentials> -> () = { [weak controller] (result: Result<Credentials>) -> () in
             guard let presenting = controller?.presentingViewController else {
-                return callback(Result.Failure(error: .RequestFailed(cause: failureCause("Cannot find controller that triggered web flow"))))
+                return callback(Result.Failure(error: WebAuthError.CannotDismissWebAuthController))
             }
 
-            if case .Failure(let cause) = result, .Cancelled = cause {
+            if case .Failure(let cause as WebAuthError) = result, case .UserCancelled = cause {
                 dispatch_async(dispatch_get_main_queue()) {
                     callback(result)
                 }
@@ -248,25 +273,31 @@ public class WebAuth {
     func buildAuthorizeURL(withRedirectURL redirectURL: NSURL, defaults: [String: String]) -> NSURL {
         let authorize = NSURL(string: "/authorize", relativeToURL: self.url)!
         let components = NSURLComponents(URL: authorize, resolvingAgainstBaseURL: true)!
-        var items = [
-            NSURLQueryItem(name: "client_id", value: self.clientId),
-            NSURLQueryItem(name: "redirect_uri", value: redirectURL.absoluteString),
-            NSURLQueryItem(name: "state", value: state),
-            ]
+        var items: [NSURLQueryItem] = []
+        var entries = defaults
+        entries["client_id"] = self.clientId
+        entries["redirect_uri"] = redirectURL.absoluteString
+        entries["scope"] = "openid"
+        entries["state"] = self.state
+        self.parameters.forEach { entries[$0] = $1 }
 
-        let addAll: (String, String) -> () = { items.append(NSURLQueryItem(name: $0, value: $1)) }
-        defaults.forEach(addAll)
-        self.parameters.forEach(addAll)
-        components.queryItems = items
+        entries.forEach { items.append(NSURLQueryItem(name: $0, value: $1)) }
+        components.queryItems = self.telemetry.queryItemsWithTelemetry(queryItems: items)
         return components.URL!
     }
 
     func handler(redirectURL: NSURL) -> OAuth2Grant {
-        return self.usePKCE ? PKCE(clientId: clientId, url: url, redirectURL: redirectURL) : ImplicitGrant()
+        if self.usePKCE {
+            var authentication = Authentication(clientId: self.clientId, url: self.url, telemetry: self.telemetry)
+            authentication.logger = self.logger
+            return PKCE(authentication: authentication, redirectURL: redirectURL)
+        } else {
+            return ImplicitGrant()
+        }
     }
 
     var redirectURL: NSURL? {
-        let bundleIdentifier = NSBundle.mainBundle().bundleIdentifier ?? WebAuth.NoBundleIdentifier
+        let bundleIdentifier = NSBundle.mainBundle().bundleIdentifier ?? _WebAuth.NoBundleIdentifier
         let components = NSURLComponents(URL: self.url, resolvingAgainstBaseURL: true)
         components?.scheme = self.universalLink ? "https" : bundleIdentifier
         return components?.URL?
@@ -274,10 +305,6 @@ public class WebAuth {
             .URLByAppendingPathComponent(bundleIdentifier)
             .URLByAppendingPathComponent("callback")
     }
-}
-
-private func failureCause(message: String) -> NSError {
-    return NSError(domain: "com.auth0.oauth2", code: 0, userInfo: [NSLocalizedDescriptionKey: message])
 }
 
 private func generateDefaultState() -> String? {
