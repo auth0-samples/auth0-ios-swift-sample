@@ -1,4 +1,4 @@
-// SessionStorage.swift
+// Loggable.swift
 //
 // Copyright (c) 2016 Auth0 (http://auth0.com)
 //
@@ -20,31 +20,41 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import UIKit
+import Foundation
 
-/// Keeps track of current Auth session (e.g. OAuth2)
-class SessionStorage {
-    static let sharedInstance = SessionStorage()
+public protocol Loggable {
 
-    private var current: OAuth2Session? = nil
+    var logger: Logger? { get set }
 
-    func resume(url: NSURL, options: [String: AnyObject]) -> Bool {
-        let resumed = self.current?.resume(url, options: options) ?? false
-        if resumed {
-            self.current = nil
-        }
-        return resumed
+}
+
+public extension Loggable {
+
+    /**
+     Turn on Auth0.swift debug logging of HTTP requests and OAuth2 flow (iOS only) with a custom logger.
+
+     - parameter logger: logger used to print log statements
+     - note: By default all logging is **disabled**
+     - important: Logging should be turned on/off **before** making request to Auth0 for the flag to take effect.
+     */
+    mutating func usingLogger(logger: Logger) -> Self {
+        self.logger = logger
+        return self
     }
 
-    func store(session: OAuth2Session) {
-        self.current?.cancel()
-        self.current = session
-    }
+    /**
+     Turn on/off Auth0.swift debug logging of HTTP requests and OAuth2 flow (iOS only).
 
-    func cancel(session: OAuth2Session) {
-        session.cancel()
-        if self.current?.state == session.state {
-            self.current = nil
+     - parameter enabled: optional flag to turn on/off logging
+     - note: By default all logging is **disabled**
+     - important: Logging should be turned on/off **before** making request to Auth0 for the flag to take effect.
+     */
+    mutating func logging(enabled enabled: Bool) -> Self {
+        if enabled {
+            self.logger = DefaultLogger()
+        } else {
+            self.logger = nil
         }
+        return self
     }
 }

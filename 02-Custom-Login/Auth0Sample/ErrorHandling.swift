@@ -26,8 +26,8 @@ import Auth0
 
 extension UIViewController {
     
-    func showAlertForError(error: Authentication.Error) {
-        let alert = UIAlertController(title: "Error", message: String(error), preferredStyle: .Alert)
+    func showAlertForError(error: ErrorType) {
+        let alert = UIAlertController(title: "Error", message: "Failed with error: \(error)", preferredStyle: .Alert)
         alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
         self.presentViewController(alert, animated: true, completion: nil)
     }

@@ -91,7 +91,8 @@ class SignUpViewController: UIViewController {
         self.loading = true
         Auth0
             .authentication()
-            .signUp(self.emailTextField.text!,
+            .signUp(
+                email: self.emailTextField.text!,
                 password: self.passwordTextField.text!,
                 connection: "Username-Password-Authentication",
                 userMetadata: ["first_name": self.firstNameTextField.text!,

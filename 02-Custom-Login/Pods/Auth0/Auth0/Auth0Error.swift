@@ -1,4 +1,4 @@
-// _ObjectiveLogger.swift
+// Auth0Error.swift
 //
 // Copyright (c) 2016 Auth0 (http://auth0.com)
 //
@@ -22,26 +22,27 @@
 
 import Foundation
 
-@objc(A0Logger)
-public class _ObjectiveLogger: NSObject {
-    /**
-     Turn on Auth0.swift debug logging of HTTP requests and OAuth2 flow (iOS only).
+let UnknownError = "a0.sdk.internal_error.unknown"
+let NonJSONError = "a0.sdk.internal_error.plain"
+let EmptyBodyError = "a0.sdk.internal_error.empty"
 
-     - note: By default all logging is **disabled**
-     - important: Logging should be turned on/off **before** making request to Auth0 for the flag to take effect.
-     */
-    public static func loggingEnabled() {
-        enableLogging(true)
-    }
+/**
+   Generic representation of Auth0 API errors
+   - note: It's recommended to use either `AuthenticationError` or `ManagementError` for better error handling
+ */
+public protocol Auth0Error: ErrorType {
 
-    /**
-     Turn on/off Auth0.swift debug logging of HTTP requests and OAuth2 flow (iOS only).
+    init(string: String?, statusCode: Int)
+    init(info: [String: AnyObject], statusCode: Int)
 
-     - parameter enabled: flag to turn on/off logging
-     - note: By default all logging is **disabled**
-     - important: Logging should be turned on/off **before** making request to Auth0 for the flag to take effect.
-     */
-    public static func loggingEnabled(enabled: Bool) {
-        enableLogging(enabled)
-    }
+    /// The code of the error as a String
+    var code: String { get }
+    
+}
+
+internal protocol FoundationErrorConvertible {
+    static var FoundationDomain: String { get }
+    static var FoundationUserInfoKey: String { get }
+
+    func newFoundationError() -> NSError
 }

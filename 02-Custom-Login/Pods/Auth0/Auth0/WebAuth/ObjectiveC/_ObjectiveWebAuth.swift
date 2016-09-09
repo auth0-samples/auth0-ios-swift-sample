@@ -26,13 +26,18 @@ import Foundation
 /// Web-based Auth with Auth0
 public class _ObjectiveOAuth2: NSObject {
 
-    private let webAuth: WebAuth
+    private(set) var webAuth: _WebAuth
 
-    public init(clientId: String, url: NSURL) {
-        self.webAuth = WebAuth(clientId: clientId, url: url)
+    public override init() {
+        let values = plistValues(bundle: NSBundle.mainBundle())!
+        self.webAuth = _WebAuth(clientId: values.clientId, url: .a0_url(values.domain))
     }
 
-    func addParameters(parameters: [String: String]) {
+    public init(clientId: String, url: NSURL) {
+        self.webAuth = _WebAuth(clientId: clientId, url: url)
+    }
+
+    public func addParameters(parameters: [String: String]) {
         self.webAuth.parameters(parameters)
     }
 
@@ -107,8 +112,10 @@ public class _ObjectiveOAuth2: NSObject {
             switch result {
             case .Success(let credentials):
                 callback(nil, credentials)
+            case .Failure(let cause as FoundationErrorConvertible):
+                callback(cause.newFoundationError(), nil)
             case .Failure(let cause):
-                callback(cause.foundationError, nil)
+                callback(cause as NSError, nil)
             }
         }
     }
@@ -124,5 +131,15 @@ public class _ObjectiveOAuth2: NSObject {
     @objc(resumeAuthWithURL:options:)
     public static func resume(url: NSURL, options: [String: AnyObject]) -> Bool {
         return SessionStorage.sharedInstance.resume(url, options: options)
+    }
+
+    /**
+     Avoid Auth0.swift sending its version on every request to Auth0 API.
+     By default we collect our libraries and SDKs versions to help us during support and evaluate usage.
+
+     - parameter enabled: if Auth0.swift should send it's version on every request.
+     */
+    public func setTelemetryEnabled(enabled: Bool) {
+        self.webAuth.enableTelemetry(enabled: enabled)
     }
 }

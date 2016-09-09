@@ -25,81 +25,56 @@ import Foundation
 /**
  *  Auth0 Management API
  */
-public struct Management {
+public struct Management: Trackable {
     public let token: String
     public let url: NSURL
+    public var telemetry: Telemetry
 
     let session: NSURLSession
 
-    init(token: String, url: NSURL, session: NSURLSession = .sharedSession()) {
+    init(token: String, url: NSURL, session: NSURLSession = .sharedSession(), telemetry: Telemetry = Telemetry()) {
         self.token = token
         self.url = url
         self.session = session
+        self.telemetry = telemetry
     }
 
     public typealias Object = [String: AnyObject]
-
-    /**
-     Types of errors that can be returned by Management API
-
-     - Response:        the request was not successful and Auth0 returned an error response with the reeason it failed
-     - InvalidResponse: the response returned by Auth0 was not valid
-     - RequestFailed:   the request failed
-     */
-    public enum Error: ErrorType {
-        case Response(error: String, description: String, code: String, statusCode: Int)
-        case InvalidResponse(response: NSData?)
-        case RequestFailed(cause: ErrorType)
-    }
-
 
     /**
      Auth0 Users API v2
 
      - returns: Users API endpoints
      */
-    public func users() -> Users { return Users(management: self) }
+    public func users() -> Users { return Users(management: self, telemetry: self.telemetry) }
 
-    func managementObject(response: Response, callback: Request<Object, Error>.Callback) {
-        switch response.result {
-        case .Success(let payload):
-            if let dictionary = payload as? Object {
+    func managementObject(response: Response<ManagementError>, callback: Request<Object, ManagementError>.Callback) {
+        do {
+            if let dictionary = try response.result() as? Object {
                 callback(.Success(result: dictionary))
             } else {
-                callback(.Failure(error: .InvalidResponse(response: response.data)))
+                callback(.Failure(error: ManagementError(string: string(response.data))))
             }
-        case .Failure(let cause):
-            callback(.Failure(error: managementError(response.data, cause: cause)))
+        } catch let error {
+            callback(.Failure(error: error))
         }
     }
 
-    func managementObjects(response: Response, callback: Request<[Object], Error>.Callback) {
-        switch response.result {
-        case .Success(let payload):
-            if let list = payload as? [Object] {
+    func managementObjects(response: Response<ManagementError>, callback: Request<[Object], ManagementError>.Callback) {
+        do {
+            if let list = try response.result() as? [Object] {
                 callback(.Success(result: list))
             } else {
-                callback(.Failure(error: .InvalidResponse(response: response.data)))
+                callback(.Failure(error: ManagementError(string: string(response.data))))
             }
-        case .Failure(let cause):
-            callback(.Failure(error: managementError(response.data, cause: cause)))
+        } catch let error {
+            callback(.Failure(error: error))
         }
     }
 
-    private func managementError(data: NSData?, cause: Response.Error) -> Error {
-        switch cause {
-        case .InvalidJSON(let data):
-            return .InvalidResponse(response: data)
-        case .ServerError(let status, let data) where (400...500).contains(status) && data != nil:
-            if
-                let json = try? NSJSONSerialization.JSONObjectWithData(data!, options: []),
-                let payload = json as? [String: AnyObject], let error = payload["error"] as? String, let message = payload["description"] as? String, let code = payload["code"] as? String {
-                return .Response(error: error, description: message, code: code, statusCode: status)
-            } else {
-                return .RequestFailed(cause: cause)
-            }
-        default:
-            return .RequestFailed(cause: cause)
-        }
+    var defaultHeaders: [String: String] {
+        return [
+            "Authorization": "Bearer \(token)"
+        ]
     }
 }

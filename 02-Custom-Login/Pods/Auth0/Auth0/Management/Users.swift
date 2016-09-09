@@ -26,8 +26,15 @@ import Foundation
  Users endpoints of Auth0 Management API v2
  - seeAlso: [Auth0 Management API docs](https://auth0.com/docs/api/management/v2#!/Users)
  */
-public struct Users {
+public struct Users: Trackable, Loggable {
     let management: Management
+    public var telemetry: Telemetry
+    public var logger: Logger?
+
+    init(management: Management, telemetry: Telemetry) {
+        self.management = management
+        self.telemetry = telemetry
+    }
 
     /**
      Fetch a user using the it's identifier.
@@ -36,7 +43,7 @@ public struct Users {
 
      ```
      Auth0
-        .users(token, domain: "samples.auth0.com")
+        .users(token: token, domain: "samples.auth0.com")
         .get(userId)
         .start { print($0) }
      ```
@@ -45,7 +52,7 @@ public struct Users {
 
      ```
      Auth0
-        .users(token, domain: "samples.auth0.com")
+        .users(token: token, domain: "samples.auth0.com")
         .get(userId, fields: ["email", "user_id"])
         .start { print($0) }
      ```
@@ -54,7 +61,7 @@ public struct Users {
      
      ```
      Auth0
-        .users(token, domain: "samples.auth0.com")
+        .users(token token, domain: "samples.auth0.com")
         .get(userId, fields: ["identities", "app_metadata"], include: false)
         .start { print($0) }
      ```
@@ -67,7 +74,7 @@ public struct Users {
      - note: [Auth0 Management API docs](https://auth0.com/docs/api/management/v2#!/Users/get_users_by_id)
      - important: The token must have the scope `read:users` scope
      */
-    public func get(identifier: String, fields: [String] = [], include: Bool = true) -> Request<Management.Object, Management.Error> {
+    public func get(identifier: String, fields: [String] = [], include: Bool = true) -> Request<Management.Object, ManagementError> {
         let userPath = "/api/v2/users/\(identifier)"
         let component = components(self.management.url, path: userPath)
         let value = fields.joinWithSeparator(",")
@@ -78,7 +85,7 @@ public struct Users {
             ]
         }
 
-        return Request(session: self.management.session, url: component.URL!, method: "GET", handle: self.management.managementObject)
+        return Request(session: self.management.session, url: component.URL!, method: "GET", handle: self.management.managementObject, headers: self.management.defaultHeaders, logger: self.logger, telemetry: self.telemetry)
     }
 
     /**
@@ -112,7 +119,7 @@ public struct Users {
 
      ```
      Auth0
-        .users(token, domain: "samples.auth0.com")
+        .users(token: token, domain: "samples.auth0.com")
         .patch(userId, attributes: attributes)
         .start { print($0) }
      ```
@@ -125,11 +132,11 @@ public struct Users {
      - note: [Auth0 Management API docs](https://auth0.com/docs/api/management/v2#!/Users/patch_users_by_id)
      - important: The token must have one of  the following scopes: `update:users`, `update:users_app_metadata`
      */
-    public func patch(identifier: String, attributes: UserPatchAttributes) -> Request<Management.Object, Management.Error> {
+    public func patch(identifier: String, attributes: UserPatchAttributes) -> Request<Management.Object, ManagementError> {
         let userPath = "/api/v2/users/\(identifier)"
         let component = components(self.management.url, path: userPath)
         
-        return Request(session: self.management.session, url: component.URL!, method: "PATCH", handle: self.management.managementObject, payload: attributes.dictionary)
+        return Request(session: self.management.session, url: component.URL!, method: "PATCH", handle: self.management.managementObject, payload: attributes.dictionary, headers: self.management.defaultHeaders, logger: self.logger, telemetry: self.telemetry)
     }
 
     /**
@@ -138,7 +145,7 @@ public struct Users {
 
      ```
      Auth0
-        .users(token, domain: "samples.auth0.com")
+        .users(token: token, domain: "samples.auth0.com")
         .patch(userId, userMetadata: ["first_name": "Juan", "last_name": "AuthZero"])
         .start { print($0) }
      ```
@@ -150,7 +157,7 @@ public struct Users {
      - note: [Auth0 Management API docs](https://auth0.com/docs/api/management/v2#!/Users/patch_users_by_id)
      - important: The token must have one of  the following scopes: `update:users`, `update:users_app_metadata`
      */
-    public func patch(identifier: String, userMetadata: [String: AnyObject]) -> Request<Management.Object, Management.Error> {
+    public func patch(identifier: String, userMetadata: [String: AnyObject]) -> Request<Management.Object, ManagementError> {
         return patch(identifier, attributes: UserPatchAttributes().userMetadata(userMetadata))
     }
 
@@ -160,7 +167,7 @@ public struct Users {
 
      ```
      Auth0
-        .users(token, domain: "samples.auth0.com")
+        .users(token: token, domain: "samples.auth0.com")
         .link(userId, withOtherUserToken: anotherToken)
         .start { print($0) }
      ```
@@ -173,7 +180,7 @@ public struct Users {
      - seeAlso: [Link Accounts Guide](https://auth0.com/docs/link-accounts)
      - important: The token must have the following scope `update:current_user_identities`
      */
-    public func link(identifier: String, withOtherUserToken token: String) -> Request<[Management.Object], Management.Error> {
+    public func link(identifier: String, withOtherUserToken token: String) -> Request<[Management.Object], ManagementError> {
         return link(identifier, payload: ["link_with": token])
     }
 
@@ -183,7 +190,7 @@ public struct Users {
 
      ```
      Auth0
-        .users(token, domain: "samples.auth0.com")
+        .users(token: token, domain: "samples.auth0.com")
         .link(userId, userId: anotherUserId, provider: "auth0", connectionId: "AConnectionID")
         .start { print($0) }
      ```
@@ -198,7 +205,7 @@ public struct Users {
      - seeAlso: [Link Accounts Guide](https://auth0.com/docs/link-accounts)
      - important: The token must have the following scope `update:users`
      */
-    public func link(identifier: String, withUser userId: String, provider: String, connectionId: String? = nil) -> Request<[Management.Object], Management.Error> {
+    public func link(identifier: String, withUser userId: String, provider: String, connectionId: String? = nil) -> Request<[Management.Object], ManagementError> {
         var payload = [
             "user_id": userId,
             "provider": provider,
@@ -207,10 +214,10 @@ public struct Users {
         return link(identifier, payload: payload)
     }
 
-    private func link(identifier: String, payload: [String: String]) -> Request<[Management.Object], Management.Error> {
+    private func link(identifier: String, payload: [String: String]) -> Request<[Management.Object], ManagementError> {
         let identitiesPath = "/api/v2/users/\(identifier)/identities"
         let url = components(self.management.url, path: identitiesPath).URL!
-        return Request(session: self.management.session, url: url, method: "POST", handle: self.management.managementObjects, payload: payload)
+        return Request(session: self.management.session, url: url, method: "POST", handle: self.management.managementObjects, payload: payload, headers: self.management.defaultHeaders, logger: self.logger, telemetry: self.telemetry)
     }
 
     /**
@@ -218,8 +225,8 @@ public struct Users {
 
      ```
      Auth0
-        .users(token, domain: "samples.auth0.com")
-        .unlink("an_idenitity_id", provider: "facebook", fromUserId: "a_user_identifier")
+        .users(token: token, domain: "samples.auth0.com")
+        .unlink(identityId: "an_idenitity_id", provider: "facebook", fromUserId: "a_user_identifier")
         .start { print($0) }
      ```
 
@@ -232,10 +239,10 @@ public struct Users {
      - seeAlso: [Link Accounts Guide](https://auth0.com/docs/link-accounts)
      - important: The token must have the following scope `update:users`
      */
-    public func unlink(identityId: String, provider: String, fromUserId identifier: String) -> Request<[Management.Object], Management.Error> {
+    public func unlink(identityId identityId: String, provider: String, fromUserId identifier: String) -> Request<[Management.Object], ManagementError> {
         let identityPath = "/api/v2/users/\(identifier)/identities/\(provider)/\(identityId)"
         let url = components(self.management.url, path: identityPath).URL!
-        return Request(session: self.management.session, url: url, method: "DELETE", handle: self.management.managementObjects)
+        return Request(session: self.management.session, url: url, method: "DELETE", handle: self.management.managementObjects, headers: self.management.defaultHeaders, logger: self.logger, telemetry: self.telemetry)
     }
 }
 

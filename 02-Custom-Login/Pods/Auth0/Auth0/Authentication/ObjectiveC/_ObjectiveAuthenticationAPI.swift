@@ -25,7 +25,11 @@ import Foundation
 @objc(A0AuthenticationAPI)
 public class _ObjectiveAuthenticationAPI: NSObject {
 
-    private let authentication: Authentication
+    private var authentication: Authentication
+
+    public override init () {
+        self.authentication = Auth0.authentication()
+    }
 
     public convenience init(clientId: String, url: NSURL) {
         self.init(clientId: clientId, url: url, session: NSURLSession.sharedSession())
@@ -35,17 +39,17 @@ public class _ObjectiveAuthenticationAPI: NSObject {
         self.authentication = Authentication(clientId: clientId, url: url, session: session)
     }
 
-    @objc(loginWithUsername:password:connection:scope:parameters:callback:)
+    @objc(loginWithUsernameOrEmail:password:connection:scope:parameters:callback:)
     public func login(username: String, password: String, connection: String, scope: String, parameters: [String: AnyObject]?, callback: (NSError?, Credentials?) -> ()) {
         self.authentication
-            .login(username, password: password, connection: connection, scope: scope, parameters: parameters ?? [:])
+            .login(usernameOrEmail: username, password: password, connection: connection, scope: scope, parameters: parameters ?? [:])
             .start(handleResult(callback))
     }
 
     @objc(createUserWithEmail:username:password:connection:userMetadata:callback:)
     public func createUser(email: String, username: String?, password: String, connection: String, userMetadata: [String: AnyObject]?, callback: (NSError?, [String: AnyObject]?) -> ()) {
         self.authentication
-            .createUser(email, username: username, password: password, connection: connection, userMetadata: userMetadata)
+            .createUser(email: email, username: username, password: password, connection: connection, userMetadata: userMetadata)
             .start { result in
                 switch result {
                 case .Success(let user):
@@ -57,8 +61,10 @@ public class _ObjectiveAuthenticationAPI: NSObject {
                         info["username"] = username
                     }
                     callback(nil, info)
+                case .Failure(let cause as FoundationErrorConvertible):
+                    callback(cause.newFoundationError(), nil)
                 case .Failure(let cause):
-                    callback(cause.foundationError, nil)
+                    callback(cause as NSError, nil)
                 }
             }
     }
@@ -66,14 +72,14 @@ public class _ObjectiveAuthenticationAPI: NSObject {
     @objc(resetPasswordWithEmail:connection:callback:)
     public func resetPassword(email: String, connection: String, callback: NSError? -> ()) {
         self.authentication
-            .resetPassword(email, connection: connection)
+            .resetPassword(email: email, connection: connection)
             .start(handleResult(callback))
     }
 
     @objc(signUpWithEmail:username:password:connection:userMetadata:scope:parameters:callback:)
     public func signUp(email: String, username: String?, password: String, connection: String, userMetadata: [String: AnyObject]?, scope: String, parameters: [String: AnyObject]?, callback: (NSError?, Credentials?) -> ()) {
         self.authentication
-            .signUp(email, username: username, password: password, connection: connection, userMetadata: userMetadata, scope: scope, parameters: parameters ?? [:])
+            .signUp(email: email, username: username, password: password, connection: connection, userMetadata: userMetadata, scope: scope, parameters: parameters ?? [:])
             .start(handleResult(callback))
     }
 
@@ -106,40 +112,55 @@ public class _ObjectiveAuthenticationAPI: NSObject {
     }
 
     @objc(tokenInfoFromToken:callback:)
-    public func tokenInfo(token: String, callback: (NSError?, UserProfile?) -> ()) {
-        self.authentication.tokenInfo(token).start(handleResult(callback))
+    public func tokenInfo(token: String, callback: (NSError?, Profile?) -> ()) {
+        self.authentication.tokenInfo(token: token).start(handleResult(callback))
     }
 
     @objc(userInfoWithToken:callback:)
-    public func userInfo(token: String, callback: (NSError?, UserProfile?) -> ()) {
-        self.authentication.userInfo(token).start(handleResult(callback))
+    public func userInfo(token: String, callback: (NSError?, Profile?) -> ()) {
+        self.authentication.userInfo(token: token).start(handleResult(callback))
     }
 
     @objc(loginSocialWithToken:connection:scope:parameters:callback:)
     public func loginSocial(token: String, connection: String, scope: String, parameters: [String: AnyObject]?, callback: (NSError?, Credentials?) -> ()) {
 
         self.authentication
-            .loginSocial(token, connection: connection, scope: scope, parameters: parameters ?? [:])
+            .loginSocial(token: token, connection: connection, scope: scope, parameters: parameters ?? [:])
             .start(handleResult(callback))
     }
 
+    /**
+     Avoid Auth0.swift sending its version on every request to Auth0 API.
+     By default we collect our libraries and SDKs versions to help us during support and evaluate usage.
+
+     - parameter enabled: if Auth0.swift should send it's version on every request.
+     */
+    public func setTelemetryEnabled(enabled: Bool) {
+        self.authentication.enableTelemetry(enabled: enabled)
+    }
 }
 
-private func handleResult<T>(callback: (NSError?, T?) -> ()) -> Result<T, Authentication.Error> -> () {
+private func handleResult<T>(callback: (NSError?, T?) -> ()) -> Result<T> -> () {
     return { result in
         switch result {
         case .Success(let payload):
             callback(nil, payload)
+        case .Failure(let cause as FoundationErrorConvertible):
+            callback(cause.newFoundationError(), nil)
         case .Failure(let cause):
-            callback(cause.foundationError, nil)
+            callback(cause as NSError, nil)
         }
     }
 }
 
-private func handleResult(callback: (NSError?) -> ()) -> Result<Void, Authentication.Error> -> () {
+private func handleResult(callback: (NSError?) -> ()) -> Result<Void> -> () {
     return { result in
+        if case .Failure(let cause as FoundationErrorConvertible) = result {
+            callback(cause.newFoundationError())
+            return
+        }
         if case .Failure(let cause) = result {
-            callback(cause.foundationError)
+            callback(cause as NSError)
             return
         }
         callback(nil)
