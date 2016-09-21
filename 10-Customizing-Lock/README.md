@@ -12,20 +12,46 @@ You'll find this snippet in the `AppDelegate.swift` file:
 
 ```swift
 private func customizeLockTheme() {
+    // Instantiate a theme
     let theme = A0Theme()
-    theme.registerImageWithName("badge", bundle: NSBundle.mainBundle(), forKey: A0ThemeIconImageName)
-    theme.registerColor(.yellowColor(), forKey: A0ThemeTitleTextColor)
-    theme.registerFont(.boldSystemFontOfSize(14), forKey: A0ThemeTitleFont)
+    
+    // 1. Change the logo:
+    theme.registerImageWithName("custom-logo", bundle: NSBundle.mainBundle(), forKey: A0ThemeIconImageName)
+    
+    // 2. Customize the 'Login' text appearance:
+    theme.registerColor(.whiteColor(), forKey: A0ThemeTitleTextColor)
+    theme.registerFont(.systemFontOfSize(24, weight: UIFontWeightThin), forKey: A0ThemeTitleFont)
+    
+    // 3. Customize the 'OR' text appearance:
     theme.registerColor(.whiteColor(), forKey: A0ThemeSeparatorTextColor)
-    theme.registerColor(.yellowColor(), forKey: A0ThemeTextFieldIconColor)
-    theme.registerColor(.whiteColor(), forKey: A0ThemeTextFieldPlaceholderTextColor)
-    theme.registerColor(.yellowColor(), forKey: A0ThemeTextFieldTextColor)
-    theme.registerColor(.blackColor(), forKey: A0ThemePrimaryButtonNormalColor)
-    theme.registerColor(.yellowColor(), forKey: A0ThemePrimaryButtonHighlightedColor)
-    theme.registerFont(.boldSystemFontOfSize(20), forKey: A0ThemePrimaryButtonFont)
-    theme.registerColor(.redColor(), forKey: A0ThemeSecondaryButtonBackgroundColor)
+    theme.registerFont(.systemFontOfSize(12, weight: UIFontWeightSemibold), forKey: A0ThemeSeparatorTextFont)
+    
+    // 4. Customize the text fields:
+    theme.registerColor(.lightVioletColor(), forKey: A0ThemeTextFieldIconColor)
+    theme.registerColor(.lightVioletColor(), forKey: A0ThemeTextFieldPlaceholderTextColor)
+    theme.registerColor(.whiteColor(), forKey: A0ThemeTextFieldTextColor)
+    theme.registerFont(.systemFontOfSize(14, weight: UIFontWeightRegular), forKey: A0ThemeTextFieldFont)
+    
+    // 5. Customize the primary button (ACCESS):
+    theme.registerColor(.whiteColor(), forKey: A0ThemePrimaryButtonNormalColor)
+    theme.registerColor(.lightVioletColor(), forKey: A0ThemePrimaryButtonHighlightedColor)
+    theme.registerColor(.darkVioletColor(), forKey: A0ThemePrimaryButtonTextColor)
+    theme.registerFont(.systemFontOfSize(20, weight: UIFontWeightBold), forKey: A0ThemePrimaryButtonFont)
+    
+    // 6. Configure the secondary buttons (sign up / reset password):
+    theme.registerColor(.lightVioletColor(), forKey: A0ThemeSecondaryButtonBackgroundColor)
     theme.registerColor(.whiteColor(), forKey: A0ThemeSecondaryButtonTextColor)
-    theme.registerColor(.orangeColor(), forKey: A0ThemeScreenBackgroundColor)
+    
+    // 7. Add a background image:
+    theme.registerImageWithName("custom-background", bundle: NSBundle.mainBundle(), forKey: A0ThemeScreenBackgroundImageName)
+    
+    // 8. Configure the X button:
+    theme.registerColor(.lightVioletColor(), forKey: A0ThemeCloseButtonTintColor)
+    
+    // 9. Configure the status bar:
+    theme.statusBarStyle = .LightContent
+    
+    // Don't forget to register your theme!
     A0Theme.sharedInstance().registerTheme(theme)
 }
 ```
