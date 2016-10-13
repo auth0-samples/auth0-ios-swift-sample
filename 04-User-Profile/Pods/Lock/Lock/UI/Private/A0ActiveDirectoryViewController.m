@@ -59,8 +59,6 @@
 
 @implementation A0ActiveDirectoryViewController
 
-AUTH0_DYNAMIC_LOGGER_METHODS
-
 - (void)viewDidLoad {
     [super viewDidLoad];
 
@@ -78,7 +76,7 @@ AUTH0_DYNAMIC_LOGGER_METHODS
     self.loginView.identifier = _identifier;
 
     self.validator = [[A0CredentialsValidator alloc] initWithValidators:@[
-                                                                          [[A0UsernameValidator alloc] initWithField:self.loginView.identifierField.textField],
+                                                                          [A0UsernameValidator nonEmtpyValidatorForField:self.loginView.identifierField.textField],
                                                                           [[A0PasswordValidator alloc] initWithField:self.loginView.passwordField.textField],
                                                                           ]];
 }

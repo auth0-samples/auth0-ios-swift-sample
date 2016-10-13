@@ -31,6 +31,7 @@ FOUNDATION_EXPORT NSString * const A0UsernameValidatorIdentifier;
  */
 @interface A0UsernameValidator : NSObject<A0FieldValidator>
 
-- (instancetype)initWithField:(UITextField *)field;
++ (instancetype)nonEmtpyValidatorForField:(UITextField *)field;
++ (instancetype)databaseValidatorForField:(UITextField *)field withMinimum:(NSInteger)minimum andMaximum:(NSInteger)maximum;
 
 @end

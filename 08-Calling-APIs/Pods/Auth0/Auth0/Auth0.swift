@@ -36,7 +36,7 @@ import Foundation
  - returns: Auth0 Authentication API
  */
 public func authentication(clientId clientId: String, domain: String, session: NSURLSession = .sharedSession()) -> Authentication {
-    return Authentication(clientId: clientId, url: .a0_url(domain), session: session)
+    return Auth0Authentication(clientId: clientId, url: .a0_url(domain), session: session)
 }
 
 /**
@@ -70,59 +70,6 @@ public func authentication(clientId clientId: String, domain: String, session: N
 public func authentication(session session: NSURLSession = .sharedSession(), bundle: NSBundle = NSBundle.mainBundle()) -> Authentication {
     let values = plistValues(bundle: bundle)!
     return authentication(clientId: values.clientId, domain: values.domain, session: session)
-}
-
-/**
- Auth0 Management API v2 to perform CRUD operation against your Users, Clients, Connections, etc.
-
- ```
- Auth0.management(token: token)
- ```
-
- Auth0 domain is loaded from the file `Auth0.plist` in your main bundle with the following content:
-
- ```
- <?xml version="1.0" encoding="UTF-8"?>
- <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
- <plist version="1.0">
- <dict>
-	<key>ClientId</key>
-	<string>{YOUR_CLIENT_ID}</string>
-	<key>Domain</key>
-	<string>{YOUR_DOMAIN}</string>
- </dict>
- </plist>
- ```
-
- - parameter token:     token of Management API v2 with the correct allowed scopes to perform the desired action
- - parameter session:   instance of NSURLSession used for networking. By default it will use the shared NSURLSession
- - parameter bundle:    bundle used to locate the `Auth0.plist` file. By default is the main bundle
-
- - returns: Auth0 Management API v2
- - important: Auth0.swift has yet to implement all endpoints. Now you can only perform some CRUD operations against Users
- - important: Calling this method without a valid `Auth0.plist` will crash your application
- */
-public func management(token token: String, session: NSURLSession = .sharedSession(), bundle: NSBundle = NSBundle.mainBundle()) -> Management {
-    let values = plistValues(bundle: bundle)!
-    return management(token: token, domain: values.domain, session: session)
-}
-
-/**
- Auth0 Management API v2 to perform CRUD operation against your Users, Clients, Connections, etc.
- 
- ```
- Auth0.management(token: token, domain: "samples.auth0.com")
- ```
-
- - parameter token:     token of Management API v2 with the correct allowed scopes to perform the desired action
- - parameter domain:    domain of your Auth0 account. e.g.: 'samples.auth0.com'
- - parameter session:   instance of NSURLSession used for networking. By default it will use the shared NSURLSession
-
- - returns: Auth0 Management API v2
- - important: Auth0.swift has yet to implement all endpoints. Now you can only perform some CRUD operations against Users
- */
-public func management(token token: String, domain: String, session: NSURLSession = .sharedSession()) -> Management {
-    return Management(token: token, url: .a0_url(domain), session: session)
 }
 
 /**
@@ -187,38 +134,7 @@ public func users(token token: String, session: NSURLSession = .sharedSession(),
  - returns: Auth0 Management API v2
  */
 public func users(token token: String, domain: String, session: NSURLSession = .sharedSession()) -> Users {
-    return management(token: token, domain: domain, session: session).users()
-}
-
-/**
- Turn on/off Auth0.swift debug logging of HTTP requests and OAuth2 flow (iOS only).
-
- - parameter enabled: optional flag to turn on/off logging
- - note: By default all logging is **disabled**
- - important: Logging should be turned on/off **before** making request to Auth0 for the flag to take effect.
- */
-public func enableLogging(enabled enabled: Bool = true) {
-    Auth0Logger.sharedInstance.logger = enabled ? DefaultLogger() : nil
-}
-
-/**
- Avoid Auth0.swift sending its version on every request to Auth0 API.
- By default we collect our libraries and SDKs versions to help us during support and evaluate usage.
-
- - parameter enabled: if Auth0.swift should send it's version on every request.
- */
-public func enableTelemetry(enabled enabled: Bool) {
-    Telemetry.sharedInstance.enabled = enabled
-}
-
-/**
- Send the library/framework, that has Auth0.swift as dependency, when sending telemetry information
-
- - parameter name:    name of library or framework that uses Auth0.swift
- - parameter version: version of library or framework
- */
-public func using(inLibrary name: String, version: String) {
-    Telemetry.sharedInstance.wrapped(inLibrary: name, version: version)
+    return Management(token: token, url: .a0_url(domain), session: session)
 }
 
 func plistValues(bundle bundle: NSBundle) -> (clientId: String, domain: String)? {

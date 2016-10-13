@@ -1,12 +1,22 @@
 PODS:
-  - Auth0 (1.0.0-rc.2)
+  - Auth0 (1.0.0)
 
 DEPENDENCIES:
-  - Auth0 (~> 1.0.0-rc.2)
+  - Auth0 (from `https://github.com/auth0/Auth0.swift`, branch `v1@swift-2.3`)
+
+EXTERNAL SOURCES:
+  Auth0:
+    :branch: v1@swift-2.3
+    :git: https://github.com/auth0/Auth0.swift
+
+CHECKOUT OPTIONS:
+  Auth0:
+    :commit: aa01ec7951df639c77f09ed560f928dd00120b45
+    :git: https://github.com/auth0/Auth0.swift
 
 SPEC CHECKSUMS:
-  Auth0: 655808e77e0fb11475ebf9a0c477cb7735de738d
+  Auth0: 3ff1a10fe8f6a323b171de883a8b9f08d29529b2
 
-PODFILE CHECKSUM: f559632a2431d9842b052cf4a2f1ea03e9957609
+PODFILE CHECKSUM: b3e0a38ecb6223caf349aaa4a604d3cf6eeaad87
 
-COCOAPODS: 1.0.1
+COCOAPODS: 1.1.0.rc.3

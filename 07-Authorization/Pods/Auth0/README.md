@@ -6,12 +6,13 @@
 [![License](https://img.shields.io/cocoapods/l/Auth0.svg?style=flat-square)](http://cocoadocs.org/docsets/Auth0)
 [![Platform](https://img.shields.io/cocoapods/p/Auth0.svg?style=flat-square)](http://cocoadocs.org/docsets/Auth0)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat-square)](https://github.com/Carthage/Carthage)
+![Swift 2.3](https://img.shields.io/badge/Swift-2.3-orange.svg?style=flat-square)
 
 Swift toolkit for Auth0 API
 
 ## Requirements
 
-iOS 9+ and Xcode 7.3 (Swift 2.2)
+iOS 9+ and Xcode 8 (Swift 2.3)
 
 ## Installation
 
@@ -21,7 +22,7 @@ Auth0.swift is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod "Auth0", '1.0.0-beta.3'
+pod "Auth0", :git => 'https://github.com/auth0/Auth0.swift.git', :branch => 'v1@swift-2.3'
 ```
 
 ###Carthage
@@ -29,7 +30,7 @@ pod "Auth0", '1.0.0-beta.3'
 In your Cartfile add this line
 
 ```
-github "auth0/Auth0.swift" "1.0.0-beta.3"
+github "auth0/Auth0.swift" "v1@swift-2.3"
 ```
 
 ## Usage
@@ -268,10 +269,11 @@ Auth0
 
 ### Logging
 
-To enable Auth0.swift to log HTTP request and OAuth2 flow for debugging just add the following:
+To enable Auth0.swift to log HTTP request and OAuth2 flow for debugging you can call the following method in either `WebAuth`, `Authentication` or `Users` object:
 
 ```swift
-Auth0.enableLogging()
+var auth0 = Auth0.authentication()
+auth0.logging(emnabled: true)
 ```
 
 Then for a OAuth2 authentication you'll see in the console:

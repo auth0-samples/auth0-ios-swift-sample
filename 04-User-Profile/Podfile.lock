@@ -14,49 +14,45 @@ PODS:
   - AFNetworking/Serialization (3.1.0)
   - AFNetworking/UIKit (3.1.0):
     - AFNetworking/NSURLSession
-  - Auth0 (1.0.0-beta.5)
-  - CocoaLumberjack (2.3.0):
-    - CocoaLumberjack/Default (= 2.3.0)
-    - CocoaLumberjack/Extensions (= 2.3.0)
-  - CocoaLumberjack/Core (2.3.0)
-  - CocoaLumberjack/Default (2.3.0):
-    - CocoaLumberjack/Core
-  - CocoaLumberjack/Extensions (2.3.0):
-    - CocoaLumberjack/Default
-  - Lock (1.26.0):
-    - CocoaLumberjack (~> 2.0)
-    - Lock/Core (= 1.26.0)
-    - Lock/UI (= 1.26.0)
-    - Lock/WebView (= 1.26.0)
-  - Lock/Core (1.26.0):
+  - Auth0 (1.0.0)
+  - Lock (1.27.1):
+    - Lock/Core (= 1.27.1)
+    - Lock/UI (= 1.27.1)
+    - Lock/WebView (= 1.27.1)
+  - Lock/Core (1.27.1):
     - AFNetworking (~> 3.0)
-    - CocoaLumberjack (~> 2.0)
-  - Lock/CoreUI (1.26.0):
-    - CocoaLumberjack (~> 2.0)
+  - Lock/CoreUI (1.27.1):
     - Lock/Core
     - Masonry (~> 0.6)
-  - Lock/UI (1.26.0):
-    - CocoaLumberjack (~> 2.0)
+  - Lock/UI (1.27.1):
     - Lock/CoreUI
-  - Lock/WebView (1.26.0):
-    - CocoaLumberjack (~> 2.0)
+  - Lock/WebView (1.27.1):
     - Lock/CoreUI
   - Masonry (0.6.4)
   - SimpleKeychain (0.7.0)
 
 DEPENDENCIES:
-  - Auth0 (= 1.0.0-beta.5)
-  - Lock (~> 1.24)
+  - Auth0 (from `https://github.com/auth0/Auth0.swift`, branch `v1@swift-2.3`)
+  - Lock (~> 1.27)
   - SimpleKeychain (~> 0.7)
+
+EXTERNAL SOURCES:
+  Auth0:
+    :branch: v1@swift-2.3
+    :git: https://github.com/auth0/Auth0.swift
+
+CHECKOUT OPTIONS:
+  Auth0:
+    :commit: aa01ec7951df639c77f09ed560f928dd00120b45
+    :git: https://github.com/auth0/Auth0.swift
 
 SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
-  Auth0: a80a4b800beb1a105b893b3da584f0226dc00be4
-  CocoaLumberjack: 97fab7ee5f507fe54445cca7ea80f926729cfd15
-  Lock: d863c3aebe57d2e8f3e5f40c9c5ba695ec2f1162
+  Auth0: 3ff1a10fe8f6a323b171de883a8b9f08d29529b2
+  Lock: c8709bb9d798eb2824accd78170140faab1a3fc2
   Masonry: 281802d04d787ea2973179ee8bcb50500579ede2
   SimpleKeychain: b50cef3b87939d480ea1143425c00f5b4b70fe21
 
-PODFILE CHECKSUM: 7d5637359a4704c0298227777ce2aeb266ecd853
+PODFILE CHECKSUM: fff4afcee7ef5817eb3556ec45c927d658ff361b
 
-COCOAPODS: 1.0.1
+COCOAPODS: 1.1.0.rc.3

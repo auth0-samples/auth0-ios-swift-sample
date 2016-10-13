@@ -18,6 +18,7 @@
 		51E4B6BC1D0B4819000D9038 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 51E4B6BA1D0B4819000D9038 /* LaunchScreen.storyboard */; };
 		51F8D09F1D1DB16B00BA17B9 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8D09E1D1DB16B00BA17B9 /* Session.swift */; };
 		51F8D0A11D1DC3D800BA17B9 /* AlertController+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8D0A01D1DC3D800BA17B9 /* AlertController+Convenience.swift */; };
+		5F699A0B1DAFDA25007D51F3 /* Auth0.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5F699A0A1DAFDA25007D51F3 /* Auth0.plist */; };
 		6FA1B012A0668D971193969C /* Pods_Auth0Sample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BAC8CFB451C87AB3504325BD /* Pods_Auth0Sample.framework */; };
 /* End PBXBuildFile section */
 
@@ -36,6 +37,7 @@
 		51E4B6BD1D0B4819000D9038 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		51F8D09E1D1DB16B00BA17B9 /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		51F8D0A01D1DC3D800BA17B9 /* AlertController+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AlertController+Convenience.swift"; sourceTree = "<group>"; };
+		5F699A0A1DAFDA25007D51F3 /* Auth0.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Auth0.plist; sourceTree = "<group>"; };
 		BAC8CFB451C87AB3504325BD /* Pods_Auth0Sample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Auth0Sample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7398703DB6BD061FFA7316A /* Pods-Auth0Sample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Auth0Sample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Auth0Sample/Pods-Auth0Sample.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -73,6 +75,7 @@
 		51E4B6B01D0B4819000D9038 /* Auth0Sample */ = {
 			isa = PBXGroup;
 			children = (
+				5F699A0A1DAFDA25007D51F3 /* Auth0.plist */,
 				51E4B6B11D0B4819000D9038 /* AppDelegate.swift */,
 				51A8A0B71D0B4C07000E53CC /* HomeViewController.swift */,
 				51A8A0B91D0B4C0C000E53CC /* ProfileViewController.swift */,
@@ -141,6 +144,7 @@
 				TargetAttributes = {
 					51E4B6AD1D0B4819000D9038 = {
 						CreatedOnToolsVersion = 7.3;
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -167,6 +171,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5F699A0B1DAFDA25007D51F3 /* Auth0.plist in Resources */,
 				51E4B6BC1D0B4819000D9038 /* LaunchScreen.storyboard in Resources */,
 				51E4B6B91D0B4819000D9038 /* Assets.xcassets in Resources */,
 				51E4B6B71D0B4819000D9038 /* Main.storyboard in Resources */,
@@ -219,7 +224,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -356,6 +361,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = auth0.samples.Auth0Sample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Debug;
 		};
@@ -369,6 +375,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = auth0.samples.Auth0Sample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Release;
 		};

@@ -73,8 +73,6 @@
 
 @implementation A0LockViewController
 
-AUTH0_DYNAMIC_LOGGER_METHODS
-
 - (instancetype)initWithLock:(A0Lock *)lock {
     self = [super init];
     if (self) {
@@ -265,6 +263,7 @@ AUTH0_DYNAMIC_LOGGER_METHODS
 - (A0SocialLoginViewController *)newSocialLoginViewController:(void(^)(A0UserProfile *, A0Token *))success {
     A0SocialLoginViewController *controller = [[A0SocialLoginViewController alloc] init];
     controller.onLoginBlock = success;
+    controller.lock = self.lock;
     [self.navigationView removeAll];
     return controller;
 }
@@ -295,6 +294,7 @@ AUTH0_DYNAMIC_LOGGER_METHODS
         A0EnterpriseLoginViewController *controller = [weakSelf newEnterpriseLoginViewController:success forConnection:connection withEmail:email];
         [weakSelf displayController:controller];
     };
+    controller.lock = self.lock;
     [self.navigationView removeAll];
     BOOL showResetPassword = ![self.configuration shouldDisableResetPassword:self.disableResetPassword];
     BOOL showSignUp = ![self.configuration shouldDisableSignUp:self.disableSignUp];
@@ -318,6 +318,7 @@ AUTH0_DYNAMIC_LOGGER_METHODS
     controller.defaultConnection = connection;
     controller.identifier = self.identifier;
     controller.parameters = [self copyAuthenticationParameters];
+    controller.lock = self.lock;
     [self.navigationView removeAll];
     return controller;
 }
@@ -339,6 +340,7 @@ AUTH0_DYNAMIC_LOGGER_METHODS
         A0LogDebug(@"Required to ask MFA for user with identifier %@ and connection %@", identifier, connectionName);
         A0MFACodeViewController *controller = [[A0MFACodeViewController alloc] initWithIdentifier:identifier password:password connectionName:connectionName];
         controller.onLoginBlock = success;
+        controller.lock = weakSelf.lock;
         controller.parameters = [weakSelf copyAuthenticationParameters];
         [weakSelf.navigationView removeAll];
         [weakSelf.navigationView addButtonWithLocalizedTitle:A0LocalizedString(@"CANCEL") actionBlock:^{
@@ -392,6 +394,7 @@ AUTH0_DYNAMIC_LOGGER_METHODS
         A0LogDebug(@"Required to ask MFA for user with identifier %@ and connection %@", identifier, connectionName);
         A0MFACodeViewController *controller = [[A0MFACodeViewController alloc] initWithIdentifier:identifier password:password connectionName:connectionName];
         controller.onLoginBlock = success;
+        controller.lock = weakSelf.lock;
         controller.parameters = [weakSelf copyAuthenticationParameters];
         [weakSelf.navigationView removeAll];
         [weakSelf.navigationView addButtonWithLocalizedTitle:A0LocalizedString(@"CANCEL") actionBlock:^{
