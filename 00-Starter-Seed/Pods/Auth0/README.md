@@ -6,13 +6,15 @@
 [![License](https://img.shields.io/cocoapods/l/Auth0.svg?style=flat-square)](http://cocoadocs.org/docsets/Auth0)
 [![Platform](https://img.shields.io/cocoapods/p/Auth0.svg?style=flat-square)](http://cocoadocs.org/docsets/Auth0)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat-square)](https://github.com/Carthage/Carthage)
-![Swift 2.3](https://img.shields.io/badge/Swift-2.3-orange.svg?style=flat-square)
+![Swift 3.0](https://img.shields.io/badge/Swift-3.0-orange.svg?style=flat-square)
 
 Swift toolkit for Auth0 API
 
 ## Requirements
 
-iOS 9+ and Xcode 8 (Swift 2.3)
+iOS 9+ and Xcode 8 (Swift 3.0)
+
+> For Swift 2.3 you need to use [v1@swift-2.3](https://github.com/auth0/Auth0.swift/tree/v1@swift-2.3) branch
 
 ## Installation
 
@@ -22,7 +24,7 @@ Auth0.swift is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod "Auth0", :git => 'https://github.com/auth0/Auth0.swift.git', :branch => 'v1@swift-2.3'
+pod "Auth0", '1.0.0'
 ```
 
 ###Carthage
@@ -30,7 +32,7 @@ pod "Auth0", :git => 'https://github.com/auth0/Auth0.swift.git', :branch => 'v1@
 In your Cartfile add this line
 
 ```
-github "auth0/Auth0.swift" "v1@swift-2.3"
+github "auth0/Auth0.swift" "1.0.0"
 ```
 
 ## Usage
@@ -68,9 +70,9 @@ Auth0
        )
    .start { result in
        switch result {
-       case .Success(let credentials):
+       case .success(let credentials):
            print("access_token: \(credentials.accessToken)")
-       case .Failure(let error):
+       case .failure(let error):
            print(error)
        }
    }
@@ -84,9 +86,9 @@ Auth0
    .startPasswordless(email: "support@auth0.com", connection: "email")
    .start { result in
        switch result {
-       case .Success:
+       case .success:
            print("Sent OTP to support@auth0.com!")
-       case .Failure(let error):
+       case .failure(let error):
            print(error)
        }
    }
@@ -103,9 +105,9 @@ Auth0
        )
    .start { result in
        switch result {
-       case .Success(let credentials):
+       case .success(let credentials):
            print("access_token: \(credentials.accessToken)")
-       case .Failure(let error):
+       case .failure(let error):
            print(error)
        }
    }
@@ -124,9 +126,9 @@ Auth0
        )
    .start { result in
        switch result {
-       case .Success(let credentials):
+       case .success(let credentials):
            print("access_token: \(credentials.accessToken)")
-       case .Failure(let error):
+       case .failure(let error):
            print(error)
        }
    }
@@ -141,9 +143,9 @@ Auth0
    .tokenInfo(token: "user id_token")
    .start { result in
        switch result {
-       case .Success(let profile):
+       case .success(let profile):
            print("profile email: \(profile.email)")
-       case .Failure(let error):
+       case .failure(let error):
            print(error)
        }
    }
@@ -159,9 +161,9 @@ Auth0
     .patch("user identifier", userMetadata: ["first_name": "John", "last_name": "Doe"])
     .start { result in
         switch result {
-        case .Success(let userInfo):
+        case .success(let userInfo):
             print("user: \(userInfo)")
-        case .Failure(let error):
+        case .failure(let error):
             print(error)
         }
     }
@@ -175,9 +177,9 @@ Auth0
    .link(userId, withOtherUserToken: "another user token")
    .start { result in
       switch result {
-      case .Success(let userInfo):
+      case .success(let userInfo):
          print("user: \(userInfo)")
-      case .Failure(let error):
+      case .failure(let error):
          print(error)
       }
    }
@@ -214,8 +216,8 @@ In your application's `Info.plist` file register your iOS Bundle Identifier as a
 and add the following method in your application's `AppDelegate`
 
 ```swift
-func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
-    return Auth0.resumeAuth(url, options: options)
+func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+    return Auth0.resumeAuth(url, options:options)
 }
 ```
 
@@ -227,9 +229,9 @@ Auth0
     .connection("facebook")
     .start { result in
         switch result {
-        case .Success(let credentials):
+        case .success(let credentials):
             print("credentials: \(credentials)")
-        case .Failure(let error):
+        case .failure(let error):
             print(error)
         }
     }
@@ -244,9 +246,9 @@ Auth0
     .connection("google-oauth2")
     .start { result in
         switch result {
-        case .Success(let credentials):
+        case .success(let credentials):
             print("credentials: \(credentials)")
-        case .Failure(let error):
+        case .failure(let error):
             print(error)
         }
     }
@@ -259,9 +261,9 @@ Auth0
     .webAuth()
     .start { result in
         switch result {
-        case .Success(let credentials):
+        case .success(let credentials):
             print("credentials: \(credentials)")
-        case .Failure(let error):
+        case .failure(let error):
             print(error)
         }
     }
@@ -273,7 +275,7 @@ To enable Auth0.swift to log HTTP request and OAuth2 flow for debugging you can 
 
 ```swift
 var auth0 = Auth0.authentication()
-auth0.logging(emnabled: true)
+auth0.logging(enabled: true)
 ```
 
 Then for a OAuth2 authentication you'll see in the console:

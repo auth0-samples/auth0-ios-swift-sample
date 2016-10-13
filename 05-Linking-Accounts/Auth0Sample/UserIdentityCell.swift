@@ -38,7 +38,7 @@ class UserIdentityCell: UITableViewCell {
                 "\"userId\": \"\(identity.userId)\"\n"
                     + "\"connection\": \"\(identity.connection)\"\n"
                     + "\"provider\": \"\(identity.provider)\"\n"
-                    + "\"isSocial\": \"\(identity.social)\""
+                    + "\"isSocial\": \"\(identity.isSocial)\""
         }
     }
     

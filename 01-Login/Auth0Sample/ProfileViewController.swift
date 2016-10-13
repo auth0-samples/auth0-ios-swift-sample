@@ -36,9 +36,9 @@ class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.welcomeLabel.text = "Welcome, \(self.profile.name)"
-        NSURLSession.sharedSession().dataTaskWithURL(self.profile.picture, completionHandler: { data, response, error in
-            dispatch_async(dispatch_get_main_queue()) {
-                guard let data = data where error == nil else { return }
+        URLSession.shared.dataTask(with: self.profile.picture, completionHandler: { data, response, error in
+            DispatchQueue.main.async {
+                guard let data = data , error == nil else { return }
                 self.avatarImageView.image = UIImage(data: data)
             }
         }).resume()

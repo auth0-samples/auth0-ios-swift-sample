@@ -39,23 +39,23 @@ class ProfileViewController: UIViewController {
         self.profile = SessionManager().storedProfile
         self.welcomeLabel.text = "Welcome, \(self.profile.name)"
         self.retrieveDataFromURL(self.profile.picture) { data, response, error in
-            dispatch_async(dispatch_get_main_queue()) {
-                guard let data = data where error == nil else { return }
+            DispatchQueue.main.async {
+                guard let data = data , error == nil else { return }
                 self.avatarImageView.image = UIImage(data: data)
             }
         }
         self.countryLabel.text = (self.profile.extraInfo["country"] as? String) ?? "<Country not detected>"
     }
     
-    @IBAction func logout(sender: UIBarButtonItem) {
+    @IBAction func logout(_ sender: UIBarButtonItem) {
         SessionManager().logout()
-        self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+        self.presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
     // MARK: - Private
     
-    private func retrieveDataFromURL(url: NSURL, completion: ((data: NSData?, response: NSURLResponse?, error: NSError? ) -> Void)) {
-        NSURLSession.sharedSession().dataTaskWithURL(url, completionHandler: completion).resume()
+    fileprivate func retrieveDataFromURL(_ url: URL, completion: @escaping ((_ data: Data?, _ response: URLResponse?, _ error: NSError? ) -> Void)) {
+        URLSession.shared.dataTask(with: url, completionHandler: completion as! (Data?, URLResponse?, Error?) -> Void).resume()
     }
         
 }

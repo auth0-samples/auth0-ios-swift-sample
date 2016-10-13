@@ -45,7 +45,7 @@ public struct Telemetry {
         self.info = Telemetry.generateValue()
     }
 
-    mutating func wrapped(in name: String, version: String) {
+    mutating func wrapped(inLibrary name: String, version: String) {
         let info = Telemetry.versionInformation()
         let wrapped = [
             Telemetry.NameKey: name,
@@ -55,7 +55,7 @@ public struct Telemetry {
         self.info = Telemetry.generateValue(fromInfo: wrapped)
     }
 
-    func addTelemetryHeader(request request: NSMutableURLRequest) {
+    func addTelemetryHeader(request: NSMutableURLRequest) {
         if let value = self.value {
             request.setValue(value, forHTTPHeaderField: "Auth0-Client")
         } else {
@@ -63,25 +63,26 @@ public struct Telemetry {
         }
     }
 
-    func queryItemsWithTelemetry(queryItems queryItems: [NSURLQueryItem]) -> [NSURLQueryItem] {
+    func queryItemsWithTelemetry(queryItems: [URLQueryItem]) -> [URLQueryItem] {
         var items = queryItems
         if let value = self.value {
-            items.append(NSURLQueryItem(name: "auth0Client", value: value))
+            items.append(URLQueryItem(name: "auth0Client", value: value))
         }
         return items
     }
 
-    static func versionInformation(bundle bundle: NSBundle = NSBundle(forClass: Credentials.classForCoder())) -> [String: String] {
+    static func versionInformation(bundle: Bundle = Bundle(for: Credentials.classForCoder())) -> [String: String] {
+        let version = bundle.infoDictionary?["CFBundleShortVersionString"] as? String ?? Telemetry.NoVersion
         let dict = [
             Telemetry.NameKey: Telemetry.LibraryName,
-            Telemetry.VersionKey: "1.0.0-rc.3",
-            "swift_version": "2.3",
+            Telemetry.VersionKey: version,
+            "swift-version": "3.0"
             ]
         return dict
     }
 
     static func generateValue(fromInfo info: [String: String] = Telemetry.versionInformation()) -> String? {
-        let data = try? NSJSONSerialization.dataWithJSONObject(info, options: [])
+        let data = try? JSONSerialization.data(withJSONObject: info, options: [])
         return data?.a0_encodeBase64URLSafe()
     }
 }
@@ -100,7 +101,7 @@ extension Trackable {
 
      - parameter enabled: if Auth0.swift should send it's version on every request.
      */
-    public mutating func tracking(enabled enabled: Bool) {
+    public mutating func tracking(enabled: Bool) {
         self.telemetry.enabled = enabled
     }
 
@@ -110,7 +111,7 @@ extension Trackable {
      - parameter name:    name of library or framework that uses Auth0.swift
      - parameter version: version of library or framework
      */
-    public mutating func using(in name: String, version: String) {
-        self.telemetry.wrapped(in: name, version: version)
+    public mutating func using(inLibrary name: String, version: String) {
+        self.telemetry.wrapped(inLibrary: name, version: version)
     }
 }

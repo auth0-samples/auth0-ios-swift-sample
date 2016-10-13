@@ -31,18 +31,8 @@ PODS:
   - Masonry (0.6.4)
 
 DEPENDENCIES:
-  - Auth0 (from `https://github.com/auth0/Auth0.swift`, branch `v1@swift-2.3`)
+  - Auth0 (~> 1.0)
   - Lock (~> 1.27)
-
-EXTERNAL SOURCES:
-  Auth0:
-    :branch: v1@swift-2.3
-    :git: https://github.com/auth0/Auth0.swift
-
-CHECKOUT OPTIONS:
-  Auth0:
-    :commit: aa01ec7951df639c77f09ed560f928dd00120b45
-    :git: https://github.com/auth0/Auth0.swift
 
 SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
@@ -50,6 +40,6 @@ SPEC CHECKSUMS:
   Lock: c8709bb9d798eb2824accd78170140faab1a3fc2
   Masonry: 281802d04d787ea2973179ee8bcb50500579ede2
 
-PODFILE CHECKSUM: 0b753e08bdfda875d04af60380202b279aeffcd2
+PODFILE CHECKSUM: 7dac0c31c9f10b085a5c0da8383dff8962074cf4
 
 COCOAPODS: 1.1.0.rc.3

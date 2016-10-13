@@ -26,35 +26,30 @@ import UIKit
 extension UIAlertController {
     
     static func loadingAlert() -> UIAlertController {
-        return self.alertWithTitle("Loading", message: "Please, wait...")
+        return self.alert(title: "Loading", message: "Please, wait...")
     }
     
-    static func alertWithTitle(title: String? = nil, message: String? = nil, includeDoneButton: Bool = false) -> UIAlertController {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+    static func alert(title: String? = nil, message: String? = nil, includeDoneButton: Bool = false) -> UIAlertController {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         if includeDoneButton {
-            alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         }
         return alert
     }
     
-    func presentInViewController(viewController: UIViewController, dismissAfter possibleDelay: NSTimeInterval? = nil, completion: (() -> ())? = nil) {
-        viewController.presentViewController(self, animated: false, completion: nil)
+    func presentInViewController(viewController: UIViewController, dismissAfter possibleDelay: TimeInterval? = nil, completion: (() -> ())? = nil) {
+        viewController.present(self, animated: false, completion: nil)
         guard let delay = possibleDelay else {
             return
         }
-        dispatch_after(
-            dispatch_time(
-                DISPATCH_TIME_NOW,
-                Int64(delay * Double(NSEC_PER_SEC))
-            ),
-            dispatch_get_main_queue()) {
-                self.dismiss(completion)
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+            self.dismiss(completion: completion)
         }
     }
     
     func dismiss(completion: (()->())? = nil) {
-        dispatch_async(dispatch_get_main_queue()) {
-            self.dismissViewControllerAnimated(false, completion: completion)
+        DispatchQueue.main.async {
+            self.dismiss(animated: false, completion: completion)
         }
     }
 

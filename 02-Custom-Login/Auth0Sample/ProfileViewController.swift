@@ -43,40 +43,40 @@ class ProfileViewController: UIViewController {
     
     // MARK: - Private
     
-    private func retrieveProfile() {
+    fileprivate func retrieveProfile() {
         guard let idToken = loginCredentials.idToken else {
             self.showErrorRetrievingProfileAlert()
-            self.navigationController?.popViewControllerAnimated(true)
+            let _ = self.navigationController?.popViewController(animated: true)
             return
         }
         Auth0
             .authentication()
             .tokenInfo(token: idToken)
             .start { result in
-                dispatch_async(dispatch_get_main_queue()) {
+                DispatchQueue.main.async {
                     switch result {
-                    case .Success(let profile):
+                    case .success(let profile):
                         
                         self.welcomeLabel.text = "Welcome, \(profile.name)"
                         self.retrieveDataFromURL(profile.pictureURL) { data, response, error in
-                            dispatch_async(dispatch_get_main_queue()) {
-                                guard let data = data where error == nil else { return }
+                            DispatchQueue.main.async {
+                                guard let data = data , error == nil else { return }
                                 self.avatarImageView.image = UIImage(data: data)
                             }
                         }
-                        self.userMetadataTextView.text = String(profile.userMetadata)
-                    case .Failure(let error):
+                        self.userMetadataTextView.text = profile.userMetadata.description
+                    case .failure(let error):
                         self.showAlertForError(error)
                     }
                 }
         }
     }
     
-    private func retrieveDataFromURL(url:NSURL, completion: ((data: NSData?, response: NSURLResponse?, error: NSError? ) -> Void)) {
-        NSURLSession.sharedSession().dataTaskWithURL(url, completionHandler: completion).resume()
+    fileprivate func retrieveDataFromURL(_ url:URL, completion: @escaping ((_ data: Data?, _ response: URLResponse?, _ error: NSError? ) -> Void)) {
+        URLSession.shared.dataTask(with: url, completionHandler: completion as! (Data?, URLResponse?, Error?) -> Void).resume()
     }
     
-    private func showErrorRetrievingProfileAlert() {
+    fileprivate func showErrorRetrievingProfileAlert() {
         print("Error retrieving profile")
     }
 

@@ -28,28 +28,28 @@ class HomeViewController: UIViewController {
     
     // MARK: - IBAction
     
-    @IBAction func showLoginController(sender: UIButton) {
-        let controller = A0Lock.sharedLock().newLockViewController()
-        controller.closable = true
-        controller.onAuthenticationBlock = { profile, token in
+    @IBAction func showLoginController(_ sender: UIButton) {
+        let controller = A0Lock.shared().newLockViewController()
+        controller?.closable = true
+        controller?.onAuthenticationBlock = { profile, token in
             guard let userProfile = profile else {
                 self.showMissingProfileAlert()
                 return
             }
             self.retrievedProfile = userProfile
-            controller.dismissViewControllerAnimated(true, completion: nil)
-            self.performSegueWithIdentifier("ShowProfile", sender: nil)
+            controller?.dismiss(animated: true, completion: nil)
+            self.performSegue(withIdentifier: "ShowProfile", sender: nil)
         }
-        controller.onUserDismissBlock = {
+        controller?.onUserDismissBlock = {
             //The user dismisses the Login screen
         }
-        A0Lock.sharedLock().presentLockController(controller, fromController: self)
+        A0Lock.shared().present(controller, from: self)
     }
     
     // MARK: - Segue
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        guard let profileController = segue.destinationViewController as? ProfileViewController else {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let profileController = segue.destination as? ProfileViewController else {
             return
         }
         profileController.profile = self.retrievedProfile
@@ -57,12 +57,12 @@ class HomeViewController: UIViewController {
     
     // MARK: - Private
     
-    private var retrievedProfile: A0UserProfile!
+    fileprivate var retrievedProfile: A0UserProfile!
     
-    private func showMissingProfileAlert() {
-        let alert = UIAlertController(title: "Error", message: "Could not retrieve profile", preferredStyle: .Alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-        self.presentViewController(alert, animated: true, completion: nil)
+    fileprivate func showMissingProfileAlert() {
+        let alert = UIAlertController(title: "Error", message: "Could not retrieve profile", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
     
 }

@@ -48,45 +48,45 @@ class SignUpViewController: UIViewController {
         self.textFields.forEach { $0.setPlaceholderTextColor(.lightVioletColor()) }
     }
     
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return .LightContent
+    override var preferredStatusBarStyle : UIStatusBarStyle {
+        return .lightContent
     }
     
     // MARK: - IBAction
     
-    @IBAction func register(sender: UIButton) {
+    @IBAction func register(_ sender: UIButton) {
         self.performRegister()
     }
     
-    @IBAction func registerWithFacebook(sender: UIButton) {
+    @IBAction func registerWithFacebook(_ sender: UIButton) {
         self.performFacebookSignUp()
     }
     
-    @IBAction func registerWithTwitter(sender: UIButton) {
+    @IBAction func registerWithTwitter(_ sender: UIButton) {
         self.performTwitterSignUp()
     }
     
-    @IBAction func textFieldEditingChanged(sender: UITextField) {
+    @IBAction func textFieldEditingChanged(_ sender: UITextField) {
         self.validateForm()
     }
 
     // MARK: - Private
     
-    private var loading: Bool = false {
+    fileprivate var loading: Bool = false {
         didSet {
-            dispatch_async(dispatch_get_main_queue()) {
+            DispatchQueue.main.async {
                 if self.loading {
                     self.spinner.startAnimating()
-                    self.actionButtons.forEach { $0.enabled = false }
+                    self.actionButtons.forEach { $0.isEnabled = false }
                 } else {
                     self.spinner.stopAnimating()
-                    self.actionButtons.forEach { $0.enabled = true }
+                    self.actionButtons.forEach { $0.isEnabled = true }
                 }
             }
         }
     }
     
-    private func performRegister() {
+    fileprivate func performRegister() {
         self.view.endEditing(true)
         self.loading = true
         Auth0
@@ -99,20 +99,20 @@ class SignUpViewController: UIViewController {
                     "last_name": self.lastNameTextField.text!]
             )
             .start { result in
-                dispatch_async(dispatch_get_main_queue()) {
+                DispatchQueue.main.async {
                     self.loading = false
                     switch result {
-                    case .Success(let credentials):
+                    case .success(let credentials):
                         self.retrievedCredentials = credentials
-                        self.performSegueWithIdentifier("DismissSignUp", sender: nil)
-                    case .Failure(let error):
+                        self.performSegue(withIdentifier: "DismissSignUp", sender: nil)
+                    case .failure(let error):
                         self.showAlertForError(error)
                     }
                 }
         }
     }
     
-    private func performFacebookSignUp() {
+    fileprivate func performFacebookSignUp() {
         self.view.endEditing(true)
         self.loading = true
         Auth0
@@ -120,20 +120,20 @@ class SignUpViewController: UIViewController {
             .connection("facebook")
             .scope("openid")
             .start { result in
-                dispatch_async(dispatch_get_main_queue()) {
+                DispatchQueue.main.async {
                     self.loading = false
                     switch result {
-                    case .Success(let credentials):
+                    case .success(let credentials):
                         self.retrievedCredentials = credentials
-                        self.performSegueWithIdentifier("DismissSignUp", sender: nil)
-                    case .Failure(let error):
+                        self.performSegue(withIdentifier: "DismissSignUp", sender: nil)
+                    case .failure(let error):
                         self.showAlertForError(error)
                     }
                 }
         }
     }
     
-    private func performTwitterSignUp() {
+    fileprivate func performTwitterSignUp() {
         self.view.endEditing(true)
         self.loading = true
         Auth0
@@ -141,32 +141,32 @@ class SignUpViewController: UIViewController {
             .connection("twitter")
             .scope("openid")
             .start { result in
-                dispatch_async(dispatch_get_main_queue()) {
+                DispatchQueue.main.async {
                     self.loading = false
                     switch result {
-                    case .Success(let credentials):
+                    case .success(let credentials):
                         self.retrievedCredentials = credentials
-                        self.performSegueWithIdentifier("DismissSignUp", sender: nil)
-                    case .Failure(let error):
+                        self.performSegue(withIdentifier: "DismissSignUp", sender: nil)
+                    case .failure(let error):
                         self.showAlertForError(error)
                     }
                 }
         }
     }
     
-    private func validateForm() {
-        self.signUpButton.enabled = self.formIsValid
+    fileprivate func validateForm() {
+        self.signUpButton.isEnabled = self.formIsValid
     }
     
-    private var formIsValid: Bool {
-        return self.emailTextField.hasText() && self.passwordTextField.hasText()
+    fileprivate var formIsValid: Bool {
+        return self.emailTextField.hasText && self.passwordTextField.hasText
     }
     
 }
 
 extension SignUpViewController: UITextFieldDelegate {
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         switch textField {
         case self.emailTextField:
             self.passwordTextField.becomeFirstResponder()
