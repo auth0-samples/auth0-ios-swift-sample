@@ -37,9 +37,9 @@ class ProfileViewController: UIViewController {
         super.viewDidLoad()
         self.profile = SessionManager().storedProfile
         self.welcomeLabel.text = "Welcome, \(self.profile.name)"
-        self.retrieveDataFromURL(self.profile.picture) { data, response, error in
-            dispatch_async(dispatch_get_main_queue()) {
-                guard let data = data where error == nil else { return }
+        self.retrieveData(url: self.profile.picture) { data, response, error in
+            DispatchQueue.main.async {
+                guard error == nil, let data = data else { return }
                 self.avatarImageView.image = UIImage(data: data)
             }
         }
@@ -59,27 +59,27 @@ class ProfileViewController: UIViewController {
     
     @IBAction func logout(sender: UIBarButtonItem) {
         SessionManager().logout()
-        self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+        self.presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
     // MARK: - Private
     
-    private func retrieveDataFromURL(url: NSURL, completion: ((data: NSData?, response: NSURLResponse?, error: NSError? ) -> Void)) {
-        NSURLSession.sharedSession().dataTaskWithURL(url, completionHandler: completion).resume()
+    private func retrieveData(url: URL, completion: @escaping ((Data?, URLResponse?, Error? ) -> Void)) {
+        URLSession.shared.dataTask(with: url, completionHandler: completion).resume()
     }
     
     private func showAdminPanel() {
-        self.performSegueWithIdentifier("ShowAdminPanel", sender: nil)
+        self.performSegue(withIdentifier: "ShowAdminPanel", sender: nil)
     }
     
     private func showAccessDeniedAlert() {
-        let alert = UIAlertController.alertWithTitle("Access denied", message: "You do not have privileges to access the admin panel", includeDoneButton: true)
-        self.presentViewController(alert, animated: true, completion: nil)
+        let alert = UIAlertController.alert(title: "Access denied", message: "You do not have privileges to access the admin panel", includeDoneButton: true)
+        self.present(alert, animated: true, completion: nil)
     }
     
     private func showErrorRetrievingRolesAlert() {
-        let alert = UIAlertController.alertWithTitle("Error", message: "Could not retrieve roles from server", includeDoneButton: true)
-        self.presentViewController(alert, animated: true, completion: nil)
+        let alert = UIAlertController.alert(title: "Error", message: "Could not retrieve roles from server", includeDoneButton: true)
+        self.present(alert, animated: true, completion: nil)
     }
         
 }

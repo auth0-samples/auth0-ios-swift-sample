@@ -32,19 +32,9 @@ PODS:
   - SimpleKeychain (0.7.0)
 
 DEPENDENCIES:
-  - Auth0 (from `https://github.com/auth0/Auth0.swift`, branch `v1@swift-2.3`)
+  - Auth0 (~> 1.0)
   - Lock (~> 1.27)
   - SimpleKeychain (~> 0.7)
-
-EXTERNAL SOURCES:
-  Auth0:
-    :branch: v1@swift-2.3
-    :git: https://github.com/auth0/Auth0.swift
-
-CHECKOUT OPTIONS:
-  Auth0:
-    :commit: aa01ec7951df639c77f09ed560f928dd00120b45
-    :git: https://github.com/auth0/Auth0.swift
 
 SPEC CHECKSUMS:
   AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
@@ -53,6 +43,6 @@ SPEC CHECKSUMS:
   Masonry: 281802d04d787ea2973179ee8bcb50500579ede2
   SimpleKeychain: b50cef3b87939d480ea1143425c00f5b4b70fe21
 
-PODFILE CHECKSUM: fff4afcee7ef5817eb3556ec45c927d658ff361b
+PODFILE CHECKSUM: b1336db92ed06a911fe68220655876d02882d52f
 
 COCOAPODS: 1.1.0.rc.3

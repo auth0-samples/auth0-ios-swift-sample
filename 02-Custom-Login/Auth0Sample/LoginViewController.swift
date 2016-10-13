@@ -44,32 +44,32 @@ class LoginViewController: UIViewController {
         self.textFields.forEach { $0.setPlaceholderTextColor(.lightVioletColor()) }
     }
     
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return .LightContent
+    override var preferredStatusBarStyle : UIStatusBarStyle {
+        return .lightContent
     }
     
     // MARK: - IBAction
     
-    @IBAction func login(sender: UIButton) {
+    @IBAction func login(_ sender: UIButton) {
         self.performLogin()
     }
     
-    @IBAction func loginWithFacebook(sender: UIButton) {
+    @IBAction func loginWithFacebook(_ sender: UIButton) {
         self.performFacebookAuthentication()
     }
     
-    @IBAction func loginWithTwitter(sender: UIButton) {
+    @IBAction func loginWithTwitter(_ sender: UIButton) {
         self.performTwitterAuthentication()
     }
     
-    @IBAction func textFieldEditingChanged(sender: UITextField) {
+    @IBAction func textFieldEditingChanged(_ sender: UITextField) {
         self.validateForm()
     }
     
-    @IBAction func unwindToLogin(segue: UIStoryboardSegueWithCompletion) {
+    @IBAction func unwindToLogin(_ segue: UIStoryboardSegueWithCompletion) {
         guard let
-        controller = segue.sourceViewController as? SignUpViewController,
-        credentials = controller.retrievedCredentials
+        controller = segue.source as? SignUpViewController,
+        let credentials = controller.retrievedCredentials
         else { return  }
         segue.completion = {
             self.loginWithCredentials(credentials)
@@ -78,8 +78,8 @@ class LoginViewController: UIViewController {
     
     // MARK: - Segue
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        guard let profileViewController = segue.destinationViewController as? ProfileViewController else {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let profileViewController = segue.destination as? ProfileViewController else {
             return
         }
         profileViewController.loginCredentials = self.retrievedCredentials!
@@ -87,23 +87,23 @@ class LoginViewController: UIViewController {
     
     // MARK: - Private
     
-    private var retrievedCredentials: Credentials?
+    fileprivate var retrievedCredentials: Credentials?
     
-    private var loading: Bool = false {
+    fileprivate var loading: Bool = false {
         didSet {
-            dispatch_async(dispatch_get_main_queue()) {
+            DispatchQueue.main.async {
                 if self.loading {
                     self.spinner.startAnimating()
-                    self.actionButtons.forEach { $0.enabled = false }
+                    self.actionButtons.forEach { $0.isEnabled = false }
                 } else {
                     self.spinner.stopAnimating()
-                    self.actionButtons.forEach { $0.enabled = true }
+                    self.actionButtons.forEach { $0.isEnabled = true }
                 }
             }
         }
     }
     
-    private func performLogin() {
+    fileprivate func performLogin() {
         self.view.endEditing(true)
         self.loading = true
         Auth0
@@ -111,22 +111,25 @@ class LoginViewController: UIViewController {
             .login(
                 usernameOrEmail: self.emailTextField.text!,
                 password: self.passwordTextField.text!,
-                connection: "Username-Password-Authentication"
+                multifactorCode: nil,
+                connection: "Username-Password-Authentication",
+                scope: "openid",
+                parameters: [:]
             )
             .start { result in
-                dispatch_async(dispatch_get_main_queue()) {
+                DispatchQueue.main.async {
                     self.loading = false
                     switch result {
-                    case .Success(let credentials):
+                    case .success(let credentials):
                         self.loginWithCredentials(credentials)
-                    case .Failure(let error):
+                    case .failure(let error):
                         self.showAlertForError(error)
                     }
                 }
         }
     }
     
-    private func performFacebookAuthentication() {
+    fileprivate func performFacebookAuthentication() {
         self.view.endEditing(true)
         self.loading = true
         Auth0
@@ -134,19 +137,19 @@ class LoginViewController: UIViewController {
             .connection("facebook")
             .scope("openid")
             .start { result in
-                dispatch_async(dispatch_get_main_queue()) {
+                DispatchQueue.main.async {
                     self.spinner.stopAnimating()
                     switch result {
-                    case .Success(let credentials):
+                    case .success(let credentials):
                         self.loginWithCredentials(credentials)
-                    case .Failure(let error):
+                    case .failure(let error):
                         self.showAlertForError(error)
                     }
                 }
         }
     }
     
-    private func performTwitterAuthentication() {
+    fileprivate func performTwitterAuthentication() {
         self.view.endEditing(true)
         self.spinner.startAnimating()
         Auth0
@@ -154,36 +157,36 @@ class LoginViewController: UIViewController {
             .connection("twitter")
             .scope("openid")
             .start { result in
-                dispatch_async(dispatch_get_main_queue()) {
+                DispatchQueue.main.async {
                     self.spinner.stopAnimating()
                     switch result {
-                    case .Success(let credentials):
+                    case .success(let credentials):
                         self.loginWithCredentials(credentials)
-                    case .Failure(let error):
+                    case .failure(let error):
                         self.showAlertForError(error)
                     }
                 }
         }
     }
     
-    private func loginWithCredentials(credentials: Credentials) {
+    fileprivate func loginWithCredentials(_ credentials: Credentials) {
         self.retrievedCredentials = credentials
-        self.performSegueWithIdentifier("ShowProfile", sender: nil)
+        self.performSegue(withIdentifier: "ShowProfile", sender: nil)
     }
     
-    private func validateForm() {
-        self.loginButton.enabled = self.formIsValid
+    fileprivate func validateForm() {
+        self.loginButton.isEnabled = self.formIsValid
     }
     
-    private var formIsValid: Bool {
-        return self.emailTextField.hasText() && self.passwordTextField.hasText()
+    fileprivate var formIsValid: Bool {
+        return self.emailTextField.hasText && self.passwordTextField.hasText
     }
     
 }
 
 extension LoginViewController: UITextFieldDelegate {
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         switch textField {
         case self.emailTextField:
             self.passwordTextField.becomeFirstResponder()

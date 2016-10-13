@@ -3,6 +3,6 @@ use_frameworks!
 
 target 'Auth0Sample' do
 	pod 'Lock', '~> 1.27'
-	pod 'Auth0', :git => 'https://github.com/auth0/Auth0.swift', :branch => 'v1@swift-2.3'
+	pod 'Auth0', '~> 1.0'
 	pod 'SimpleKeychain', '~> 0.7'
 end

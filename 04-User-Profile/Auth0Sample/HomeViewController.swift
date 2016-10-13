@@ -35,33 +35,33 @@ class HomeViewController: UIViewController {
     
     // MARK: - IBAction
     
-    @IBAction func showLoginController(sender: UIButton) {
-        let controller = A0Lock.sharedLock().newLockViewController()
-        controller.closable = true
-        controller.onAuthenticationBlock = { maybeProfile, maybeToken in
-            guard let profile = maybeProfile, token = maybeToken else {
+    @IBAction func showLoginController(_ sender: UIButton) {
+        let controller = A0Lock.shared().newLockViewController()
+        controller?.closable = true
+        controller?.onAuthenticationBlock = { maybeProfile, maybeToken in
+            guard let profile = maybeProfile, let token = maybeToken else {
                 self.showMissingProfileOrTokenAlert()
                 return
             }
             SessionManager().loginWithToken(token, profile: profile)
             self.retrievedProfile = profile
-            controller.dismissViewControllerAnimated(true, completion: nil)
-            self.performSegueWithIdentifier("ShowProfileAnimated", sender: nil)
+            controller?.dismiss(animated: true, completion: nil)
+            self.performSegue(withIdentifier: "ShowProfileAnimated", sender: nil)
         }
-        A0Lock.sharedLock().presentLockController(controller, fromController: self)
+        A0Lock.shared().present(controller, from: self)
     }
     
     // MARK: - Private
     
-    private var retrievedProfile: A0UserProfile?
+    fileprivate var retrievedProfile: A0UserProfile?
     
-    private func showMissingProfileOrTokenAlert() {
-        let alert = UIAlertController(title: "Error", message: "Could not retrieve profile or token", preferredStyle: .Alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-        self.presentViewController(alert, animated: true, completion: nil)
+    fileprivate func showMissingProfileOrTokenAlert() {
+        let alert = UIAlertController(title: "Error", message: "Could not retrieve profile or token", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
     
-    private func checkExistentSession() {
+    fileprivate func checkExistentSession() {
         let loadingAlert = UIAlertController.loadingAlert()
         loadingAlert.presentInViewController(self)
         SessionManager().retrieveSession { maybeSession in
@@ -70,7 +70,7 @@ class HomeViewController: UIViewController {
                 return
             }
             self.retrievedProfile = session.profile
-            self.performSegueWithIdentifier("ShowProfileNonAnimated", sender: nil)
+            self.performSegue(withIdentifier: "ShowProfileNonAnimated", sender: nil)
         }
     }
 

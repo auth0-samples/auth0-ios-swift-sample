@@ -43,7 +43,7 @@ class FullProfileViewController: UIViewController {
 
     // MARK: - IBAction
     
-    @IBAction func save(sender: UIBarButtonItem) {
+    @IBAction func save(_ sender: UIBarButtonItem) {
         self.view.endEditing(true)
         let loadingAlert = UIAlertController.loadingAlert()
         loadingAlert.presentInViewController(self)
@@ -55,18 +55,18 @@ class FullProfileViewController: UIViewController {
                         "last_name": self.lastNameTextField.text!,
                         "country": self.countryTextField.text!])
                 .start { result in
-                    dispatch_async(dispatch_get_main_queue()) {
+                    DispatchQueue.main.async {
                         loadingAlert.dismiss()
                         switch result {
-                        case .Success(let value):
+                        case .success(let value):
                             // update the profile locally
                             let updatedProfile = A0UserProfile(dictionary: value)
                             SessionManager().saveProfile(updatedProfile)
                             self.profile = updatedProfile
                             let successAlert = UIAlertController.alertWithTitle(nil, message: "Successfully updated profile!")
                             successAlert.presentInViewController(self, dismissAfter: 1.0)
-                        case .Failure(let error):
-                            let failureAlert = UIAlertController.alertWithTitle("Error", message: String(error), includeDoneButton: true)
+                        case .failure(let error):
+                            let failureAlert = UIAlertController.alertWithTitle("Error", message: error.localizedDescription, includeDoneButton: true)
                             failureAlert.presentInViewController(self)
                         }
                     }
@@ -76,7 +76,7 @@ class FullProfileViewController: UIViewController {
     
     // MARK: - Private
     
-    private func loadTextFieldsValues() {
+    fileprivate func loadTextFieldsValues() {
         self.emailTextField.text = self.profile.email
         let metadata = self.profile.userMetadata as! [String: AnyObject]
         self.firstNameTextField.text = metadata["first_name"] as? String
@@ -87,7 +87,7 @@ class FullProfileViewController: UIViewController {
 
 extension FullProfileViewController: UITextFieldDelegate {
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         switch textField {
         case self.firstNameTextField:
             self.lastNameTextField.becomeFirstResponder()

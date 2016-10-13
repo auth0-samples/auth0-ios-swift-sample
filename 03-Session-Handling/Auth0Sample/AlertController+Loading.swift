@@ -26,15 +26,15 @@ import UIKit
 extension UIAlertController {
     
     static func loadingAlert() -> UIAlertController {
-        return UIAlertController(title: "Loading", message: "Please, wait...", preferredStyle: .Alert)
+        return UIAlertController(title: "Loading", message: "Please, wait...", preferredStyle: .alert)
     }
     
-    func presentInViewController(viewController: UIViewController) {
-        viewController.presentViewController(self, animated: true, completion: nil)
+    func presentInViewController(_ viewController: UIViewController) {
+        viewController.present(self, animated: true, completion: nil)
     }
     
     func dismiss() {
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
 
 }

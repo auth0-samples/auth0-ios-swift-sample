@@ -38,8 +38,8 @@ class ProfileViewController: UIViewController {
         self.profile = SessionManager().storedProfile
         self.welcomeLabel.text = "Welcome, \(self.profile.name)"
         self.retrieveDataFromURL(self.profile.picture) { data, response, error in
-            dispatch_async(dispatch_get_main_queue()) {
-                guard let data = data where error == nil else { return }
+            DispatchQueue.main.async {
+                guard let data = data , error == nil else { return }
                 self.avatarImageView.image = UIImage(data: data)
             }
         }
@@ -47,42 +47,42 @@ class ProfileViewController: UIViewController {
     
     // MARK: - IBAction
     
-    @IBAction func logout(sender: UIBarButtonItem) {
+    @IBAction func logout(_ sender: UIBarButtonItem) {
         SessionManager().logout()
-        self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+        self.presentingViewController?.dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func callAPIWithoutAuthentication(sender: UIButton) {
+    @IBAction func callAPIWithoutAuthentication(_ sender: UIButton) {
         self.callAPI(authenticated: false)
     }
     
-    @IBAction func callAPIWithAuthentication(sender: UIButton) {
+    @IBAction func callAPIWithAuthentication(_ sender: UIButton) {
         self.callAPI(authenticated: true)
     }
     
     // MARK: - Private
     
-    private func retrieveDataFromURL(url: NSURL, completion: ((data: NSData?, response: NSURLResponse?, error: NSError? ) -> Void)) {
-        NSURLSession.sharedSession().dataTaskWithURL(url, completionHandler: completion).resume()
+    fileprivate func retrieveDataFromURL(_ url: URL, completion: @escaping ((_ data: Data?, _ response: URLResponse?, _ error: NSError? ) -> Void)) {
+        URLSession.shared.dataTask(with: url, completionHandler: completion as! (Data?, URLResponse?, Error?) -> Void).resume()
     }
     
-    private func callAPI(authenticated shouldAuthenticate: Bool) {
-        let url = NSURL(string: "your api url")!
-        let request = NSMutableURLRequest(URL: url)
+    fileprivate func callAPI(authenticated shouldAuthenticate: Bool) {
+        let url = URL(string: "your api url")!
+        var request = URLRequest(url: url)
         // Configure your request here (method, body, etc)
         if shouldAuthenticate {
             let token = SessionManager().storedSession!.token.idToken
             request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
-        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) { data, response, error in
-            dispatch_async(dispatch_get_main_queue()) {
+        let task = URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
+            DispatchQueue.main.async {
                 let title = "Results"
-                let message = "Error: \(String(error))\n\nData: \(data == nil ? "nil" : "(there is data)")\n\nResponse: \(String(response))"
+                let message = "Error: \(error?.localizedDescription)\n\nData: \(data == nil ? "nil" : "(there is data)")\n\nResponse: \(response?.description)"
                 let alert = UIAlertController.alertWithTitle(title, message: message, includeDoneButton: true)
-                self.presentViewController(alert, animated: true, completion: nil)
+                self.present(alert, animated: true, completion: nil)
                 
             }
-        }
+        }) 
         task.resume()
     }
     

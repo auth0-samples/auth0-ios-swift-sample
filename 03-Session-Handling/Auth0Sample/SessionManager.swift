@@ -29,14 +29,14 @@ import SimpleKeychain
 /// A class that encapsulates the process of session handling
 class SessionManager {
     
-    func retrieveSession(completion: Session? -> ()) {
+    func retrieveSession(_ completion: @escaping (Session?) -> ()) {
         guard let session = self.storedSession else {
             completion(nil)
             return
         }
-        let client = A0Lock.sharedLock().apiClient()
+        let client = A0Lock.shared().apiClient()
         // Check whether the current id_token is still valid
-        client.fetchUserProfileWithIdToken(session.token.idToken,
+        client.fetchUserProfile(withIdToken: session.token.idToken,
                                            success: { profile in
                                             // id_token is still valid
                                             // We update the user profile
@@ -54,12 +54,12 @@ class SessionManager {
                     completion(nil)
                     return
                 }
-                client.fetchNewIdTokenWithRefreshToken(refreshToken,
+                client.fetchNewIdToken(withRefreshToken: refreshToken,
                     parameters: nil,
                     success: { newToken in
                         // Just got a new id_token!
                         let updatedToken = A0Token(accessToken: session.token.accessToken, idToken: newToken.idToken, tokenType: session.token.tokenType, refreshToken: session.token.refreshToken)
-                        self.keychain.setData(NSKeyedArchiver.archivedDataWithRootObject(updatedToken), forKey: "token")
+                        self.keychain.setData(NSKeyedArchiver.archivedData(withRootObject: updatedToken), forKey: "token")
                         // Gotta retrieve the updated profile.
                         self.retrieveSession(completion)
                     }, failure: { error in
@@ -73,9 +73,9 @@ class SessionManager {
         
     }
     
-    func loginWithToken(token: A0Token, profile: A0UserProfile) {
-        self.keychain.setData(NSKeyedArchiver.archivedDataWithRootObject(profile), forKey: "profile")
-        self.keychain.setData(NSKeyedArchiver.archivedDataWithRootObject(token), forKey: "token")
+    func loginWithToken(_ token: A0Token, profile: A0UserProfile) {
+        self.keychain.setData(NSKeyedArchiver.archivedData(withRootObject: profile), forKey: "profile")
+        self.keychain.setData(NSKeyedArchiver.archivedData(withRootObject: token), forKey: "token")
     }
     
     func logout() {
@@ -86,20 +86,20 @@ class SessionManager {
         return self.storedSession?.profile
     }
     
-    func saveProfile(profile: A0UserProfile) {
-        self.keychain.setData(NSKeyedArchiver.archivedDataWithRootObject(profile), forKey: "profile")
+    func saveProfile(_ profile: A0UserProfile) {
+        self.keychain.setData(NSKeyedArchiver.archivedData(withRootObject: profile), forKey: "profile")
     }
     
     // MARK: - Private
     
-    private let keychain = A0SimpleKeychain(service: "Auth0")
-    private static let TokenKey = "A0Token"
-    private var storedSession: Session? {
+    fileprivate let keychain = A0SimpleKeychain(service: "Auth0")
+    fileprivate static let TokenKey = "A0Token"
+    fileprivate var storedSession: Session? {
         guard let
-            tokenData = keychain.dataForKey("token"),
-            token = NSKeyedUnarchiver.unarchiveObjectWithData(tokenData) as? A0Token,
-            profileData = keychain.dataForKey("profile"),
-            profile = NSKeyedUnarchiver.unarchiveObjectWithData(profileData) as? A0UserProfile
+            tokenData = keychain.data(forKey: "token"),
+            let token = NSKeyedUnarchiver.unarchiveObject(with: tokenData) as? A0Token,
+            let profileData = keychain.data(forKey: "profile"),
+            let profile = NSKeyedUnarchiver.unarchiveObject(with: profileData) as? A0UserProfile
             else { return nil }
         return Session(token: token, profile: profile)
     }

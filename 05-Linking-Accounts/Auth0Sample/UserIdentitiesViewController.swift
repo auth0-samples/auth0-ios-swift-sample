@@ -36,43 +36,43 @@ class UserIdentitiesViewController: UIViewController {
         self.updateIdentities()
     }
     
-    @IBAction func switchEditingMode(sender: UIBarButtonItem) {
-        let editing = !self.tableView.editing
+    @IBAction func switchEditingMode(_ sender: UIBarButtonItem) {
+        let editing = !self.tableView.isEditing
         self.tableView.setEditing(editing, animated: true)
         sender.title = editing ? "Done" : "Edit"
-        self.addAccountBarButtonItem.enabled = editing
+        self.addAccountBarButtonItem.isEnabled = editing
     }
     
-    @IBAction func linkAnotherAccount(sender: UIBarButtonItem) {
+    @IBAction func linkAnotherAccount(_ sender: UIBarButtonItem) {
         self.showLinkAccountDialog()
     }
     
     // MARK: - Private
     
-    private var identities: [A0UserIdentity]!
+    fileprivate var identities: [A0UserIdentity]!
 
-    private func showLinkAccountDialog() {
-        let controller = A0Lock.sharedLock().newLockViewController()
-        controller.closable = true
-        controller.onAuthenticationBlock = { profile, token in
+    fileprivate func showLinkAccountDialog() {
+        let controller = A0Lock.shared().newLockViewController()
+        controller?.closable = true
+        controller?.onAuthenticationBlock = { profile, token in
             guard let idToken = token?.idToken else {
                 self.showMissingProfileOrTokenAlert()
                 return
             }
-            controller.dismissViewControllerAnimated(true) {
+            controller?.dismiss(animated: true) {
                 self.linkAccountWithIDToken(idToken)
             }
         }
-        A0Lock.sharedLock().presentLockController(controller, fromController: self)
+        A0Lock.shared().present(controller, from: self)
     }
     
-    private func showMissingProfileOrTokenAlert() {
-        let alert = UIAlertController(title: "Error", message: "Could not retrieve token", preferredStyle: .Alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-        self.presentViewController(alert, animated: true, completion: nil)
+    fileprivate func showMissingProfileOrTokenAlert() {
+        let alert = UIAlertController(title: "Error", message: "Could not retrieve token", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
     
-    private func linkAccountWithIDToken(otherUserToken: String) {
+    fileprivate func linkAccountWithIDToken(_ otherUserToken: String) {
         let loadingAlert = UIAlertController.loadingAlert()
         loadingAlert.presentInViewController(self)
         SessionManager().retrieveSession { session in
@@ -82,13 +82,13 @@ class UserIdentitiesViewController: UIViewController {
                 .start { result in
                         loadingAlert.dismiss() {
                             switch result {
-                            case .Success:
+                            case .success:
                                 let successAlert = UIAlertController.alertWithTitle(nil, message: "Successfully linked account!")
                                 successAlert.presentInViewController(self, dismissAfter: 1.0) { completion in
                                     self.updateIdentities()
                                 }
-                            case .Failure(let error):
-                                let failureAlert = UIAlertController.alertWithTitle("Error", message: String(error), includeDoneButton: true)
+                            case .failure(let error):
+                                let failureAlert = UIAlertController.alertWithTitle("Error", message: error.localizedDescription, includeDoneButton: true)
                                 failureAlert.presentInViewController(self)
                             }
                     }
@@ -96,18 +96,18 @@ class UserIdentitiesViewController: UIViewController {
         }
     }
     
-    private func updateIdentities() {
+    fileprivate func updateIdentities() {
         let loadingAlert = UIAlertController.loadingAlert()
         loadingAlert.presentInViewController(self)
         SessionManager().retrieveSession { session in
             loadingAlert.dismiss() {
                 self.identities = session!.profile.identities as! [A0UserIdentity]
-                self.tableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: .Automatic)
+                self.tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
             }
         }
     }
     
-    private func unlinkIdentity(identity: A0UserIdentity) {
+    fileprivate func unlinkIdentity(_ identity: A0UserIdentity) {
         let loadingAlert = UIAlertController.loadingAlert()
         loadingAlert.presentInViewController(self)
         SessionManager().retrieveSession { session in
@@ -117,13 +117,13 @@ class UserIdentitiesViewController: UIViewController {
                 .start { result in
                     loadingAlert.dismiss() {
                         switch result {
-                        case .Success:
+                        case .success:
                             let successAlert = UIAlertController.alertWithTitle(nil, message: "Account unlinked")
                             successAlert.presentInViewController(self, dismissAfter: 1.0) { completion in
                                 self.updateIdentities()
                             }
-                        case .Failure(let error):
-                            let failureAlert = UIAlertController.alertWithTitle("Error", message: String(error), includeDoneButton: true)
+                        case .failure(let error):
+                            let failureAlert = UIAlertController.alertWithTitle("Error", message: error.localizedDescription, includeDoneButton: true)
                             failureAlert.presentInViewController(self)
                         }
                     }
@@ -131,36 +131,36 @@ class UserIdentitiesViewController: UIViewController {
         }
     }
     
-    private func identityAtIndexPath(indexPath: NSIndexPath) -> A0UserIdentity {
+    fileprivate func identityAtIndexPath(_ indexPath: IndexPath) -> A0UserIdentity {
         return self.identities[indexPath.row]
     }
 }
 
 extension UserIdentitiesViewController: UITableViewDataSource, UITableViewDelegate {
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.identities?.count ?? 0
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("UserIdentityCell") as! UserIdentityCell
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "UserIdentityCell") as! UserIdentityCell
         cell.identity = self.identities[indexPath.row]
         return cell
     }
     
-    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return !self.userId.hasSuffix(self.identityAtIndexPath(indexPath).userId)
     }
     
-    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        guard case .Delete = editingStyle else {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        guard case .delete = editingStyle else {
             return
         }
         let identityToUnlink = self.identityAtIndexPath(indexPath)
         self.unlinkIdentity(identityToUnlink)
     }
     
-    func tableView(tableView: UITableView, titleForDeleteConfirmationButtonForRowAtIndexPath indexPath: NSIndexPath) -> String? {
+    func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
         return "Unlink"
     }
 }
