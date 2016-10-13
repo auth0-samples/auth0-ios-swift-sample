@@ -48,6 +48,7 @@
 #import "NSError+A0LockErrors.h"
 #import "Constants.h"
 #import "A0LoginView.h"
+#import "A0Connection+DatabaseValidation.h"
 #import <CoreGraphics/CoreGraphics.h>
 #import <Masonry/Masonry.h>
 
@@ -58,8 +59,6 @@
 @end
 
 @implementation A0DatabaseLoginViewController
-
-AUTH0_DYNAMIC_LOGGER_METHODS
 
 - (instancetype)init {
     if (self) {
@@ -82,22 +81,29 @@ AUTH0_DYNAMIC_LOGGER_METHODS
 
     self.loginView.identifier = _identifier;
     self.loginView.delegate = self;
+    A0UsernameValidationInfo info;
     if (self.defaultConnection) {
         self.parameters[A0ParameterConnection] = self.defaultConnection.name;
+        info = self.defaultConnection.usernameValidation;
+    } else {
+        info.min = 1;
+        info.max = 15;
     }
 
     BOOL requiresUsername = [self.defaultConnection[A0ConnectionRequiresUsername] boolValue];
     NSMutableArray *validators = [@[
                                     [[A0PasswordValidator alloc] initWithField:self.loginView.passwordField.textField],
                                     ] mutableCopy];
-    if (self.forceUsername || requiresUsername) {
-        [validators addObject:[[A0UsernameValidator alloc] initWithField:self.loginView.identifierField.textField]];
+    if (self.forceUsername) {
+        [validators addObject:[A0UsernameValidator databaseValidatorForField:self.loginView.identifierField.textField withMinimum:info.min andMaximum:info.max]];
+    } else if (requiresUsername) {
+        [validators addObject:[A0UsernameValidator nonEmtpyValidatorForField:self.loginView.identifierField.textField]];
     } else {
         [validators addObject:[[A0EmailValidator alloc] initWithField:self.loginView.identifierField.textField]];
     }
     self.validator = [[A0CredentialsValidator alloc] initWithValidators:validators];
 
-    if (requiresUsername) {
+    if (requiresUsername && !self.forceUsername) {
         self.loginView.identifierType = A0LoginIndentifierTypeUsername | A0LoginIndentifierTypeEmail;
     } else {
         self.loginView.identifierType = self.forceUsername ? A0LoginIndentifierTypeUsername : A0LoginIndentifierTypeEmail;

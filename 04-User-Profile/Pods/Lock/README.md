@@ -34,7 +34,7 @@ You'll need iOS 7 or later, if you need to use it with an older version please u
 The Lock is available through [CocoaPods](http://cocoapods.org). To install it, simply add the following line to your Podfile:
 
 ```ruby
-pod "Lock", "~> 1.26"
+pod "Lock", "~> 1.27"
 ```
 
 ## Before Getting Started
@@ -172,6 +172,12 @@ Also you can check our [Swift](https://github.com/auth0/Lock.iOS-OSX/tree/master
 
 `A0TouchIDLockViewController` authenticates without using a password with TouchID. In order to be able to authenticate the user, your application must have a Database connection enabled.
 
+Add the following line to your Podfile:
+
+```ruby
+pod "Lock/TouchID", "~> 1.27"
+```
+
 First instantiate `A0TouchIDLockViewController` and register the authentication callback that will receive the authenticated user's credentials. Finally present it to the user:
 
 ```objc
@@ -189,7 +195,7 @@ controller.onAuthenticationBlock = ^(A0UserProfile *profile, A0Token *token) {
 ```swift
 let lock = A0Lock.sharedLock()
 let controller = lock.newTouchIDViewController()
-lock.onAuthenticationBlock = {(profile, token) in
+controller.onAuthenticationBlock = {(profile, token) in
     // Do something with token & profile. e.g.: save them.
     // Lock will not save the Token and the profile for you.
     // And dismiss the UIViewController.
@@ -206,6 +212,12 @@ And you'll see TouchID login screen
 ### SMS
 
 `A0SMSLockViewController` authenticates without using a password with SMS. In order to be able to authenticate the user, your application must have the SMS connection enabled and configured in your [dashboard](https://app.auth0.com/#/connections/passwordless).
+
+Add the following line to your Podfile:
+
+```ruby
+pod "Lock/SMS", "~> 1.27"
+```
 
 First instantiate `A0SMSLockViewController` and register the authentication callback that will receive the authenticated user's credentials.
 
@@ -228,7 +240,7 @@ controller.onAuthenticationBlock = ^(A0UserProfile *profile, A0Token *token) {
 let lock = A0Lock.sharedLock()
 let controller = lock.newSMSViewController()
 controller.useMagicLink = true
-lock.onAuthenticationBlock = {(profile, token) in
+controller.onAuthenticationBlock = {(profile, token) in
     // Do something with token & profile. e.g.: save them.
     // Lock will not save the Token and the profile for you.
     // And dismiss the UIViewController.
@@ -243,6 +255,12 @@ And you'll see SMS login screen
 ### Email
 
 `A0EmailLockViewController` authenticates without using a password with Email. In order to be able to authenticate the user, your application must have the Email connection enabled and configured in your [dashboard](https://app.auth0.com/#/connections/passwordless).
+
+Add the following line to your Podfile:
+
+```ruby
+pod "Lock/Email", "~> 1.27"
+```
 
 First instantiate `A0EmailLockViewController` and register the authentication callback that will receive the authenticated user's credentials.
 
@@ -278,7 +296,7 @@ lock.presentEmailController(controller, fromController: self)
 
 A very cool thing you can do with Lock is use SSO. Imagine you want to create 2 apps. However, you want that if the user is logged in in app A, he will be already logged in in app B as well. Something similar to what happens with Messenger and Facebook as well as Foursquare and Swarm.
 
-Read [this guide](https://github.com/auth0/Lock.iOS-OSX/wiki/SSO-on-Mobile-Apps) to learn how to accomplish this with this library.
+Read [this guide](https://auth0.com/docs/libraries/lock-ios/sso-on-mobile-apps) to learn how to accomplish this with this library.
 
 ## Documentation
 You can find the full documentation for this library on that [Auth0 doc site](https://auth0.com/docs/libraries/lock-ios). Additionally, you can browse the full API on [CocoaDocs](http://cocoadocs.org/docsets/Lock).

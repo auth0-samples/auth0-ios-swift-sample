@@ -1,4 +1,6 @@
+#ifdef __OBJC__
 #import <UIKit/UIKit.h>
+#endif
 
 #import "A0SimpleKeychain+KeyPair.h"
 #import "A0SimpleKeychain.h"

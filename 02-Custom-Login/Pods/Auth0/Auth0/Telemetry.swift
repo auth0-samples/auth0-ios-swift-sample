@@ -45,7 +45,7 @@ public struct Telemetry {
         self.info = Telemetry.generateValue()
     }
 
-    mutating func wrapped(inLibrary name: String, version: String) {
+    mutating func wrapped(in name: String, version: String) {
         let info = Telemetry.versionInformation()
         let wrapped = [
             Telemetry.NameKey: name,
@@ -72,12 +72,10 @@ public struct Telemetry {
     }
 
     static func versionInformation(bundle bundle: NSBundle = NSBundle(forClass: Credentials.classForCoder())) -> [String: String] {
-        // FIXME: When stable is out uncomment this
-//        let version = bundle.infoDictionary?["CFBundleShortVersionString"] as? String ?? Telemetry.NoVersion
-        let version = "1.0.0-rc.2"
         let dict = [
             Telemetry.NameKey: Telemetry.LibraryName,
-            Telemetry.VersionKey: version,
+            Telemetry.VersionKey: "1.0.0-rc.3",
+            "swift_version": "2.3",
             ]
         return dict
     }
@@ -102,7 +100,7 @@ extension Trackable {
 
      - parameter enabled: if Auth0.swift should send it's version on every request.
      */
-    public mutating func enableTelemetry(enabled enabled: Bool) {
+    public mutating func tracking(enabled enabled: Bool) {
         self.telemetry.enabled = enabled
     }
 
@@ -112,7 +110,7 @@ extension Trackable {
      - parameter name:    name of library or framework that uses Auth0.swift
      - parameter version: version of library or framework
      */
-    public mutating func using(inLibrary name: String, version: String) {
-        self.telemetry.wrapped(inLibrary: name, version: version)
+    public mutating func using(in name: String, version: String) {
+        self.telemetry.wrapped(in: name, version: version)
     }
 }

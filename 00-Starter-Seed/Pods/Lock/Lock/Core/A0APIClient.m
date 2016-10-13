@@ -65,8 +65,6 @@ typedef void (^AFFailureBlock)(NSURLSessionDataTask *, NSError *);
 
 @implementation A0APIClient
 
-AUTH0_DYNAMIC_LOGGER_METHODS
-
 - (instancetype)initWithAPIRouter:(id<A0APIRouter>)router {
     NSAssert(router, @"You must supply a valid API Router");
     self = [super init];
@@ -199,11 +197,13 @@ AUTH0_DYNAMIC_LOGGER_METHODS
                                   failure:(A0APIClientError)failure {
     A0AuthParameters *defaultParameters = [A0AuthParameters newWithDictionary:@{
                                                                                 kEmailParamName: email,
-                                                                                kUsernameParamName: username ?: email,
                                                                                 kPasswordParamName: password,
                                                                                 kClientIdParamName: self.clientId,
                                                                                 }];
     [self addDatabaseConnectionNameToParams:defaultParameters];
+    if (username) {
+        defaultParameters[kUsernameParamName] = username;
+    }
     [defaultParameters addValuesFromParameters:parameters];
     A0LogVerbose(@"Starting Signup with username & password %@", defaultParameters);
     if (![self checkForDatabaseConnectionIn:defaultParameters failure:failure]) {

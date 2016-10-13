@@ -2,4 +2,4 @@
 #import <UIKit/UIKit.h>
 #endif
 
-#define A0CurrentLockVersion @"1.26.1"
+#define A0CurrentLockVersion @"1.27.1"

@@ -20,27 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#import <CocoaLumberjack/CocoaLumberjack.h>
+#import "A0Logger.h"
 
 #ifndef Auth0_Logging_h
 #define Auth0_Logging_h
 
-static DDLogLevel auth0LogLevel = DDLogLevelOff;
+#define A0LogError(frmt, ...)    [[A0Logger sharedLogger] error: [NSString stringWithFormat: frmt, ##__VA_ARGS__]]
+#define A0LogWarn(frmt, ...)     [[A0Logger sharedLogger] message: [NSString stringWithFormat: frmt, ##__VA_ARGS__]]
+#define A0LogInfo(frmt, ...)     [[A0Logger sharedLogger] message: [NSString stringWithFormat: frmt, ##__VA_ARGS__]]
+#define A0LogDebug(frmt, ...)    [[A0Logger sharedLogger] message: [NSString stringWithFormat: frmt, ##__VA_ARGS__]]
+#define A0LogVerbose(frmt, ...)  [[A0Logger sharedLogger] message: [NSString stringWithFormat: frmt, ##__VA_ARGS__]]
 
-#define AUTH0_LOG_CONTEXT 28840 //Auth0
-
-#define A0LogError(frmt, ...)    LOG_MAYBE(NO, auth0LogLevel, DDLogFlagError, AUTH0_LOG_CONTEXT, nil, __PRETTY_FUNCTION__, frmt, ##__VA_ARGS__)
-#define A0LogWarn(frmt, ...)     LOG_MAYBE(LOG_ASYNC_ENABLED, auth0LogLevel, DDLogFlagWarning, AUTH0_LOG_CONTEXT, nil, __PRETTY_FUNCTION__, frmt, ##__VA_ARGS__)
-#define A0LogInfo(frmt, ...)     LOG_MAYBE(LOG_ASYNC_ENABLED, auth0LogLevel, DDLogFlagInfo, AUTH0_LOG_CONTEXT, nil, __PRETTY_FUNCTION__, frmt, ##__VA_ARGS__)
-#define A0LogDebug(frmt, ...)    LOG_MAYBE(LOG_ASYNC_ENABLED, auth0LogLevel, DDLogFlagDebug, AUTH0_LOG_CONTEXT, nil, __PRETTY_FUNCTION__, frmt, ##__VA_ARGS__)
-#define A0LogVerbose(frmt, ...)  LOG_MAYBE(LOG_ASYNC_ENABLED, auth0LogLevel, DDLogFlagVerbose, AUTH0_LOG_CONTEXT, nil, __PRETTY_FUNCTION__, frmt, ##__VA_ARGS__)
-
-#define AUTH0_DYNAMIC_LOGGER_METHODS                \
-    + (DDLogLevel)ddLogLevel {                      \
-        return auth0LogLevel;                       \
-    }                                               \
-                                                    \
-    + (void)ddSetLogLevel:(DDLogLevel)logLevel {    \
-        auth0LogLevel = logLevel;                   \
-    }
 #endif

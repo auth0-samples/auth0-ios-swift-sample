@@ -13,6 +13,7 @@
 		51E4B6B71D0B4819000D9038 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 51E4B6B51D0B4819000D9038 /* Main.storyboard */; };
 		51E4B6B91D0B4819000D9038 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 51E4B6B81D0B4819000D9038 /* Assets.xcassets */; };
 		51E4B6BC1D0B4819000D9038 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 51E4B6BA1D0B4819000D9038 /* LaunchScreen.storyboard */; };
+		5F699A0F1DAFE0E2007D51F3 /* Auth0.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5F699A0E1DAFE0E2007D51F3 /* Auth0.plist */; };
 		6FA1B012A0668D971193969C /* Pods_Auth0Sample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BAC8CFB451C87AB3504325BD /* Pods_Auth0Sample.framework */; };
 /* End PBXBuildFile section */
 
@@ -26,6 +27,7 @@
 		51E4B6B81D0B4819000D9038 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		51E4B6BB1D0B4819000D9038 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		51E4B6BD1D0B4819000D9038 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5F699A0E1DAFE0E2007D51F3 /* Auth0.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Auth0.plist; sourceTree = "<group>"; };
 		BAC8CFB451C87AB3504325BD /* Pods_Auth0Sample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Auth0Sample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7398703DB6BD061FFA7316A /* Pods-Auth0Sample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Auth0Sample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Auth0Sample/Pods-Auth0Sample.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -70,6 +72,7 @@
 				51E4B6B81D0B4819000D9038 /* Assets.xcassets */,
 				51E4B6BA1D0B4819000D9038 /* LaunchScreen.storyboard */,
 				51E4B6BD1D0B4819000D9038 /* Info.plist */,
+				5F699A0E1DAFE0E2007D51F3 /* Auth0.plist */,
 			);
 			path = Auth0Sample;
 			sourceTree = "<group>";
@@ -126,6 +129,7 @@
 				TargetAttributes = {
 					51E4B6AD1D0B4819000D9038 = {
 						CreatedOnToolsVersion = 7.3;
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -155,6 +159,7 @@
 				51E4B6BC1D0B4819000D9038 /* LaunchScreen.storyboard in Resources */,
 				51E4B6B91D0B4819000D9038 /* Assets.xcassets in Resources */,
 				51E4B6B71D0B4819000D9038 /* Main.storyboard in Resources */,
+				5F699A0F1DAFE0E2007D51F3 /* Auth0.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -203,7 +208,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -336,6 +341,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = auth0.samples.Auth0Sample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Debug;
 		};
@@ -349,6 +355,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = auth0.samples.Auth0Sample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Release;
 		};

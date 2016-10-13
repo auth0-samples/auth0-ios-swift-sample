@@ -1,4 +1,6 @@
+#ifdef __OBJC__
 #import <UIKit/UIKit.h>
+#endif
 
 #import "A0APIClient.h"
 #import "A0APIClientProvider.h"
