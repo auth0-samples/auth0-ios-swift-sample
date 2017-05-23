@@ -1,0 +1,15 @@
+PODS:
+  - Auth0 (1.5.0)
+  - SimpleKeychain (0.7.0)
+
+DEPENDENCIES:
+  - Auth0 (~> 1.5)
+  - SimpleKeychain (~> 0.7)
+
+SPEC CHECKSUMS:
+  Auth0: d055a1d6666a8bbab731a4bd5e896cd0159392d4
+  SimpleKeychain: b50cef3b87939d480ea1143425c00f5b4b70fe21
+
+PODFILE CHECKSUM: c74ef0578bb7bfc4857f30f4239adc1ce7c10924
+
+COCOAPODS: 1.2.1
