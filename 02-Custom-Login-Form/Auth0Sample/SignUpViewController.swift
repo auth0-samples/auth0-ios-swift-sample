@@ -91,7 +91,7 @@ class SignUpViewController: UIViewController {
         self.loading = true
         Auth0
             .authentication()
-            .signUp(
+            .createUser(
                 email: self.emailTextField.text!,
                 password: self.passwordTextField.text!,
                 connection: "Username-Password-Authentication",
@@ -102,8 +102,8 @@ class SignUpViewController: UIViewController {
                 DispatchQueue.main.async {
                     self.loading = false
                     switch result {
-                    case .success(let credentials):
-                        self.retrievedCredentials = credentials
+                    case .success(let user):
+                        self.showAlertForSuccess("User Sign up: \(user.email)")
                         self.performSegue(withIdentifier: "DismissSignUp", sender: nil)
                     case .failure(let error):
                         self.showAlertForError(error)
