@@ -41,8 +41,10 @@ class HomeViewController: UIViewController {
     // MARK: - Private
 
     private func showLogin() {
+        guard let clientInfo = plistValues(bundle: Bundle.main) else { return }
         Auth0
             .webAuth()
+            .audience("https://" + clientInfo.domain + "/userinfo")
             .scope("openid profile")
             .start {
                 switch $0 {
@@ -57,7 +59,18 @@ class HomeViewController: UIViewController {
                             guard error == nil else {
                                 return self.showLogin()
                             }
-                            self.performSegue(withIdentifier: "ShowProfileNonAnimated", sender: nil)
+                            Auth0
+                                .users(token: idToken)
+                                .get(SessionManager.shared.profile!.sub, fields: ["user_metadata"], include: true)
+                                .start { result in
+                                    switch result {
+                                    case .success(let user):
+                                        print(user)
+                                    case .failure(let error):
+                                        print(error)
+                                    }
+                            }
+
                         }
                     }
                 }
