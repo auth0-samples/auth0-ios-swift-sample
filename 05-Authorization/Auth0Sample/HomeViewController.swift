@@ -42,8 +42,10 @@ class HomeViewController: UIViewController {
     // MARK: - Private
 
     fileprivate func showLock() {
+        guard let clientInfo = plistValues(bundle: Bundle.main) else { return }
         Auth0
             .webAuth()
+            .audience("https://" + clientInfo.domain + "/userinfo")
             .scope("openid profile")
             .start {
                 switch $0 {

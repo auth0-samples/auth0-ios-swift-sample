@@ -135,6 +135,11 @@ struct Auth0Authentication: Authentication {
         return Request(session: session, url: userInfo, method: "GET", handle: authenticationObject, headers: ["Authorization": "Bearer \(token)"], logger: self.logger, telemetry: self.telemetry)
     }
 
+    func userInfo(withAccessToken accessToken: String) -> Request<UserInfo, AuthenticationError> {
+        let userInfo = URL(string: "/userinfo", relativeTo: self.url)!
+        return Request(session: session, url: userInfo, method: "GET", handle: authenticationObject, headers: ["Authorization": "Bearer \(accessToken)"], logger: self.logger, telemetry: self.telemetry)
+    }
+
     func loginSocial(token: String, connection: String, scope: String, parameters: [String: Any]) -> Request<Credentials, AuthenticationError> {
         var payload: [String: Any] = [
             "access_token": token,
@@ -174,6 +179,15 @@ struct Auth0Authentication: Authentication {
         payload["scope"] = scope
         let oauthToken = URL(string: "/oauth/token", relativeTo: self.url)!
         return Request(session: session, url: oauthToken, method: "POST", handle: authenticationObject, payload: payload, logger: self.logger, telemetry: self.telemetry)
+    }
+
+    func revoke(refreshToken: String) -> Request<Void, AuthenticationError> {
+        let payload: [String: Any] = [
+            "token": refreshToken,
+            "client_id": self.clientId
+        ]
+        let oauthToken = URL(string: "/oauth/revoke", relativeTo: self.url)!
+        return Request(session: session, url: oauthToken, method: "POST", handle: noBody, payload: payload, logger: self.logger, telemetry: self.telemetry)
     }
 
     func delegation(withParameters parameters: [String : Any]) -> Request<[String : Any], AuthenticationError> {

@@ -29,15 +29,16 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var welcomeLabel: UILabel!
     
-    var profile: Profile!
+    var profile: UserInfo!
     
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         profile = SessionManager.shared.profile
-        self.welcomeLabel.text = "Welcome, \(self.profile.name)"
-        let task = URLSession.shared.dataTask(with: self.profile.pictureURL) { (data, response, error) in
+        self.welcomeLabel.text = "Welcome, \(self.profile.name ?? "no name")"
+        guard let pictureURL = self.profile.picture else { return }
+        let task = URLSession.shared.dataTask(with: pictureURL) { (data, response, error) in
             guard let data = data , error == nil else { return }
             DispatchQueue.main.async {
                 self.avatarImageView.image = UIImage(data: data)
@@ -57,7 +58,7 @@ class ProfileViewController: UIViewController {
         guard let controller = segue.destination as? UserIdentitiesViewController else {
             return
         }
-        controller.userId = self.profile.id
+        controller.userId = self.profile.sub
     }
     
         

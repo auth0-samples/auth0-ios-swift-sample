@@ -42,9 +42,11 @@ class HomeViewController: UIViewController {
     // MARK: - Private
 
     fileprivate func showLogin() {
+        guard let clientInfo = plistValues(bundle: Bundle.main) else { return }
         Auth0
             .webAuth()
             .scope("openid profile offline_access")
+            .audience("https://" + clientInfo.domain + "/userinfo")
             .start {
                 switch $0 {
                 case .failure(let error):

@@ -41,8 +41,10 @@ class HomeViewController: UIViewController {
     // MARK: - Private
 
     private func showLogin() {
+        guard let clientInfo = plistValues(bundle: Bundle.main) else { return }
         Auth0
             .webAuth()
+            .audience("https://" + clientInfo.domain + "/userinfo")
             .scope("openid profile")
             .start {
                 switch $0 {
@@ -59,7 +61,7 @@ class HomeViewController: UIViewController {
                             }
                             Auth0
                                 .users(token: idToken)
-                                .get(SessionManager.shared.profile!.id, fields: ["user_metadata"], include: true)
+                                .get(SessionManager.shared.profile!.sub, fields: ["user_metadata"], include: true)
                                 .start { result in
                                     switch result {
                                     case .success(let user):

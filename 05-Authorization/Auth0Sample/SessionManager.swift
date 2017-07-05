@@ -36,7 +36,7 @@ class SessionManager {
     static let shared = SessionManager()
     let keychain = A0SimpleKeychain(service: "Auth0")
 
-    var profile: Profile?
+    var profile: UserInfo?
 
     private init () { }
 
@@ -50,7 +50,7 @@ class SessionManager {
             return callback(SessionManagerError.noAccessToken)
         }
         Auth0.authentication()
-            .userInfo(token: accessToken)
+            .userInfo(withAccessToken: accessToken)
             .start { result in
                 switch(result) {
                 case .success(let profile):
@@ -66,7 +66,7 @@ class SessionManager {
         guard let idToken = self.keychain.string(forKey: "id_token") else {
             return callback(SessionManagerError.noIdToken, nil)
         }
-        guard let userId = profile?.id else {
+        guard let userId = profile?.sub else {
             return callback(SessionManagerError.noProfile, nil)
         }
         Auth0
@@ -94,4 +94,24 @@ class SessionManager {
         self.keychain.clearAll()
     }
 
+}
+
+func plistValues(bundle: Bundle) -> (clientId: String, domain: String)? {
+    guard
+        let path = bundle.path(forResource: "Auth0", ofType: "plist"),
+        let values = NSDictionary(contentsOfFile: path) as? [String: Any]
+        else {
+            print("Missing Auth0.plist file with 'ClientId' and 'Domain' entries in main bundle!")
+            return nil
+    }
+
+    guard
+        let clientId = values["ClientId"] as? String,
+        let domain = values["Domain"] as? String
+        else {
+            print("Auth0.plist file at \(path) is missing 'ClientId' and/or 'Domain' entries!")
+            print("File currently has the following entries: \(values)")
+            return nil
+    }
+    return (clientId: clientId, domain: domain)
 }

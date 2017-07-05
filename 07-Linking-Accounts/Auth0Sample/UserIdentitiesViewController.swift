@@ -51,8 +51,10 @@ class UserIdentitiesViewController: UIViewController {
     fileprivate var identities: [Identity]!
 
     fileprivate func showLinkAccountDialog() {
+        guard let clientInfo = plistValues(bundle: Bundle.main) else { return }
         Auth0
             .webAuth()
+            .audience("https://" + clientInfo.domain + "/userinfo")
             .scope("openid profile")
             .start {
                 switch $0 {
