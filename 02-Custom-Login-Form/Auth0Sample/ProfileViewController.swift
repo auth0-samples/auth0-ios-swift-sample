@@ -51,20 +51,20 @@ class ProfileViewController: UIViewController {
         }
         Auth0
             .authentication()
-            .userInfo(token: accessToken)
+            .userInfo(withAccessToken: accessToken)
             .start { result in
                 DispatchQueue.main.async {
                     switch result {
                     case .success(let profile):
-                        self.welcomeLabel.text = "Welcome, \(profile.name)"
-                        let task = URLSession.shared.dataTask(with: profile.pictureURL) { (data, response, error) in
+                        self.welcomeLabel.text = "Welcome, \(profile.name ?? "no name")"
+                        guard let pictureURL = profile.picture else { return }
+                        let task = URLSession.shared.dataTask(with: pictureURL) { (data, response, error) in
                             guard let data = data , error == nil else { return }
                             DispatchQueue.main.async {
                                 self.avatarImageView.image = UIImage(data: data)
                             }
                         }
                         task.resume()
-                        self.userMetadataTextView.text = profile.userMetadata.description
                     case .failure(let error):
                         self.showAlertForError(error)
                     }

@@ -1,11 +1,14 @@
 PODS:
-  - Auth0 (1.5.0)
+  - Auth0 (1.7.0):
+    - SimpleKeychain
+  - SimpleKeychain (0.8.0)
 
 DEPENDENCIES:
   - Auth0 (~> 1.5)
 
 SPEC CHECKSUMS:
-  Auth0: d055a1d6666a8bbab731a4bd5e896cd0159392d4
+  Auth0: 088b12e4551725f4e92a25349f1db597b7cd71c1
+  SimpleKeychain: 84c748463eec601dfee5e7990f55cc82edc5488d
 
 PODFILE CHECKSUM: 27b88870026bc7a6209c400822d759684eed73db
 
