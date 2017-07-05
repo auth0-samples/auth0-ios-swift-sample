@@ -129,8 +129,10 @@ class LoginViewController: UIViewController {
     fileprivate func performFacebookAuthentication() {
         self.view.endEditing(true)
         self.loading = true
+        guard let clientInfo = plistValues(bundle: Bundle.main) else { return }
         Auth0
             .webAuth()
+            .audience("https://" + clientInfo.domain + "/userinfo")
             .connection("facebook")
             .scope("openid")
             .start { result in
@@ -149,9 +151,11 @@ class LoginViewController: UIViewController {
     fileprivate func performTwitterAuthentication() {
         self.view.endEditing(true)
         self.spinner.startAnimating()
+        guard let clientInfo = plistValues(bundle: Bundle.main) else { return }
         Auth0
             .webAuth()
             .connection("twitter")
+            .audience("https://" + clientInfo.domain + "/userinfo")
             .scope("openid")
             .start { result in
                 DispatchQueue.main.async {
