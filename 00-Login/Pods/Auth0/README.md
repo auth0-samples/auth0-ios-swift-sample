@@ -23,7 +23,7 @@ Swift toolkit that lets you communicate efficiently with many of the [Auth0 API]
 If you are using Carthage, add the following lines to your `Cartfile`:
 
 ```ruby
-pod "Auth0", '~> 1.7'
+github "auth0/Auth0.swift" ~> 1.7
 ```
 
 Then run `carthage bootstrap`.
@@ -56,6 +56,7 @@ import Auth0
 ```swift
 Auth0
     .webAuth()
+    .audience("https://{YOUR_AUTH0_DOMAIN}/userinfo")
     .start { result in
         switch result {
         case .success(let credentials):
@@ -65,6 +66,8 @@ Auth0
         }
     }
 ```
+
+> This snippet sets the `audience` to ensure OIDC compliant responses, this can also be achieved by enabling the **OIDC Conformant** switch in your Auth0 dashboard under `Client / Settings / Advanced OAuth`. For more information please check [this documentation](https://auth0.com/docs/api-auth/intro#how-to-use-the-new-flows).
 
 3. Allow Auth0 to handle authentication callbacks. In your `AppDelegate.swift` add the following:
 ```swift
@@ -139,7 +142,7 @@ Check out the [iOS Swift QuickStart Guide](https://auth0.com/docs/quickstart/nat
 ```swift
 Auth0
    .authentication()
-   .userInfo(token: accessToken)
+   .userInfo(withAccessToken: accessToken)
    .start { result in
        switch result {
        case .success(let profile):
@@ -193,7 +196,7 @@ credentialsManager.credentials { error, credentials in
 
 ### Authentication API (iOS / macOS / tvOS)
 
-The Authentication API exposes AuthN/AuthZ functionality of Auth0, as well as the supported identity protocols like OpenID Connect, OAuth 2.0, and SAML. 
+The Authentication API exposes AuthN/AuthZ functionality of Auth0, as well as the supported identity protocols like OpenID Connect, OAuth 2.0, and SAML.
 We recommend using our Hosted Login Page but if you wish to build your own UI you can use our API endpoints to do so. However some Auth flows (Grant types) are disabled by default so you will need to enable them via your Auth0 Dashboard as explained in [this guide](https://auth0.com/docs/clients/client-grant-types#edit-available-grant_types).
 
 These are the required Grant Types that needs to be enabled in your client:
@@ -245,6 +248,22 @@ Auth0
 ```
 
 ### Management API (Users)
+
+#### Retrieve user_metadata
+
+```swift
+Auth0
+    .users(token: idToken)
+    .get("user identifier", fields: ["user_metadata"], include: true)
+    .start { result in
+        switch result {
+        case .success(let userInfo):
+            print("user: \(userInfo)")
+        case .failure(let error):
+            print(error)
+        }
+    }
+```
 
 #### Update user_metadata
 
