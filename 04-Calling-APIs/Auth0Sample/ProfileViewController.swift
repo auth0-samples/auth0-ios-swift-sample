@@ -62,7 +62,7 @@ class ProfileViewController: UIViewController {
     }
 
     private func callAPI(authenticated shouldAuthenticate: Bool) {
-        let url = URL(string: "your api url")!
+        let url = URL(string: "https://localhost/your_api")! // Your API URL
         var request = URLRequest(url: url)
         // Configure your request here (method, body, etc)
         if shouldAuthenticate {
