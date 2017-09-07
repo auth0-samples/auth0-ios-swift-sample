@@ -56,7 +56,7 @@ class ProfileViewController: UIViewController {
     @IBAction func checkUserRole(sender: UIButton) {
 
         guard
-            let roles = self.profile.customClaims?["https://access.control/roles"] as? [String],
+            let roles = SessionManager.shared.userRoles(),
             roles.contains("admin")
             else { return self.showAccessDeniedAlert() }
 

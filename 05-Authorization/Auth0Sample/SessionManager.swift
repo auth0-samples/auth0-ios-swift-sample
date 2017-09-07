@@ -24,6 +24,7 @@
 import Foundation
 import SimpleKeychain
 import Auth0
+import JWTDecode
 
 enum SessionManagerError: Error {
     case noAccessToken
@@ -60,6 +61,16 @@ class SessionManager {
                     callback(error)
                 }
         }
+    }
+
+    func userRoles() -> [String]? {
+        guard
+            let idToken = self.keychain.string(forKey: "id_token"),
+            let jwt = try? decode(jwt: idToken),
+            let roles = jwt.claim(name: "https://access.control/roles").array
+            else { return nil }
+
+        return roles
     }
 
     func logout() {
