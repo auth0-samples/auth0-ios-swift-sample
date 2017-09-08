@@ -54,16 +54,13 @@ class ProfileViewController: UIViewController {
     }
 
     @IBAction func checkUserRole(sender: UIButton) {
-        SessionManager.shared.retrieveRoles { error, role in
-            DispatchQueue.main.async {
-                guard error == nil else { return self.showErrorRetrievingRolesAlert() }
-                if role == "admin" {
-                    self.showAdminPanel()
-                } else {
-                    self.showAccessDeniedAlert()
-                }
-            }
-        }
+
+        guard
+            let roles = SessionManager.shared.userRoles(),
+            roles.contains("admin")
+            else { return self.showAccessDeniedAlert() }
+
+        self.showAdminPanel()
     }
 
     private func showAdminPanel() {

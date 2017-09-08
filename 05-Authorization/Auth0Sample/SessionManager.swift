@@ -24,6 +24,7 @@
 import Foundation
 import SimpleKeychain
 import Auth0
+import JWTDecode
 
 enum SessionManagerError: Error {
     case noAccessToken
@@ -62,32 +63,14 @@ class SessionManager {
         }
     }
 
-    func retrieveRoles(_ callback: @escaping (Error?, String?) -> ()) {
-        guard let idToken = self.keychain.string(forKey: "id_token") else {
-            return callback(SessionManagerError.noIdToken, nil)
-        }
-        guard let userId = profile?.sub else {
-            return callback(SessionManagerError.noProfile, nil)
-        }
-        Auth0
-            .users(token: idToken)
-            .get(userId, fields: [], include: true)
-            .start { result in
-                switch result {
-                case .success(let user):
-                guard
-                    let appMetadata = user["app_metadata"] as? [String: Any],
-                    let roles = appMetadata["roles"] as? [String]
-                    else {
-                        return callback(SessionManagerError.missingRoles, nil)
-                    }
-                    callback(nil, roles.first)
-                    break
-                case .failure(let error):
-                    callback(error, nil)
-                    break
-                }
-        }
+    func userRoles() -> [String]? {
+        guard
+            let idToken = self.keychain.string(forKey: "id_token"),
+            let jwt = try? decode(jwt: idToken),
+            let roles = jwt.claim(name: "https://access.control/roles").array
+            else { return nil }
+
+        return roles
     }
 
     func logout() {
