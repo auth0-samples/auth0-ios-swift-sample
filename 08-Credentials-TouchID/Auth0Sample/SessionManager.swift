@@ -33,7 +33,7 @@ class SessionManager {
 
     private init () {
         self.credentialsManager = CredentialsManager(authentication: Auth0.authentication())
-        self.credentialsManager?.enableTouchAuth(withTitle: "Touch to Authenticate")
+        self.credentialsManager.enableTouchAuth(withTitle: "Touch to Authenticate")
         // _ = self.authentication.logging(enabled: true) // API Logging
     }
 
