@@ -135,6 +135,7 @@
 				TargetAttributes = {
 					51E4B6AD1D0B4819000D9038 = {
 						CreatedOnToolsVersion = 7.3;
+						DevelopmentTeam = 2NUJ273DRF;
 						LastSwiftMigration = 0800;
 					};
 				};
@@ -357,6 +358,7 @@
 			baseConfigurationReference = 93FC4714BD1EE0D00B8D705B /* Pods-Auth0Sample.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 2NUJ273DRF;
 				INFOPLIST_FILE = Auth0Sample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -371,6 +373,7 @@
 			baseConfigurationReference = 1A97BB270D2AB3E78A76FC86 /* Pods-Auth0Sample.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 2NUJ273DRF;
 				INFOPLIST_FILE = Auth0Sample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

@@ -54,18 +54,22 @@ class SessionManager {
     }
 
     func renewAuth(_ callback: @escaping (Error?) -> ()) {
+        // Check it is possible to return credentials before asking for Touch
+        guard self.credentialsManager.hasValid() else {
+            return callback(CredentialsManagerError.noCredentials)
+        }
         self.credentialsManager.credentials { error, credentials in
             guard error == nil, let credentials = credentials else {
                 return callback(error)
             }
-            // Store credentials in KeyChain
-            _ = self.store(credentials: credentials)
+            self.credentials = credentials
             callback(nil)
         }
     }
 
     func logout() -> Bool {
         // Remove credentials from KeyChain
+        self.credentials = nil
         return self.credentialsManager.clear()
     }
 
