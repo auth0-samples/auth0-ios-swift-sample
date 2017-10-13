@@ -50,14 +50,19 @@ class HomeViewController: UIViewController {
             .start {
                 switch $0 {
                 case .failure(let error):
-                    // Handle the error
                     print("Error: \(error)")
                 case .success(let credentials):
-                    guard let accessToken = credentials.accessToken, let refreshToken = credentials.refreshToken else { return }
-                    SessionManager.shared.storeTokens(accessToken, refreshToken: refreshToken)
-                    SessionManager.shared.retrieveProfile { error in
-                        DispatchQueue.main.async {
-                            self.performSegue(withIdentifier: "ShowProfileNonAnimated", sender: nil)
+                    if(!SessionManager.shared.store(credentials: credentials)) {
+                        print("Failed to store credentials")
+                    } else {
+                        SessionManager.shared.retrieveProfile { error in
+                            DispatchQueue.main.async {
+                                guard error == nil else {
+                                    print("Failed to retrieve profile: \(String(describing: error))")
+                                    return self.showLogin()
+                                }
+                                self.performSegue(withIdentifier: "ShowProfileNonAnimated", sender: nil)
+                            }
                         }
                     }
                 }
@@ -67,13 +72,22 @@ class HomeViewController: UIViewController {
     fileprivate func checkToken() {
         let loadingAlert = UIAlertController.loadingAlert()
         loadingAlert.presentInViewController(self)
-        SessionManager.shared.retrieveProfile { error in
+        SessionManager.shared.renewAuth { error in
             DispatchQueue.main.async {
                 loadingAlert.dismiss(animated: true) {
                     guard error == nil else {
+                        print("Failed to retrieve credentials: \(String(describing: error))")
                         return self.showLogin()
                     }
-                    self.performSegue(withIdentifier: "ShowProfileNonAnimated", sender: nil)
+                    SessionManager.shared.retrieveProfile { error in
+                        DispatchQueue.main.async {
+                            guard error == nil else {
+                                print("Failed to retrieve profile: \(String(describing: error))")
+                                return self.showLogin()
+                            }
+                            self.performSegue(withIdentifier: "ShowProfileNonAnimated", sender: nil)
+                        }
+                    }
                 }
             }
         }
