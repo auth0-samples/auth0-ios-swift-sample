@@ -25,67 +25,62 @@ import Foundation
 import SimpleKeychain
 import Auth0
 
-enum SessionManagerError: Error {
-    case noAccessToken
-    case noRefreshToken
-}
-
 class SessionManager {
     static let shared = SessionManager()
-    let keychain = A0SimpleKeychain(service: "Auth0")
+    private let authentication = Auth0.authentication()
+    let credentialsManager: CredentialsManager!
     var profile: UserInfo?
+    var credentials: Credentials?
 
-    private init () { }
-
-    func storeTokens(_ accessToken: String, refreshToken: String? = nil) {
-        self.keychain.setString(accessToken, forKey: "access_token")
-        if let refreshToken = refreshToken {
-            self.keychain.setString(refreshToken, forKey: "refresh_token")
-        }
+    private init () {
+        self.credentialsManager = CredentialsManager(authentication: Auth0.authentication())
+        // _ = self.authentication.logging(enabled: true) // API Logging
     }
 
     func retrieveProfile(_ callback: @escaping (Error?) -> ()) {
-        guard let accessToken = self.keychain.string(forKey: "access_token") else {
-            return callback(SessionManagerError.noAccessToken)
-        }
-        Auth0
-            .authentication()
+        guard let accessToken = self.credentials?.accessToken
+            else { return callback(CredentialsManagerError.noCredentials) }
+        self.authentication
             .userInfo(withAccessToken: accessToken)
             .start { result in
                 switch(result) {
                 case .success(let profile):
                     self.profile = profile
                     callback(nil)
-                case .failure(_):
-                    self.refreshToken(callback)
-                }
-        }
-    }
-
-    func refreshToken(_ callback: @escaping (Error?) -> ()) {
-        guard let refreshToken = self.keychain.string(forKey: "refresh_token") else {
-            return callback(SessionManagerError.noRefreshToken)
-        }
-        Auth0
-            .authentication()
-            .renew(withRefreshToken: refreshToken, scope: "openid profile offline_access")
-            .start { result in
-                switch(result) {
-                case .success(let credentials):
-                    guard let accessToken = credentials.accessToken else { return }
-                    self.storeTokens(accessToken)
-                    self.retrieveProfile(callback)
                 case .failure(let error):
                     callback(error)
-                    self.logout()
                 }
         }
     }
 
-    func logout() {
-        self.keychain.clearAll()
+    func renewAuth(_ callback: @escaping (Error?) -> ()) {
+        // Check it is possible to return credentials before asking for Touch
+        guard self.credentialsManager.hasValid() else {
+            return callback(CredentialsManagerError.noCredentials)
+        }
+        self.credentialsManager.credentials { error, credentials in
+            guard error == nil, let credentials = credentials else {
+                return callback(error)
+            }
+            self.credentials = credentials
+            callback(nil)
+        }
     }
-    
+
+    func logout() -> Bool {
+        // Remove credentials from KeyChain
+        self.credentials = nil
+        // Clear session from browser
+        let webAuth = Auth0.webAuth()
+        webAuth.clearSession(federated: true) { _ in }
+        return self.credentialsManager.clear()
+    }
+
+    func store(credentials: Credentials) -> Bool {
+        self.credentials = credentials
+        // Store credentials in KeyChain
+        return self.credentialsManager.store(credentials: credentials)
+    }
 }
 
 func plistValues(bundle: Bundle) -> (clientId: String, domain: String)? {

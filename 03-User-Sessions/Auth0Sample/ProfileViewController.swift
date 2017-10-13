@@ -52,7 +52,7 @@ class ProfileViewController: UIViewController {
     }
 
     @IBAction func logout(_ sender: UIBarButtonItem) {
-        SessionManager.shared.logout()
+        _ = SessionManager.shared.logout()
         self.presentingViewController?.dismiss(animated: true, completion: nil)
     }
 }
