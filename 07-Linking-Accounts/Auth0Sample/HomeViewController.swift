@@ -45,7 +45,7 @@ class HomeViewController: UIViewController {
         Auth0
             .webAuth()
             .audience("https://" + clientInfo.domain + "/userinfo")
-            .scope("openid profile")
+            .scope("openid profile email")
             .start {
                 switch $0 {
                 case .failure(let error):
@@ -59,18 +59,7 @@ class HomeViewController: UIViewController {
                             guard error == nil else {
                                 return self.showLogin()
                             }
-                            Auth0
-                                .users(token: idToken)
-                                .get(SessionManager.shared.profile!.sub, fields: ["user_metadata"], include: true)
-                                .start { result in
-                                    switch result {
-                                    case .success(let user):
-                                        print(user)
-                                    case .failure(let error):
-                                        print(error)
-                                    }
-                            }
-
+                            self.performSegue(withIdentifier: "ShowProfileNonAnimated", sender: nil)
                         }
                     }
                 }

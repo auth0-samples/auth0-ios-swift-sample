@@ -55,7 +55,7 @@ class UserIdentitiesViewController: UIViewController {
         Auth0
             .webAuth()
             .audience("https://" + clientInfo.domain + "/userinfo")
-            .scope("openid profile")
+            .scope("openid profile email")
             .start {
                 switch $0 {
                 case .failure(let error):
