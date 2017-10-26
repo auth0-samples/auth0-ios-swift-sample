@@ -27,6 +27,7 @@ struct LockOptions: OptionBuildable {
     var closable: Bool = false
     var termsOfServiceURL: URL = URL(string: "https://auth0.com/terms")!
     var privacyPolicyURL: URL = URL(string: "https://auth0.com/privacy")!
+    var supportURL: URL?
     var logLevel: LoggerLevel = .off
     var loggerOutput: LoggerOutput?
     var logHttpRequest: Bool = false
@@ -47,4 +48,6 @@ struct LockOptions: OptionBuildable {
     var audience: String?
 
     var passwordlessMethod: PasswordlessMethod = .code
+    var passwordManager: OnePassword = OnePassword()
+    var allowShowPassword: Bool = true
 }

@@ -22,18 +22,21 @@
 
 import UIKit
 
-class InputField: UIView, UITextFieldDelegate {
+class InputField: UIView, Stylable {
 
     weak var containerView: UIView?
     weak var textField: UITextField?
     weak var iconView: UIImageView?
+    weak var iconContainer: UIView?
     weak var errorLabel: UILabel?
-
     weak var nextField: InputField?
 
     private weak var errorLabelTopPadding: NSLayoutConstraint?
-
+    private weak var textFieldLeftAnchor: NSLayoutConstraint?
+    private weak var textFieldRightPadding: NSLayoutConstraint?
     private(set) var state: State = .invalid(nil)
+    private weak var borderColor: UIColor?
+    private weak var borderColorError: UIColor?
 
     private lazy var debounceShowError: () -> Void = debounce(0.8, queue: DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated), action: { [weak self] in self?.needsToUpdateState() })
 
@@ -53,7 +56,12 @@ class InputField: UIView, UITextFieldDelegate {
             self.textField?.autocorrectionType = .no
             self.textField?.autocapitalizationType = .none
             self.textField?.keyboardType = type.keyboardType
-            self.iconView?.image = type.icon.image(compatibleWithTraits: self.traitCollection)
+            if let icon = type.icon {
+                self.iconView?.image = icon.image(compatibleWithTraits: self.traitCollection)
+            } else if let textField = self.textField, let container = self.containerView {
+                self.iconContainer?.removeFromSuperview()
+                textFieldLeftAnchor = constraintEqual(anchor: textField.leftAnchor, toAnchor: container.leftAnchor, constant: 16)
+            }
         }
     }
 
@@ -110,8 +118,13 @@ class InputField: UIView, UITextFieldDelegate {
     func needsToUpdateState() {
         Queue.main.async {
             self.errorLabel?.text = self.state.text
-            self.containerView?.layer.borderColor = self.state.color.cgColor
             self.errorLabelTopPadding?.constant = self.state.padding
+            switch self.state {
+                case .valid:
+                    self.containerView?.layer.borderColor = self.borderColor?.cgColor
+                case .invalid:
+                    self.containerView?.layer.borderColor = self.borderColorError?.cgColor
+            }
         }
     }
 
@@ -149,9 +162,9 @@ class InputField: UIView, UITextFieldDelegate {
         constraintEqual(anchor: iconContainer.heightAnchor, toAnchor: iconContainer.widthAnchor)
         iconContainer.translatesAutoresizingMaskIntoConstraints = false
 
-        constraintEqual(anchor: textField.leftAnchor, toAnchor: iconContainer.rightAnchor, constant: 16)
+        self.textFieldLeftAnchor = constraintEqual(anchor: textField.leftAnchor, toAnchor: iconContainer.rightAnchor, constant: 16)
         constraintEqual(anchor: textField.topAnchor, toAnchor: container.topAnchor)
-        constraintEqual(anchor: textField.rightAnchor, toAnchor: container.rightAnchor, constant: -16)
+        self.textFieldRightPadding = constraintEqual(anchor: textField.rightAnchor, toAnchor: container.rightAnchor, constant: -16)
         constraintEqual(anchor: textField.bottomAnchor, toAnchor: container.bottomAnchor)
         dimension(dimension: textField.heightAnchor, withValue: 50)
         textField.translatesAutoresizingMaskIntoConstraints = false
@@ -160,17 +173,17 @@ class InputField: UIView, UITextFieldDelegate {
         constraintEqual(anchor: iconView.centerYAnchor, toAnchor: iconContainer.centerYAnchor)
         iconView.translatesAutoresizingMaskIntoConstraints = false
 
-        iconContainer.backgroundColor = UIColor ( red: 0.9333, green: 0.9333, blue: 0.9333, alpha: 1.0 )
-        iconView.tintColor = UIColor ( red: 0.5725, green: 0.5804, blue: 0.5843, alpha: 1.0 )
+        iconContainer.backgroundColor = Style.Auth0.inputIconBackgroundColor
+        iconView.tintColor = Style.Auth0.inputIconColor
         textField.addTarget(self, action: #selector(textChanged), for: .editingChanged)
         textField.delegate = self
         textField.font = UIFont.systemFont(ofSize: 17)
-        errorLabel.textColor = .red
         errorLabel.text = nil
         errorLabel.numberOfLines = 0
 
         self.textField = textField
         self.iconView = iconView
+        self.iconContainer = iconContainer
         self.containerView = container
         self.errorLabel = errorLabel
 
@@ -180,11 +193,32 @@ class InputField: UIView, UITextFieldDelegate {
         self.containerView?.layer.borderWidth = 1
         self.type = .email
         self.errorLabel?.text = State.valid.text
-        self.containerView?.layer.borderColor = State.valid.color.cgColor
+        self.containerView?.layer.borderColor = Style.Auth0.inputBorderColor.cgColor
     }
 
     override var intrinsicContentSize: CGSize {
         return CGSize(width: 230, height: 50)
+    }
+
+    // MARK: - Password Manager
+
+    func addFieldButton(withIcon name: String, color: UIColor = .black) -> IconButton? {
+        guard let container = self.containerView, let textField = self.textField else { return nil }
+
+        let button = IconButton()
+        button.icon = LazyImage(name: name, bundle: Lock.bundle).image(compatibleWithTraits: self.traitCollection)
+        button.color = color
+        container.addSubview(button)
+
+        self.textFieldRightPadding?.isActive = false
+        constraintEqual(anchor: textField.rightAnchor, toAnchor: button.leftAnchor)
+        constraintEqual(anchor: button.leftAnchor, toAnchor: textField.rightAnchor)
+        constraintEqual(anchor: button.topAnchor, toAnchor: textField.topAnchor)
+        constraintEqual(anchor: button.bottomAnchor, toAnchor: textField.bottomAnchor)
+        constraintEqual(anchor: button.rightAnchor, toAnchor: container.rightAnchor)
+        button.translatesAutoresizingMaskIntoConstraints = false
+
+        return button
     }
 
     // MARK: - Internal
@@ -202,15 +236,6 @@ class InputField: UIView, UITextFieldDelegate {
             }
         }
 
-        var color: UIColor {
-            switch self {
-            case .valid:
-                return UIColor ( red: 0.9333, green: 0.9333, blue: 0.9333, alpha: 1.0 )
-            case .invalid:
-                return UIColor.red
-            }
-        }
-
         var padding: CGFloat {
             switch self {
             case .invalid where self.text != nil:
@@ -219,28 +244,6 @@ class InputField: UIView, UITextFieldDelegate {
                 return 0
             }
         }
-    }
-
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        self.onBeginEditing(self)
-    }
-
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        self.onEndEditing(self)
-    }
-
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        self.onReturn(self)
-        if let field = self.nextField?.textField {
-            Queue.main.async {
-                field.becomeFirstResponder()
-            }
-        } else {
-            Queue.main.async {
-                textField.resignFirstResponder()
-            }
-        }
-        return true
     }
 
     func textChanged(_ field: UITextField) {
@@ -255,7 +258,7 @@ class InputField: UIView, UITextFieldDelegate {
         case password
         case phone
         case oneTimePassword
-        case custom(name: String, placeholder: String, icon: LazyImage, keyboardType: UIKeyboardType, autocorrectionType: UITextAutocorrectionType, secure: Bool)
+        case custom(name: String, placeholder: String, icon: LazyImage?, keyboardType: UIKeyboardType, autocorrectionType: UITextAutocorrectionType, secure: Bool)
 
         var placeholder: String? {
             switch self {
@@ -287,7 +290,7 @@ class InputField: UIView, UITextFieldDelegate {
             return false
         }
 
-        var icon: LazyImage {
+        var icon: LazyImage? {
             switch self {
             case .email:
                 return lazyImage(named: "ic_mail")
@@ -334,4 +337,46 @@ class InputField: UIView, UITextFieldDelegate {
             }
         }
     }
+
+    // MARK: - Styable
+    func apply(style: Style) {
+        self.borderColor = style.inputBorderColor
+        self.borderColorError = style.inputBorderColorError
+        self.textField?.textColor = style.inputTextColor
+        self.textField?.attributedPlaceholder = NSAttributedString(string: self.textField?.placeholder ?? "",
+                                                               attributes: [NSForegroundColorAttributeName: style.inputPlaceholderTextColor])
+        self.containerView?.backgroundColor = style.inputBackgroundColor
+        self.containerView?.layer.borderColor = style.inputBorderColor.cgColor
+        self.errorLabel?.textColor = style.inputBorderColorError
+        self.iconContainer?.backgroundColor = style.inputIconBackgroundColor
+        self.iconView?.tintColor = style.inputIconColor
+    }
+}
+
+// MARK: - UITextFieldDelegate
+extension InputField: UITextFieldDelegate {
+
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        self.onBeginEditing(self)
+    }
+
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        self.onEndEditing(self)
+    }
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.onTextChange(self)
+        self.onReturn(self)
+        if let field = self.nextField?.textField {
+            Queue.main.async {
+                field.becomeFirstResponder()
+            }
+        } else {
+            Queue.main.async {
+                textField.resignFirstResponder()
+            }
+        }
+        return true
+    }
+
 }
