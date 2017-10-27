@@ -4,6 +4,8 @@
 [![Version](https://img.shields.io/cocoapods/v/Lock.svg?style=flat-square)](http://cocoadocs.org/docsets/Lock)
 [![License](https://img.shields.io/cocoapods/l/Lock.svg?style=flat-square)](http://cocoadocs.org/docsets/Lock)
 [![Platform](https://img.shields.io/cocoapods/p/Lock.svg?style=flat-square)](http://cocoadocs.org/docsets/Lock)
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat-square)](https://github.com/Carthage/Carthage)
+![Swift 3.1](https://img.shields.io/badge/Swift-3.1-orange.svg?style=flat-square)
 
 [Auth0](https://auth0.com) is an authentication broker that supports social identity providers as well as enterprise identity providers such as Active Directory, LDAP, Google Apps and Salesforce.
 
@@ -19,8 +21,8 @@ Need help migrating from v1? Please check our [Migration Guide](MIGRATION.md)
 ## Requirements
 
 - iOS 9 or later
-- Xcode 8
-- Swift 3.0
+- Xcode 8.3 / 9.0
+- Swift 3.1+
 
 ## Install
 
@@ -29,7 +31,7 @@ Need help migrating from v1? Please check our [Migration Guide](MIGRATION.md)
  Add the following line to your Podfile:
 
  ```ruby
- pod "Lock", "~> 2.2"
+ pod "Lock", "~> 2.4"
  ```
 
 ### Carthage
@@ -37,7 +39,7 @@ Need help migrating from v1? Please check our [Migration Guide](MIGRATION.md)
 In your `Cartfile` add
 
 ```ruby
-github "auth0/Lock.swift" ~> 2.2
+github "auth0/Lock.swift" ~> 2.4
 ```
 
 ## Usage
@@ -79,9 +81,21 @@ In your application bundle you can add a `plist` file named `Auth0.plist` with t
 </plist>
 ```
 
-### Classic
+## Lock Classic
 
 Lock Classic handles authentication using Database, Social & Enterprise connections.
+
+### OIDC Conformant Mode
+
+It is strongly encouraged that this SDK be used in OIDC Conformant mode. When this mode is enabled, it will force the SDK to use Auth0's current authentication pipeline and will prevent it from reaching legacy endpoints. By default this is `false`
+
+```swift
+.withOptions {
+    $0.oidcConformant = true
+}
+```
+
+For more information, please see the [OIDC adoption guide](https://auth0.com/docs/api-auth/tutorials/adoption).
 
 To show Lock, add the following snippet in your `UIViewController`
 
@@ -90,6 +104,7 @@ Lock
     .classic()
     .withOptions {
         $0.closable = false
+        $0.oidcConformant = true
     }
     .withStyle {
       $0.title = "Welcome to my App!"
@@ -179,9 +194,11 @@ Lock provides many styling options to help you apply your own brand identity to 
 }
 ```
 
-## Passwordless
+## Lock Passwordless
 
 Lock Passwordless handles authentication using Passwordless & Social Connections.
+
+> The Passwordless feature requires your client to have the *Resource Owner* Legacy Grant Type enabled. Check [this article](https://auth0.com/docs/clients/client-grant-types) for more information.
 
 To show Lock, add the following snippet in your `UIViewController`
 
@@ -209,7 +226,9 @@ Lock
     .present(from: self)
 ```
 
-Passwordless can only be used with a single connection and will prioritize the use of email connections over sms.
+**Notes:**
+- Passwordless can only be used with a single connection and will prioritize the use of email connections over sms.  
+- The `audience` option is not available in Passwordless.
 
 #### Passwordless Method
 
@@ -237,7 +256,7 @@ func application(_ application: UIApplication, continue userActivity: NSUserActi
 
 ```swift
 .withConnections {
-    $0.sms(name: "custom-sms")
+    $0.sms(name: "sms")
 }
 ```
 
@@ -245,7 +264,7 @@ func application(_ application: UIApplication, continue userActivity: NSUserActi
 
 ```swift
 .withConnections {
-    $0.email(name: "custom-email")
+    $0.email(name: "email")
 }
 ```
 
@@ -362,6 +381,57 @@ When signing up the default information requirements are the user's *email* and 
 
 *Note: You must specify the icon to use with your custom text field and store it in your App's bundle.*
 
+#### Password Manager
+
+By default password manager support using [1Password](https://1password.com/) is enabled for database connections, although you will still need to have the 1Password app installed for the option to be visible in the login and signup screens. You can disable 1Password support using the `enabled` property of the `passwordManager`.
+
+```swift
+.withOptions {
+    $0.passwordManager.enabled = false
+}
+```
+
+By default the `appIdentifier` will be set to the app's bundle identifier and the `displayName` will be set to the app's display name. You can customize these as follows:
+
+```swift
+.withOptions {
+    $0.passwordManager.appIdentifier = "www.myapp.com"
+    $0.passwordManager.displayName = "My App"
+}
+```
+
+You will need to add the following to your app's `Info.plist`:
+
+```xml
+<key>LSApplicationQueriesSchemes</key>
+<array>
+    <string>org-appextension-feature-password-management</string>
+</array>
+```
+
+> If your `Info.plist` is not shown in this format, you can **Right Click** on `Info.plist` in Xcode and then select **Open As / Source Code**.
+
+
+If you see the following debug error:
+
+```text
+canOpenURL: failed for URL: "org-appextension-feature-password-management://" - error: "This app is not allowed to query for scheme org-appextension-feature-password-management"
+```
+
+This is normal and expected behavior when there is no app that can open a custom URL. In this case when the 1Password app is not installed.  Unfortunately, the message can be a little confusing but it is coming from iOS itself.
+
+#### Show Password
+
+By default a show password icon is shown in password fields to toggle visibility of the input text. You can disable this using the `allowShowPassword` option.
+
+```swift
+.withOptions {
+    $0.allowShowPassword = false
+}
+```
+
+**Note:** Show password will not be available if the [Password Manager](#Password Manager) is available.
+
 #### Enterprise
 
 * **enterpriseConnectionUsingActiveAuth**: By default Enterprise connections will use Web Authentication. However you can specify which connections will alternatively use credential authentication and prompt for a username and password.
@@ -378,7 +448,7 @@ When signing up the default information requirements are the user's *email* and 
 
 Auth0 helps you to:
 
-* Add authentication with [multiple authentication sources](https://docs.auth0.com/identityproviders), either social like **Google, Facebook, Microsoft Account, LinkedIn, GitHub, Twitter, Box, Salesforce, amont others**, or enterprise identity systems like **Windows Azure AD, Google Apps, Active Directory, ADFS or any SAML Identity Provider**.
+* Add authentication with [multiple authentication sources](https://docs.auth0.com/identityproviders), either social like **Google, Facebook, Microsoft Account, LinkedIn, GitHub, Twitter, Box, Salesforce, amongst others**, or enterprise identity systems like **Windows Azure AD, Google Apps, Active Directory, ADFS or any SAML Identity Provider**.
 * Add support for [Custom OAuth2 Connections](https://auth0.com/docs/connections/social/oauth2).
 * Add authentication through more traditional **[username/password databases](https://docs.auth0.com/mysql-connection-tutorial)**.
 * Add support for **[linking different user accounts](https://docs.auth0.com/link-accounts)** with the same user.

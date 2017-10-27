@@ -38,6 +38,8 @@ class DatabasePresenter: Presentable, Loggable {
         }
     }
 
+    var passwordManager: PasswordManager
+
     var authPresenter: AuthPresenter?
     var enterpriseInteractor: EnterpriseDomainInteractor?
 
@@ -57,6 +59,7 @@ class DatabasePresenter: Presentable, Loggable {
         self.database = connection
         self.navigator = navigator
         self.options = options
+        self.passwordManager = options.passwordManager
     }
 
     var view: View {
@@ -85,6 +88,7 @@ class DatabasePresenter: Presentable, Loggable {
             showSignup(inView: database, username: initialUsername, email: initialEmail)
         }
         self.databaseView = database
+
         return database
     }
 
@@ -92,11 +96,10 @@ class DatabasePresenter: Presentable, Loggable {
         self.messagePresenter?.hideCurrent()
         let authCollectionView = self.authPresenter?.newViewToEmbed(withInsets: UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20), isLogin: true)
         let style = self.database.requiresUsername ? self.options.usernameStyle : [.Email]
-        view.showLogin(withIdentifierStyle: style, identifier: identifier, authCollectionView: authCollectionView)
+        view.showLogin(withIdentifierStyle: style, identifier: identifier, authCollectionView: authCollectionView, showPassswordManager: self.passwordManager.available, showPassword: self.options.allowShowPassword)
         self.currentScreen = .login
         let form = view.form
         form?.onValueChange = self.handleInput
-
         let action = { [weak form] (button: PrimaryButton) in
             self.messagePresenter?.hideCurrent()
             self.logger.info("Perform login for email: \(self.authenticator.email.verbatim())")
@@ -146,6 +149,23 @@ class DatabasePresenter: Presentable, Loggable {
         view.secondaryButton?.onPress = { button in
             self.navigator.navigate(.forgotPassword)
         }
+
+        if let identifyField = view.identityField, let passwordField = view.passwordField {
+            passwordManager.onUpdate = { [unowned self, unowned identifyField, unowned passwordField] identifier, password in
+                identifyField.text = identifier
+                passwordField.text = password
+                self.handleInput(identifyField)
+                self.handleInput(passwordField)
+            }
+        }
+        view.passwordManagerButton?.onPress = { _ in
+            self.passwordManager.login {
+                guard $0 == nil else {
+                    return self.logger.error("There was a problem with the password manager: \($0.verbatim())")
+                }
+            }
+        }
+
     }
 
     private func showSignup(inView view: DatabaseView, username: String?, email: String?) {
@@ -154,13 +174,14 @@ class DatabasePresenter: Presentable, Loggable {
         let interactor = self.authenticator as? DatabaseInteractor
         let passwordPolicyValidator = interactor?.passwordValidator as? PasswordPolicyValidator
         self.currentScreen = .signup
-
-        view.showSignUp(withUsername: self.database.requiresUsername, username: username, email: email, authCollectionView: authCollectionView, additionalFields: self.options.customSignupFields, passwordPolicyValidator: passwordPolicyValidator)
+        interactor?.user.reset()
+        view.showSignUp(withUsername: self.database.requiresUsername, username: username, email: email, authCollectionView: authCollectionView, additionalFields: self.options.customSignupFields, passwordPolicyValidator: passwordPolicyValidator, showPassswordManager: self.passwordManager.available, showPassword: self.options.allowShowPassword)
         let form = view.form
         view.form?.onValueChange = self.handleInput
-        let action = { [weak form] (button: PrimaryButton) in
+        let action = { [weak form, weak view] (button: PrimaryButton) in
             self.messagePresenter?.hideCurrent()
-            self.logger.info("perform sign up for email \(self.creator.email.verbatim())")
+            self.logger.info("Perform sign up for email \(self.creator.email.verbatim())")
+            view?.allFields?.forEach { self.handleInput($0) }
             let interactor = self.creator
             button.inProgress = true
             interactor.create { createError, loginError in
@@ -170,6 +191,7 @@ class DatabasePresenter: Presentable, Loggable {
                         if !self.options.loginAfterSignup {
                             let message = "Thanks for signing up.".i18n(key: "com.auth0.lock.database.signup.success.message", comment: "User signed up")
                             if let databaseView = self.databaseView, self.options.allow.contains(.Login) {
+                                self.databaseView?.switcher?.selected = .login
                                 self.showLogin(inView: databaseView, identifier: self.creator.identifier)
                             }
                             if self.options.allow.contains(.Login) || !self.options.autoClose {
@@ -186,7 +208,6 @@ class DatabasePresenter: Presentable, Loggable {
                     form?.needsToUpdateState()
                     self.messagePresenter?.showError(error)
                     self.logger.error("Failed with error \(error)")
-
                 }
             }
         }
@@ -200,11 +221,30 @@ class DatabasePresenter: Presentable, Loggable {
         view.secondaryButton?.color = UIColor ( red: 0.9333, green: 0.9333, blue: 0.9333, alpha: 1.0 )
         view.secondaryButton?.onPress = { button in
             let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+            alert.popoverPresentationController?.sourceView = button
+            alert.popoverPresentationController?.sourceRect = button.bounds
             let cancel = UIAlertAction(title: "Cancel".i18n(key: "com.auth0.lock.database.tos.sheet.cancel", comment: "Cancel"), style: .cancel, handler: nil)
             let tos = UIAlertAction(title: "Terms of Service".i18n(key: "com.auth0.lock.database.tos.sheet.title", comment: "ToS"), style: .default, handler: safariBuilder(forURL: self.options.termsOfServiceURL as URL, navigator: self.navigator))
             let privacy = UIAlertAction(title: "Privacy Policy".i18n(key: "com.auth0.lock.database.tos.sheet.privacy", comment: "Privacy"), style: .default, handler: safariBuilder(forURL: self.options.privacyPolicyURL as URL, navigator: self.navigator))
             [cancel, tos, privacy].forEach { alert.addAction($0) }
             self.navigator.present(alert)
+        }
+
+        if let identifyField = view.identityField, let passwordField = view.passwordField {
+            passwordManager.onUpdate = { [unowned self, unowned identifyField, unowned passwordField] identifier, password in
+                identifyField.text = identifier
+                passwordField.text = password
+                self.handleInput(identifyField)
+                self.handleInput(passwordField)
+            }
+        }
+
+        view.passwordManagerButton?.onPress = { _ in
+            self.passwordManager.store(withPolicy: passwordPolicyValidator?.policy.onePasswordRules(), identifier: self.creator.identifier) {
+                guard $0 == nil else {
+                    return self.logger.error("There was a problem with the password manager: \($0.verbatim())")
+                }
+            }
         }
     }
 
@@ -237,16 +277,14 @@ class DatabasePresenter: Presentable, Loggable {
             try self.authenticator.update(attribute, value: input.text)
             input.showValid()
 
-            guard
-                    let mode = self.databaseView?.switcher?.selected,
-                    mode == .login && updateHRD
-                    else { return }
-            try? self.enterpriseInteractor?.updateEmail(input.text)
-            if let connection = self.enterpriseInteractor?.connection {
-                self.logger.verbose("Enterprise connection detected: \(connection)")
-                if self.databaseView?.ssoBar == nil { self.databaseView?.presentEnterprise() }
-            } else {
-                self.databaseView?.removeEnterprise()
+            if self.currentScreen == .login && updateHRD {
+                try? self.enterpriseInteractor?.updateEmail(input.text)
+                if let connection = self.enterpriseInteractor?.connection {
+                    self.logger.verbose("Enterprise connection detected: \(connection)")
+                    if self.databaseView?.ssoBar == nil { self.databaseView?.presentEnterprise() }
+                } else {
+                    self.databaseView?.removeEnterprise()
+                }
             }
         } catch let error as InputValidationError {
             input.showError(error.localizedMessage(withConnection: self.database))

@@ -6,15 +6,15 @@
 [![License](https://img.shields.io/cocoapods/l/Auth0.svg?style=flat-square)](http://cocoadocs.org/docsets/Auth0)
 [![Platform](https://img.shields.io/cocoapods/p/Auth0.svg?style=flat-square)](http://cocoadocs.org/docsets/Auth0)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat-square)](https://github.com/Carthage/Carthage)
-![Swift 3.0](https://img.shields.io/badge/Swift-3.0-orange.svg?style=flat-square)
+![Swift 3.2](https://img.shields.io/badge/Swift-3.2-orange.svg?style=flat-square)
 
 Swift toolkit that lets you communicate efficiently with many of the [Auth0 API](https://auth0.com/docs/api/info) functions and enables you to seamlessly integrate the Auth0 login.
 
 ## Requirements
 
 - iOS 9 or later
-- Xcode 8
-- Swift 3.0
+- Xcode 8.3 / 9.0
+- Swift 3.2
 
 ## Installation
 
@@ -23,7 +23,7 @@ Swift toolkit that lets you communicate efficiently with many of the [Auth0 API]
 If you are using Carthage, add the following lines to your `Cartfile`:
 
 ```ruby
-pod "Auth0", '~> 1.7'
+github "auth0/Auth0.swift" ~> 1.9
 ```
 
 Then run `carthage bootstrap`.
@@ -36,12 +36,17 @@ If you are using [Cocoapods](https://cocoapods.org/), add these lines to your `P
 
 ```ruby
 use_frameworks!
-pod 'Auth0', '~> 1.7'
+pod 'Auth0', '~> 1.9'
 ```
 
-Then, run `pod install`.
+Then run `pod install`.
 
 > For further reference on Cocoapods, check [their official documentation](http://guides.cocoapods.org/using/getting-started.html).
+
+> ### Upgrade Notes
+> If you are using the [clearSession](https://github.com/auth0/Auth0.swift/blob/master/Auth0/WebAuth.swift#L235) method in iOS 11+. You will need to ensure that the **Callback URL** has been added to the **Allowed Logout URLs** section of your client in the [Auth0 Dashboard](https://manage.auth0.com/#/clients/).
+
+
 
 ## Getting started
 
@@ -56,6 +61,7 @@ import Auth0
 ```swift
 Auth0
     .webAuth()
+    .audience("https://{YOUR_AUTH0_DOMAIN}/userinfo")
     .start { result in
         switch result {
         case .success(let credentials):
@@ -65,6 +71,8 @@ Auth0
         }
     }
 ```
+
+> This snippet sets the `audience` to ensure OIDC compliant responses, this can also be achieved by enabling the **OIDC Conformant** switch in your Auth0 dashboard under `Client / Settings / Advanced OAuth`. For more information please check [this documentation](https://auth0.com/docs/api-auth/intro#how-to-use-the-new-flows).
 
 3. Allow Auth0 to handle authentication callbacks. In your `AppDelegate.swift` add the following:
 ```swift
@@ -120,10 +128,18 @@ In your application's `Info.plist` file, register your iOS Bundle Identifer as a
 </array>
 ```
 
-Finally, go to your [Auth0 Dashboard](${manage_url}/#/applications/${account.clientId}/settings) and make sure that **Allowed Callback URLs** contains the following:
+> If your `Info.plist` is not shown in this format, you can **Right Click** on `Info.plist` in Xcode and then select **Open As / Source Code**.
+
+Finally, go to your [Auth0 Dashboard](${manage_url}/#/applications/${account.clientId}/settings) and make sure that **Allowed Callback URLs** contains the following entry:
 
 ```text
-{YOUR_BUNDLE_IDENTIFIER}://${YOUR_DOMAIN}/ios/{YOUR_BUNDLE_IDENTIFIER}/callback
+{YOUR_BUNDLE_IDENTIFIER}://${YOUR_AUTH0_DOMAIN}/ios/{YOUR_BUNDLE_IDENTIFIER}/callback
+```
+
+e.g. If your bundle identifier was `com.company.myapp` and your domain was `company.auth0.com` then this value would be
+
+```text
+com.company.myapp://company.auth0.com/ios/com.company.myapp/callback
 ```
 
 ## Next Steps
@@ -139,7 +155,7 @@ Check out the [iOS Swift QuickStart Guide](https://auth0.com/docs/quickstart/nat
 ```swift
 Auth0
    .authentication()
-   .userInfo(token: accessToken)
+   .userInfo(withAccessToken: accessToken)
    .start { result in
        switch result {
        case .success(let profile):
@@ -152,7 +168,7 @@ Auth0
 
 #### Renew user credentials
 
-Renewal of credentials can be achieved using a [Refresh Token](https://auth0.com/docs/tokens/refresh-token/), it's recommended that you read and understand the refresh token process before implementing.
+Use a [Refresh Token](https://auth0.com/docs/tokens/refresh-token/) to renew user credentials. It's recommended that you read and understand the refresh token process before implementing.
 
 ```swift
 Auth0
@@ -193,7 +209,7 @@ credentialsManager.credentials { error, credentials in
 
 ### Authentication API (iOS / macOS / tvOS)
 
-The Authentication API exposes AuthN/AuthZ functionality of Auth0, as well as the supported identity protocols like OpenID Connect, OAuth 2.0, and SAML. 
+The Authentication API exposes AuthN/AuthZ functionality of Auth0, as well as the supported identity protocols like OpenID Connect, OAuth 2.0, and SAML.
 We recommend using our Hosted Login Page but if you wish to build your own UI you can use our API endpoints to do so. However some Auth flows (Grant types) are disabled by default so you will need to enable them via your Auth0 Dashboard as explained in [this guide](https://auth0.com/docs/clients/client-grant-types#edit-available-grant_types).
 
 These are the required Grant Types that needs to be enabled in your client:
@@ -245,6 +261,22 @@ Auth0
 ```
 
 ### Management API (Users)
+
+#### Retrieve user_metadata
+
+```swift
+Auth0
+    .users(token: idToken)
+    .get("user identifier", fields: ["user_metadata"], include: true)
+    .start { result in
+        switch result {
+        case .success(let userInfo):
+            print("user: \(userInfo)")
+        case .failure(let error):
+            print(error)
+        }
+    }
+```
 
 #### Update user_metadata
 
@@ -309,7 +341,7 @@ Connection: keep-alive
 {"access_token":"...","token_type":"Bearer"}
 ```
 
-> Only set this flag for **DEBUG** only or you'll be leaking user's credentials in the device log.
+> Set this flag only when **DEBUGGING** to avoid leaking user's credentials in the device log.
 
 ## What is Auth0?
 

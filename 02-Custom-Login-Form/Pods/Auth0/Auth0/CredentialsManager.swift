@@ -53,13 +53,34 @@ public struct CredentialsManager {
     /// Store credentials instance in keychain
     ///
     /// - Parameter credentials: credentials instance to store
-    /// - Returns: Bool outcome of success
+    /// - Returns: if credentials were stored
     public func store(credentials: Credentials) -> Bool {
         return self.storage.setData(NSKeyedArchiver.archivedData(withRootObject: credentials), forKey: storeKey)
     }
 
+    /// Clear credentials stored in keychain
+    ///
+    /// - Returns: if credentials were removed
+    public func clear() -> Bool {
+        return self.storage.deleteEntry(forKey: storeKey)
+    }
+
+    /// Checks if a non-expired set of credentials are stored
+    ///
+    /// - Returns: if there are valid and non-expired credentials stored
+    public func hasValid() -> Bool {
+        guard
+            let data = self.storage.data(forKey:self.storeKey),
+            let credentials = NSKeyedUnarchiver.unarchiveObject(with: data) as? Credentials,
+            credentials.accessToken != nil,
+            let expiresIn = credentials.expiresIn
+            else { return false }
+        return expiresIn > Date() || credentials.refreshToken != nil
+    }
+
     /// Retrieve credentials from keychain and yield new credentials using refreshToken if accessToken has expired
-    /// otherwise the retrieved credentails will be returned as they have not expired.
+    /// otherwise the retrieved credentails will be returned as they have not expired. Renewed credentials will be 
+    /// stored in the keychain.
     ///
     ///
     /// ```
@@ -100,7 +121,14 @@ public struct CredentialsManager {
         self.authentication.renew(withRefreshToken: refreshToken, scope: scope).start {
             switch $0 {
             case .success(let credentials):
-                callback(nil, credentials)
+                let newCredentials = Credentials(accessToken: credentials.accessToken,
+                                                       tokenType: credentials.tokenType,
+                                                       idToken: credentials.idToken,
+                                                       refreshToken: refreshToken,
+                                                       expiresIn: credentials.expiresIn,
+                                                       scope: credentials.scope)
+                _ = self.store(credentials: newCredentials)
+                callback(nil, newCredentials)
             case .failure(let error):
                 callback(.failedRefresh(error), nil)
             }

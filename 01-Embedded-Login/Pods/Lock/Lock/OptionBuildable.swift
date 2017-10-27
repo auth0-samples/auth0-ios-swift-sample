@@ -36,6 +36,9 @@ public protocol OptionBuildable: Options {
         /// Privacy Policy URL. By default is Auth0's.
     var privacyPolicyURL: URL { get set }
 
+        /// Support page url that will be displayed (Inside Safari) when an unrecoverable error occurs and the user taps the "Contact Support" button in the error screen.
+    var supportURL: URL? { get set }
+
         /// Log level for Lock. By default is `Off`.
     var logLevel: LoggerLevel { get set }
 
@@ -90,6 +93,12 @@ public protocol OptionBuildable: Options {
 
         /// Specify the passwordless method, send a passcode or magic link. By default is .code
     var passwordlessMethod: PasswordlessMethod { get set }
+
+        /// Specify the password manager configuration, specify the appIdentifier, displyName and enable/disable manager.  By default manager is enabled and defaults to the app's bundle identifier and display name.
+    var passwordManager: OnePassword { get set }
+
+        /// Should Lock display the option to toggle the visibility of the password field text, will not be visible if password manager is available.  By default is true
+    var allowShowPassword: Bool { get set }
 }
 
 extension OptionBuildable {
@@ -133,6 +142,18 @@ public extension OptionBuildable {
         set {
             guard let url = URL(string: newValue) else { return } // FIXME: log error
             self.privacyPolicyURL = url
+        }
+    }
+
+        /// Support Page URL. By default is not set.
+    var supportPage: String? {
+        get {
+            guard let url = self.supportURL else { return nil }
+            return url.absoluteString
+        }
+        set {
+            guard let value = newValue, let url = URL(string: value) else { return } // FIXME: log error
+            self.supportURL = url
         }
     }
 

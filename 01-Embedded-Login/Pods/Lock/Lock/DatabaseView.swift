@@ -22,17 +22,22 @@
 
 import UIKit
 
-protocol DatabaseView: View, NSObjectProtocol {
+protocol DatabaseView: class, View {
     weak var form: Form? { get }
     weak var secondaryButton: SecondaryButton? { get }
     weak var primaryButton: PrimaryButton? { get }
     weak var switcher: DatabaseModeSwitcher? { get }
+    weak var passwordManagerButton: IconButton? { get }
+    weak var showPasswordButton: IconButton? { get }
+    weak var identityField: InputField? { get }
+    weak var passwordField: InputField? { get }
+    var allFields: [InputField]? { get }
 
     var traitCollection: UITraitCollection { get }
 
     var allowedModes: DatabaseMode { get }
 
-    func showLogin(withIdentifierStyle style: DatabaseIdentifierStyle, identifier: String?, authCollectionView: AuthCollectionView?)
+    func showLogin(withIdentifierStyle style: DatabaseIdentifierStyle, identifier: String?, authCollectionView: AuthCollectionView?, showPassswordManager: Bool, showPassword: Bool)
     // swiftlint:disable:next function_parameter_count
-    func showSignUp(withUsername showUsername: Bool, username: String?, email: String?, authCollectionView: AuthCollectionView?, additionalFields: [CustomTextField], passwordPolicyValidator: PasswordPolicyValidator?)
+    func showSignUp(withUsername showUsername: Bool, username: String?, email: String?, authCollectionView: AuthCollectionView?, additionalFields: [CustomTextField], passwordPolicyValidator: PasswordPolicyValidator?, showPassswordManager: Bool, showPassword: Bool)
 }
