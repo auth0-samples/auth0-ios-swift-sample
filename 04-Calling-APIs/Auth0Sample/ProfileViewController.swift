@@ -68,8 +68,9 @@ class ProfileViewController: UIViewController {
     }
 
     private func callAPI(authenticated shouldAuthenticate: Bool) {
-        let url = URL(string: "https://localhost/your_api")! // Your API URL
+        let url = URL(string: "https://localhost/your_api")! // Set to your Protected API URL
         var request = URLRequest(url: url)
+        
         // Configure your request here (method, body, etc)
         if shouldAuthenticate {
             guard let token = A0SimpleKeychain(service: "Auth0").string(forKey: "access_token") else {
