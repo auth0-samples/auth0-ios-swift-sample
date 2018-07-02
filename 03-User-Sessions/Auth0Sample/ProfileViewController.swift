@@ -28,6 +28,9 @@ class ProfileViewController: UIViewController {
     
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var welcomeLabel: UILabel!
+
+    @IBOutlet weak var extend: UIButton!
+    @IBOutlet weak var patch: UIButton!
     
     var profile: UserInfo!
     
@@ -45,10 +48,46 @@ class ProfileViewController: UIViewController {
             }
         }
         task.resume()
+
+        if !SessionManager.shared.patchMode {
+            self.extend.isEnabled = false
+            self.patch.isEnabled = false
+        }
     }
 
     @IBAction func addMetaData() {
-        
+        guard let accessToken = SessionManager.shared.credentials?.accessToken else {
+            return print("Failed to retrieve access token")
+        }
+        Auth0
+            .users(token: accessToken)
+            .patch(self.profile.sub, userMetadata: ["country": "United Kingdom"])
+            .start { result in
+                switch(result) {
+                case .success(_):
+                    self.extendedProfile()
+                case .failure(let error):
+                    print("Failed to retrieve profile: \(String(describing: error))")
+                }
+        }
+    }
+
+    @IBAction func extendedProfile() {
+        guard let accessToken = SessionManager.shared.credentials?.accessToken else {
+            return print("Failed to retrieve access token")
+        }
+        Auth0
+            .users(token: accessToken)
+            .get(self.profile.sub, fields: ["user_metadata"])
+            .start { result in
+                switch(result) {
+                case .success(let profile):
+                    let extend = UIAlertController.alertWithTitle("Extended Profile", message: "\(profile)", includeDoneButton: true)
+                    self.present(extend, animated: true, completion: nil)
+                case .failure(let error):
+                    print("Failed to retrieve profile: \(String(describing: error))")
+                }
+        }
     }
 
     @IBAction func logout(_ sender: UIBarButtonItem) {

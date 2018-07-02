@@ -31,10 +31,11 @@ class SessionManager {
     let credentialsManager: CredentialsManager!
     var profile: UserInfo?
     var credentials: Credentials?
+    var patchMode: Bool = false
 
     private init () {
         self.credentialsManager = CredentialsManager(authentication: Auth0.authentication())
-        // _ = self.authentication.logging(enabled: true) // API Logging
+         _ = self.authentication.logging(enabled: true) // API Logging
     }
 
     func retrieveProfile(_ callback: @escaping (Error?) -> ()) {
@@ -70,9 +71,6 @@ class SessionManager {
     func logout() -> Bool {
         // Remove credentials from KeyChain
         self.credentials = nil
-        // Clear session from browser
-        let webAuth = Auth0.webAuth()
-        webAuth.clearSession(federated: true) { _ in }
         return self.credentialsManager.clear()
     }
 

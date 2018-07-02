@@ -13,8 +13,8 @@
 		51E4B6B71D0B4819000D9038 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 51E4B6B51D0B4819000D9038 /* Main.storyboard */; };
 		51E4B6B91D0B4819000D9038 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 51E4B6B81D0B4819000D9038 /* Assets.xcassets */; };
 		51E4B6BC1D0B4819000D9038 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 51E4B6BA1D0B4819000D9038 /* LaunchScreen.storyboard */; };
-		51F8D0A11D1DC3D800BA17B9 /* AlertController+Loading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8D0A01D1DC3D800BA17B9 /* AlertController+Loading.swift */; };
 		5B05D4AC1E439B51009D9955 /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B05D4AB1E439B51009D9955 /* SessionManager.swift */; };
+		5B99E3A820EA64BA00472473 /* AlertController+Loading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B99E3A720EA64BA00472473 /* AlertController+Loading.swift */; };
 		5F699A091DAFD9EC007D51F3 /* Auth0.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5F699A081DAFD9EC007D51F3 /* Auth0.plist */; };
 		A9956886EBED5387B69F6CA3 /* Pods_Auth0Sample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 941F4E207A9ACAC7CEF391FC /* Pods_Auth0Sample.framework */; };
 /* End PBXBuildFile section */
@@ -29,8 +29,8 @@
 		51E4B6B81D0B4819000D9038 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		51E4B6BB1D0B4819000D9038 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		51E4B6BD1D0B4819000D9038 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		51F8D0A01D1DC3D800BA17B9 /* AlertController+Loading.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AlertController+Loading.swift"; sourceTree = "<group>"; };
 		5B05D4AB1E439B51009D9955 /* SessionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
+		5B99E3A720EA64BA00472473 /* AlertController+Loading.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AlertController+Loading.swift"; sourceTree = "<group>"; };
 		5F699A081DAFD9EC007D51F3 /* Auth0.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Auth0.plist; sourceTree = "<group>"; };
 		93FC4714BD1EE0D00B8D705B /* Pods-Auth0Sample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Auth0Sample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Auth0Sample/Pods-Auth0Sample.debug.xcconfig"; sourceTree = "<group>"; };
 		941F4E207A9ACAC7CEF391FC /* Pods_Auth0Sample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Auth0Sample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -86,6 +86,7 @@
 		51E4B6B01D0B4819000D9038 /* Auth0Sample */ = {
 			isa = PBXGroup;
 			children = (
+				5B99E3A720EA64BA00472473 /* AlertController+Loading.swift */,
 				5F699A081DAFD9EC007D51F3 /* Auth0.plist */,
 				51E4B6B11D0B4819000D9038 /* AppDelegate.swift */,
 				51A8A0B71D0B4C07000E53CC /* HomeViewController.swift */,
@@ -94,7 +95,6 @@
 				51E4B6B81D0B4819000D9038 /* Assets.xcassets */,
 				51E4B6BA1D0B4819000D9038 /* LaunchScreen.storyboard */,
 				51E4B6BD1D0B4819000D9038 /* Info.plist */,
-				51F8D0A01D1DC3D800BA17B9 /* AlertController+Loading.swift */,
 				5B05D4AB1E439B51009D9955 /* SessionManager.swift */,
 			);
 			path = Auth0Sample;
@@ -129,7 +129,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0900;
+				LastUpgradeCheck = 0940;
 				ORGANIZATIONNAME = Auth0;
 				TargetAttributes = {
 					51E4B6AD1D0B4819000D9038 = {
@@ -217,10 +217,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				51E4B6B21D0B4819000D9038 /* AppDelegate.swift in Sources */,
-				51F8D0A11D1DC3D800BA17B9 /* AlertController+Loading.swift in Sources */,
 				51A8A0BA1D0B4C0C000E53CC /* ProfileViewController.swift in Sources */,
 				5B05D4AC1E439B51009D9955 /* SessionManager.swift in Sources */,
 				51A8A0B81D0B4C07000E53CC /* HomeViewController.swift in Sources */,
+				5B99E3A820EA64BA00472473 /* AlertController+Loading.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -259,12 +259,14 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -313,12 +315,14 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;

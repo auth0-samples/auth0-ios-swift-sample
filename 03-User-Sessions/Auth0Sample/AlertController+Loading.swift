@@ -33,4 +33,12 @@ extension UIAlertController {
         viewController.present(self, animated: true, completion: nil)
     }
 
+    static func alertWithTitle(_ title: String? = nil, message: String? = nil, includeDoneButton: Bool = false) -> UIAlertController {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        if includeDoneButton {
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        }
+        return alert
+    }
+
 }
