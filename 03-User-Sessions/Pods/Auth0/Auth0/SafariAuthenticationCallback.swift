@@ -1,6 +1,6 @@
-// TransactionStore.swift
+// SafariAuthenticationCallback.swift
 //
-// Copyright (c) 2016 Auth0 (http://auth0.com)
+// Copyright (c) 2017 Auth0 (http://auth0.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,34 +21,32 @@
 // THE SOFTWARE.
 
 import UIKit
+import SafariServices
 
-/// Keeps track of current Auth Transaction
-class TransactionStore {
-    static let shared = TransactionStore()
+#if swift(>=3.2)
+@available(iOS 11.0, *)
+class SafariAuthenticationSessionCallback: AuthTransaction {
 
-    private(set) var current: AuthTransaction?
+    var state: String?
+    var authSession: SFAuthenticationSession?
+    var callback: (Bool) -> Void = { _ in }
+
+    init(url: URL, schemeURL: String, callback: @escaping (Bool) -> Void) {
+        self.callback = callback
+        self.authSession = SFAuthenticationSession(url: url, callbackURLScheme: schemeURL) { [unowned self] url, _ in
+            self.callback(url != nil)
+            TransactionStore.shared.clear()
+        }
+        self.authSession?.start()
+    }
 
     func resume(_ url: URL, options: [UIApplicationOpenURLOptionsKey: Any]) -> Bool {
-        let resumed = self.current?.resume(url, options: options) ?? false
-        if resumed {
-            self.current = nil
-        }
-        return resumed
+        self.callback(true)
+        return true
     }
 
-    func store(_ transaction: AuthTransaction) {
-        self.current?.cancel()
-        self.current = transaction
-    }
-
-    func cancel(_ transaction: AuthTransaction) {
-        transaction.cancel()
-        if self.current?.state == transaction.state {
-            self.current = nil
-        }
-    }
-
-    func clear() {
-        self.current = nil
+    func cancel() {
+        self.callback(false)
     }
 }
+#endif
