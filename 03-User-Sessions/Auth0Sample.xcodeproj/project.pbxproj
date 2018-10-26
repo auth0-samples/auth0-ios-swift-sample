@@ -177,7 +177,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Auth0Sample/Pods-Auth0Sample-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Auth0Sample/Pods-Auth0Sample-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Auth0/Auth0.framework",
 				"${BUILT_PRODUCTS_DIR}/SimpleKeychain/SimpleKeychain.framework",
 			);
@@ -188,7 +188,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Auth0Sample/Pods-Auth0Sample-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Auth0Sample/Pods-Auth0Sample-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		3D2FD3165E0BF93C79D43E0D /* [CP] Check Pods Manifest.lock */ = {

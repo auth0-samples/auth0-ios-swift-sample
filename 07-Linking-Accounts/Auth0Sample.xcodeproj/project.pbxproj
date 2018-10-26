@@ -118,7 +118,6 @@
 				51E4B6AB1D0B4819000D9038 /* Frameworks */,
 				51E4B6AC1D0B4819000D9038 /* Resources */,
 				2426C0E39587C83E312F7817 /* [CP] Embed Pods Frameworks */,
-				2AFEB05C2D2DA1E17D008977 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -184,7 +183,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Auth0Sample/Pods-Auth0Sample-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Auth0Sample/Pods-Auth0Sample-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Auth0/Auth0.framework",
 				"${BUILT_PRODUCTS_DIR}/SimpleKeychain/SimpleKeychain.framework",
 			);
@@ -195,22 +194,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Auth0Sample/Pods-Auth0Sample-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		2AFEB05C2D2DA1E17D008977 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Auth0Sample/Pods-Auth0Sample-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Auth0Sample/Pods-Auth0Sample-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		CCE0C9517C741294A3EB1A2A /* [CP] Check Pods Manifest.lock */ = {

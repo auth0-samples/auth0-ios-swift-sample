@@ -54,6 +54,7 @@ struct Auth0Authentication: Authentication {
         return Request(session: session, url: resourceOwner, method: "POST", handle: authenticationObject, payload: payload, logger: self.logger, telemetry: self.telemetry)
     }
 
+    // swiftlint:disable:next function_parameter_count
     func login(usernameOrEmail username: String, password: String, realm: String, audience: String?, scope: String?, parameters: [String: Any]?) -> Request<Credentials, AuthenticationError> {
         let resourceOwner = URL(string: "/oauth/token", relativeTo: self.url)!
         var payload: [String: Any] = [
@@ -217,7 +218,7 @@ struct Auth0Authentication: Authentication {
 
     #if os(iOS)
     func webAuth(withConnection connection: String) -> WebAuth {
-        var safari = SafariWebAuth(clientId: self.clientId, url: self.url, presenter: ControllerModalPresenter(), telemetry: self.telemetry)
+        let safari = SafariWebAuth(clientId: self.clientId, url: self.url, presenter: ControllerModalPresenter(), telemetry: self.telemetry)
         return safari
             .logging(enabled: self.logger != nil)
             .connection(connection)

@@ -1,5 +1,5 @@
 PODS:
-  - Auth0 (1.11.1):
+  - Auth0 (1.13.0):
     - SimpleKeychain
   - SimpleKeychain (0.8.1)
 
@@ -12,9 +12,9 @@ SPEC REPOS:
     - SimpleKeychain
 
 SPEC CHECKSUMS:
-  Auth0: 136bf9163e75595b66c3268f5e5e114248b7ad51
+  Auth0: 7e99e1ca69543bc243d9687fd612057072f3eaaf
   SimpleKeychain: e2485c28d82fcece35e9e41faeac42ebfe614815
 
 PODFILE CHECKSUM: 80ea2cc29a26f9958d15db8e73f4609d8d765e40
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.6.0.beta.2

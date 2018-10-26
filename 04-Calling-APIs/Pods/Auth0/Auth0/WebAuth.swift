@@ -22,6 +22,12 @@
 
 import UIKit
 
+#if swift(>=4.2)
+public typealias A0URLOptionsKey = UIApplication.OpenURLOptionsKey
+#else
+public typealias A0URLOptionsKey = UIApplicationOpenURLOptionsKey
+#endif
+
 /**
  Auth0 iOS component for authenticating with web-based flow
 
@@ -78,7 +84,7 @@ public func webAuth(clientId: String, domain: String) -> WebAuth {
 
  - returns: if the url was handled by an on going session or not.
  */
-public func resumeAuth(_ url: URL, options: [UIApplicationOpenURLOptionsKey: Any]) -> Bool {
+public func resumeAuth(_ url: URL, options: [A0URLOptionsKey: Any]) -> Bool {
     return TransactionStore.shared.resume(url, options: options)
 }
 
@@ -118,7 +124,7 @@ public protocol WebAuth: Trackable, Loggable {
     func scope(_ scope: String) -> Self
 
     /**
-      Provider scopes for oauth2/social connections. e.g. Facebook, Google etc
+     Provider scopes for oauth2/social connections. e.g. Facebook, Google etc
 
      - parameter connectionScope: oauth2/social comma separated scope list: `user_friends,email`
 
@@ -176,13 +182,22 @@ public protocol WebAuth: Trackable, Loggable {
     func usingImplicitGrant() -> Self
 
     /**
+     Use `SFSafariViewController` instead of `SFAuthenticationSession` for WebAuth
+     in iOS 11.0+.
+
+     - returns: the same WebAuth instance to allow method chaining
+     */
+    @available(iOS 11, *)
+    func useLegacyAuthentication() -> Self
+
+    /**
      Starts the WebAuth flow by modally presenting a ViewController in the top-most controller.
 
      ```
      Auth0
          .webAuth(clientId: clientId, domain: "samples.auth0.com")
          .start { result in
-            print(result)
+             print(result)
          }
      ```
 
@@ -190,7 +205,7 @@ public protocol WebAuth: Trackable, Loggable {
 
      ```
      func application(app: UIApplication, openURL url: NSURL, options: [String : Any]) -> Bool {
-        return Auth0.resumeAuth(url, options: options)
+         return Auth0.resumeAuth(url, options: options)
      }
      ```
 
@@ -205,19 +220,22 @@ public protocol WebAuth: Trackable, Loggable {
      Removes Auth0 session and optionally remove the Identity Provider session.
      - seeAlso: [Auth0 Logout docs](https://auth0.com/docs/logout)
 
+     For iOS 11+ you will need to ensure that the **Callback URL** has been added
+     to the **Allowed Logout URLs** section of your application in the [Auth0 Dashboard](https://manage.auth0.com/#/applications/).
+
 
      ```
      Auth0
-        .webAuth()
-        .clearSession { print($0) }
+         .webAuth()
+         .clearSession { print($0) }
      ```
-     
+
      Remove Auth0 session and remove the IdP session.
-     
+
      ```
      Auth0
-     .webAuth()
-     .clearSession(federated: true) { print($0) }
+         .webAuth()
+         .clearSession(federated: true) { print($0) }
      ```
 
      - parameter federated: Bool to remove the IdP session
