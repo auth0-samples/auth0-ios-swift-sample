@@ -67,7 +67,7 @@ class SessionManager {
         guard
             let idToken = self.keychain.string(forKey: "id_token"),
             let jwt = try? decode(jwt: idToken),
-            let roles = jwt.claim(name: "https://access.control/roles").array
+            let roles = jwt.claim(name: "https://example.com/roles").array
             else { return nil }
 
         return roles
