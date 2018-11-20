@@ -49,14 +49,8 @@ class ProfileViewController: UIViewController {
     }
 
     @IBAction func logout(_ sender: UIBarButtonItem) {
-        let auth0 = Auth0.webAuth()
-        auth0.clearSession(federated: true) { outcome in
-            print("Logout Called: \(outcome))")
-            DispatchQueue.main.async {
-                SessionManager.shared.logout()
-                self.presentingViewController?.dismiss(animated: true, completion: nil)
-            }
-        }
+        _ = SessionManager.shared.logout()
+        self.presentingViewController?.dismiss(animated: true, completion: nil)
     }
 
     @IBAction func checkUserRole(sender: UIButton) {

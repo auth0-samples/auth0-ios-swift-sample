@@ -37,14 +37,14 @@ class HomeViewController: UIViewController {
 
     @IBAction func showLoginController(_ sender: UIButton) {
         SessionManager.shared.patchMode = false
-        self.checkToken() { _ in
+        self.checkToken() { 
             self.showLogin()
         }
     }
 
     @IBAction func showLoginPatchController(_ sender: UIButton) {
         SessionManager.shared.patchMode = true
-        self.checkToken() { _ in
+        self.checkToken() { 
             self.showLoginWithPatch()
         }
     }
