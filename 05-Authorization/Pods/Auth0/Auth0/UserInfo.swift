@@ -24,7 +24,8 @@ import Foundation
 
 /// OIDC Standard Claims user information
 /// - note: [Claims](https://auth0.com/docs/protocols/oidc#claims)
-public class UserInfo: NSObject, JSONObjectPayload {
+@objc(A0UserInfo)
+@objcMembers public class UserInfo: NSObject, JSONObjectPayload {
 
     public static let publicClaims = ["sub", "name", "given_name", "family_name", "middle_name", "nickname", "preferred_username", "profile", "picture", "website", "email", "email_verified", "gender", "birthdate", "zoneinfo", "locale", "phone_number", "phone_number_verified", "address", "updated_at"]
 
