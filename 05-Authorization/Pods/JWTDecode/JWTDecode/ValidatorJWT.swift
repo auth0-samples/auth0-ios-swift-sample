@@ -1,6 +1,8 @@
-// NSData+URLSafe.swift
 //
-// Copyright (c) 2016 Auth0 (http://auth0.com)
+//  ValidatorJWT.swift
+//  JWTDecode
+//
+//  Copyright © 2018 Auth0. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,12 +24,9 @@
 
 import Foundation
 
-public extension Data {
-    func a0_encodeBase64URLSafe() -> String? {
-        return self
-            .base64EncodedString(options: [])
-            .replacingOccurrences(of: "+", with: "-")
-            .replacingOccurrences(of: "/", with: "_")
-            .trimmingCharacters(in: CharacterSet(charactersIn: "="))
-    }
+protocol ValidatorJWT {
+    var issuer: String { get }
+    var audience: String { get }
+
+    func validate(_ jwt: JWT, nonce: String?) -> ValidationError?
 }

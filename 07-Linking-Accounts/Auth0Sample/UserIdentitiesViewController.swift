@@ -92,7 +92,7 @@ class UserIdentitiesViewController: UIViewController {
                         switch result {
                         case .success:
                             let successAlert = UIAlertController.alertWithTitle(nil, message: "Successfully linked account!")
-                            successAlert.presentInViewController(self, dismissAfter: 1.0) { completion in
+                            successAlert.presentInViewController(self, dismissAfter: 1.0) {
                                 self.updateIdentities()
                             }
                         case .failure(let error):
@@ -134,7 +134,7 @@ class UserIdentitiesViewController: UIViewController {
                             switch result {
                             case .success:
                                 let successAlert = UIAlertController.alertWithTitle(nil, message: "Account unlinked")
-                                successAlert.presentInViewController(self, dismissAfter: 1.0) { completion in
+                                successAlert.presentInViewController(self, dismissAfter: 1.0) {
                                     self.updateIdentities()
                                 }
                             case .failure(let error):
@@ -168,7 +168,7 @@ extension UserIdentitiesViewController: UITableViewDataSource, UITableViewDelega
         return !self.userId.hasSuffix(self.identityAtIndexPath(indexPath).identifier)
     }
 
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         guard case .delete = editingStyle else {
             return
         }

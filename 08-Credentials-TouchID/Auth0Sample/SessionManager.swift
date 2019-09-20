@@ -27,7 +27,7 @@ import Auth0
 class SessionManager {
     static let shared = SessionManager()
     private let authentication = Auth0.authentication()
-    let credentialsManager: CredentialsManager!
+    var credentialsManager: CredentialsManager!
     var profile: UserInfo?
     var credentials: Credentials?
 

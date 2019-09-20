@@ -22,6 +22,9 @@
 
 import UIKit
 import SafariServices
+#if canImport(AuthenticationServices)
+import AuthenticationServices
+#endif
 
 class SafariWebAuth: WebAuth {
 
@@ -39,6 +42,7 @@ class SafariWebAuth: WebAuth {
     var responseType: [ResponseType] = [.code]
     var nonce: String?
     private var authenticationSession = true
+    private var safariPresentationStyle = UIModalPresentationStyle.fullScreen
 
     convenience init(clientId: String, url: URL, presenter: ControllerModalPresenter = ControllerModalPresenter(), telemetry: Telemetry = Telemetry()) {
         self.init(clientId: clientId, url: url, presenter: presenter, storage: TransactionStore.shared, telemetry: telemetry)
@@ -101,8 +105,9 @@ class SafariWebAuth: WebAuth {
         return self
     }
 
-    func useLegacyAuthentication() -> Self {
+    func useLegacyAuthentication(withStyle style: UIModalPresentationStyle = .fullScreen) -> Self {
         self.authenticationSession = false
+        self.safariPresentationStyle = style
         return self
     }
 
@@ -144,6 +149,12 @@ class SafariWebAuth: WebAuth {
 
     func newSafari(_ authorizeURL: URL, callback: @escaping (Result<Credentials>) -> Void) -> (SFSafariViewController, (Result<Credentials>) -> Void) {
         let controller = SFSafariViewController(url: authorizeURL)
+        controller.modalPresentationStyle = safariPresentationStyle
+        
+        if #available(iOS 11.0, *) {
+            controller.dismissButtonStyle = .cancel
+        }
+        
         let finish: (Result<Credentials>) -> Void = { [weak controller] (result: Result<Credentials>) -> Void in
             guard let presenting = controller?.presentingViewController else {
                 return callback(Result.failure(error: WebAuthError.cannotDismissWebAuthController))
@@ -181,6 +192,7 @@ class SafariWebAuth: WebAuth {
 
         entries.forEach { items.append(URLQueryItem(name: $0, value: $1)) }
         components.queryItems = self.telemetry.queryItemsWithTelemetry(queryItems: items)
+        components.percentEncodedQuery = components.percentEncodedQuery?.replacingOccurrences(of: "+", with: "%2B")
         return components.url!
     }
 
@@ -232,11 +244,11 @@ class SafariWebAuth: WebAuth {
 }
 
 private func generateDefaultState() -> String? {
-    var data = Data(count: 32)
+    let data = Data(count: 32)
     var tempData = data
 
-    let result = tempData.withUnsafeMutableBytes { (bytes: UnsafeMutablePointer<UInt8>) -> Int in
-        return Int(SecRandomCopyBytes(kSecRandomDefault, data.count, bytes))
+    let result = tempData.withUnsafeMutableBytes {
+        SecRandomCopyBytes(kSecRandomDefault, data.count, $0.baseAddress!)
     }
 
     guard result == 0 else { return nil }

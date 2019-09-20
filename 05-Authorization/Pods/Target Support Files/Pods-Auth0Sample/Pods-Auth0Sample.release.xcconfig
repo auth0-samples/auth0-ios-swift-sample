@@ -4,7 +4,7 @@ GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
 HEADER_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/Auth0/Auth0.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/JWTDecode/JWTDecode.framework/Headers" "${PODS_CONFIGURATION_BUILD_DIR}/SimpleKeychain/SimpleKeychain.framework/Headers"
 LD_RUNPATH_SEARCH_PATHS = $(inherited) '@executable_path/Frameworks' '@loader_path/Frameworks'
 OTHER_CFLAGS = $(inherited) -isystem "${PODS_CONFIGURATION_BUILD_DIR}/Auth0/Auth0.framework/Headers" -isystem "${PODS_CONFIGURATION_BUILD_DIR}/JWTDecode/JWTDecode.framework/Headers" -isystem "${PODS_CONFIGURATION_BUILD_DIR}/SimpleKeychain/SimpleKeychain.framework/Headers" -iframework "${PODS_CONFIGURATION_BUILD_DIR}/Auth0" -iframework "${PODS_CONFIGURATION_BUILD_DIR}/JWTDecode" -iframework "${PODS_CONFIGURATION_BUILD_DIR}/SimpleKeychain"
-OTHER_LDFLAGS = $(inherited) -framework "Auth0" -framework "JWTDecode" -framework "LocalAuthentication" -framework "SafariServices" -framework "SimpleKeychain" -framework "UIKit"
+OTHER_LDFLAGS = $(inherited) -framework "Auth0" -framework "JWTDecode" -framework "LocalAuthentication" -framework "SafariServices" -framework "SimpleKeychain" -framework "UIKit" -weak_framework "AuthenticationServices"
 OTHER_SWIFT_FLAGS = $(inherited) -D COCOAPODS
 PODS_BUILD_DIR = ${BUILD_DIR}
 PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)

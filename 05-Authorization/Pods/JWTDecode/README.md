@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/cocoapods/l/JWTDecode.svg?style=flat-square)](http://cocoadocs.org/docsets/JWTDecode)
 [![Platform](https://img.shields.io/cocoapods/p/JWTDecode.svg?style=flat-square)](http://cocoadocs.org/docsets/JWTDecode)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat-square)](https://github.com/Carthage/Carthage)
-![Swift 3.1](https://img.shields.io/badge/Swift-3.1-orange.svg?style=flat-square)
+![Swift 5.0](https://img.shields.io/badge/Swift-5.0-orange.svg?style=flat-square)
 
 This library will help you check [JWT](http://jwt.io/) payload
 
@@ -14,9 +14,9 @@ This library will help you check [JWT](http://jwt.io/) payload
 
 ## Requirements
 
-- iOS 9 or later
-- Xcode 8.3 / 9.0
-- Swift 3.1+
+- iOS 9+ / macOS 10.11+ / tvOS 9.0+ 
+- Xcode 10.x
+- Swift 4.x/5.x
 
 ## Installation
 
@@ -25,7 +25,7 @@ This library will help you check [JWT](http://jwt.io/) payload
 If you are using Carthage, add the following lines to your `Cartfile`:
 
 ```ruby
-github "auth0/JWTDecode.swift" ~> 2.1
+github "auth0/JWTDecode.swift" ~> 2.3
 ```
 
 Then run `carthage bootstrap`.
@@ -38,7 +38,7 @@ If you are using [Cocoapods](https://cocoapods.org/), add these lines to your `P
 
 ```ruby
 use_frameworks!
-pod 'JWTDecode', '~> 2.1'
+pod 'JWTDecode', '~> 2.3'
 ```
 
 Then, run `pod install`.
@@ -127,6 +127,16 @@ var integer: Int?
 var double: Double?
 var date: NSDate?
 var array: [String]?
+```
+
+You can easily add a convenience accessor for a custom claim by adding an extension:
+
+```swift
+extension JWT {
+    var myClaim: String? {
+        return claim(name: "my_claim").string
+    }
+}
 ```
 
 ### Error Handling
