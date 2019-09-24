@@ -25,26 +25,26 @@ import UIKit
 import Auth0
 
 class HomeViewController: UIViewController {
-    private var isLogged = false
+    private var isAuthenticated = false
 
     // MARK: - IBAction
     @IBAction func showLoginController(_ sender: UIButton) {
         guard let clientInfo = plistValues(bundle: Bundle.main) else { return }
         
-        if(!isLogged){
+        if(!isAuthenticated){
             Auth0
                 .webAuth()
                 .scope("openid profile")
                 .audience("https://" + clientInfo.domain + "/userinfo")
                 .start {
                     switch $0 {
-                    case .failure(let error):
-                        print("Error: \(error)")
-                    case .success(let credentials):
-                        guard let accessToken = credentials.accessToken else { return }
-                        self.showSuccessAlert("accessToken: \(accessToken)")
-                        self.isLogged = true
-                        sender.setTitle("Log out", for: .normal)
+                        case .failure(let error):
+                            print("Error: \(error)")
+                        case .success(let credentials):
+                            guard let accessToken = credentials.accessToken else { return }
+                            self.showSuccessAlert("accessToken: \(accessToken)")
+                            self.isAuthenticated = true
+                            sender.setTitle("Log out", for: .normal)
                     }
                 }
         }
@@ -53,11 +53,11 @@ class HomeViewController: UIViewController {
                 .webAuth()
                 .clearSession(federated:false){
                     switch $0{
-                    case true:
-                        sender.setTitle("Log in", for: .normal)
-                        self.isLogged = false
-                    case false:
-                        self.showSuccessAlert("An error occurred")
+                        case true:
+                            sender.setTitle("Log in", for: .normal)
+                            self.isAuthenticated = false
+                        case false:
+                            self.showSuccessAlert("An error occurred")
                     }
                 }
         }
