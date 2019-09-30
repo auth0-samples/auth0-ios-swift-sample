@@ -25,28 +25,47 @@ import UIKit
 import Auth0
 
 class HomeViewController: UIViewController {
+    private var isAuthenticated = false
 
     // MARK: - IBAction
     @IBAction func showLoginController(_ sender: UIButton) {
         guard let clientInfo = plistValues(bundle: Bundle.main) else { return }
-        Auth0
-            .webAuth()
-            .scope("openid profile")
-            .audience("https://" + clientInfo.domain + "/userinfo")
-            .start {
-                switch $0 {
-                case .failure(let error):
-                    print("Error: \(error)")
-                case .success(let credentials):
-                    guard let accessToken = credentials.accessToken else { return }
-                    self.showSuccessAlert(accessToken)
+        
+        if(!isAuthenticated){
+            Auth0
+                .webAuth()
+                .scope("openid profile")
+                .audience("https://" + clientInfo.domain + "/userinfo")
+                .start {
+                    switch $0 {
+                        case .failure(let error):
+                            print("Error: \(error)")
+                        case .success(let credentials):
+                            guard let accessToken = credentials.accessToken else { return }
+                            self.showSuccessAlert("accessToken: \(accessToken)")
+                            self.isAuthenticated = true
+                            sender.setTitle("Log out", for: .normal)
+                    }
+                }
+        }
+        else{
+            Auth0
+                .webAuth()
+                .clearSession(federated:false){
+                    switch $0{
+                        case true:
+                            sender.setTitle("Log in", for: .normal)
+                            self.isAuthenticated = false
+                        case false:
+                            self.showSuccessAlert("An error occurred")
+                    }
                 }
         }
     }
 
     // MARK: - Private
-    fileprivate func showSuccessAlert(_ accessToken: String) {
-        let alert = UIAlertController(title: "Success", message: "accessToken: \(accessToken)", preferredStyle: .alert)
+    fileprivate func showSuccessAlert(_ message: String) {
+        let alert = UIAlertController(title: "Message", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
