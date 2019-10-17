@@ -3,7 +3,7 @@ inhibit_all_warnings!
 use_frameworks!
 
 target 'Auth0Sample' do
-    pod 'Auth0', '~> 1.18'
+    pod 'Auth0', '~> 1.19'
     pod 'SimpleKeychain', '~> 0.7'
     pod 'JWTDecode', '~> 2.0'
 end
