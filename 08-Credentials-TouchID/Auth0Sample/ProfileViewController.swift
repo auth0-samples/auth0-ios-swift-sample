@@ -46,7 +46,14 @@ class ProfileViewController: UIViewController {
     }
     
     @IBAction func logout(_ sender: UIBarButtonItem) {
-        _ = SessionManager.shared.logout()
-        self.presentingViewController?.dismiss(animated: true, completion: nil)
+        SessionManager.shared.logout { error in
+            guard error == nil else {
+                return print("Error revoking token: \(error)")
+            }
+            
+            DispatchQueue.main.async {
+                self.presentingViewController?.dismiss(animated: true, completion: nil)
+            }
+        }
     }
 }
