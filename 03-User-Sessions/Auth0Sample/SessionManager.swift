@@ -68,10 +68,10 @@ class SessionManager {
         }
     }
 
-    func logout() -> Bool {
+    func logout(_ callback: @escaping (Error?) -> Void) {
         // Remove credentials from KeyChain
         self.credentials = nil
-        return self.credentialsManager.clear()
+        self.credentialsManager.revoke(callback)
     }
 
     func store(credentials: Credentials) -> Bool {
