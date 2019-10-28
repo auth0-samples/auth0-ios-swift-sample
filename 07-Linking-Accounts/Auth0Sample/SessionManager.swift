@@ -38,6 +38,9 @@ class SessionManager {
     var idToken: String? {
         return self.keychain.string(forKey: "id_token")
     }
+    var accessToken: String? {
+        return self.keychain.string(forKey: "access_token")
+    }
     var profile: UserInfo?
 
     private init () { }

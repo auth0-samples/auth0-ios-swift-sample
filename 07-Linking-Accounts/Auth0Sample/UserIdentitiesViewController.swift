@@ -82,9 +82,9 @@ class UserIdentitiesViewController: UIViewController {
     fileprivate func linkAccountWithIDToken(_ otherUserToken: String) {
         let loadingAlert = UIAlertController.loadingAlert()
         loadingAlert.presentInViewController(self)
-        guard let idToken = SessionManager.shared.idToken else { return }
+        guard let accessToken = SessionManager.shared.accessToken else { return }
         Auth0
-            .users(token: idToken)
+            .users(token: accessToken)
             .link(self.userId, withOtherUserToken: otherUserToken)
             .start { result in
                 DispatchQueue.main.async {
@@ -122,11 +122,11 @@ class UserIdentitiesViewController: UIViewController {
     fileprivate func unlinkIdentity(_ identity: Identity) {
         let loadingAlert = UIAlertController.loadingAlert()
         loadingAlert.presentInViewController(self)
-        guard let idToken = SessionManager.shared.idToken else { return }
+        guard let accessToken = SessionManager.shared.accessToken else { return }
         SessionManager.shared.retrieveProfile { error in
             guard error == nil else { return }
             Auth0
-                .users(token: idToken)
+                .users(token: accessToken)
                 .unlink(identityId: identity.identifier, provider: identity.provider, fromUserId: self.userId)
                 .start { result in
                     DispatchQueue.main.async {

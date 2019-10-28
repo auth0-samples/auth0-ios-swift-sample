@@ -44,8 +44,8 @@ class HomeViewController: UIViewController {
         guard let clientInfo = plistValues(bundle: Bundle.main) else { return }
         Auth0
             .webAuth()
-            .audience("https://" + clientInfo.domain + "/userinfo")
-            .scope("openid profile email")
+            .audience("https://" + clientInfo.domain + "/api/v2/")
+            .scope("openid profile email update:current_user_identities")
             .start {
                 switch $0 {
                 case .failure(let error):
