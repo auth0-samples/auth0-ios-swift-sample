@@ -42,9 +42,12 @@ class HomeViewController: UIViewController {
                             print("Error: \(error)")
                         case .success(let credentials):
                             guard let accessToken = credentials.accessToken else { return }
-                            self.showSuccessAlert("accessToken: \(accessToken)")
-                            self.isAuthenticated = true
-                            sender.setTitle("Log out", for: .normal)
+                            
+                            DispatchQueue.main.async {
+                                self.showSuccessAlert("accessToken: \(accessToken)")
+                                self.isAuthenticated = true
+                                sender.setTitle("Log out", for: .normal)
+                            }
                     }
                 }
         }
@@ -54,10 +57,14 @@ class HomeViewController: UIViewController {
                 .clearSession(federated:false){
                     switch $0{
                         case true:
-                            sender.setTitle("Log in", for: .normal)
-                            self.isAuthenticated = false
+                            DispatchQueue.main.async {
+                                sender.setTitle("Log in", for: .normal)
+                                self.isAuthenticated = false
+                            }
                         case false:
-                            self.showSuccessAlert("An error occurred")
+                            DispatchQueue.main.async {
+                                self.showSuccessAlert("An error occurred")
+                        }
                     }
                 }
         }
