@@ -82,8 +82,10 @@ class ProfileViewController: UIViewController {
             .start { result in
                 switch(result) {
                 case .success(let profile):
-                    let extend = UIAlertController.alertWithTitle("Extended Profile", message: "\(profile)", includeDoneButton: true)
-                    self.present(extend, animated: true, completion: nil)
+                    DispatchQueue.main.async {
+                        let extend = UIAlertController.alertWithTitle("Extended Profile", message: "\(profile)", includeDoneButton: true)
+                        self.present(extend, animated: true, completion: nil)
+                    }
                 case .failure(let error):
                     print("Failed to retrieve profile: \(String(describing: error))")
                 }
