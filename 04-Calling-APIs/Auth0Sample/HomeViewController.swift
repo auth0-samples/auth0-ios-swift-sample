@@ -43,7 +43,7 @@ class HomeViewController: UIViewController {
 
     fileprivate func showLogin() {
         guard let clientInfo = plistValues(bundle: Bundle.main) else { return }
-        
+
         let APIIdentifier = "https://" + clientInfo.domain + "/userinfo" // Replace with the API Identifier value you created
         Auth0
             .webAuth()
@@ -74,13 +74,15 @@ class HomeViewController: UIViewController {
         loadingAlert.presentInViewController(self)
         SessionManager.shared.logout()
         SessionManager.shared.retrieveProfile { error in
-            loadingAlert.dismiss(animated: true) {
-                guard error == nil else {
-                    return self.showLogin()
+            DispatchQueue.main.async {
+                loadingAlert.dismiss(animated: true) {
+                    guard error == nil else {
+                        return self.showLogin()
+                    }
+                    self.performSegue(withIdentifier: "ShowProfileNonAnimated", sender: nil)
                 }
-                self.performSegue(withIdentifier: "ShowProfileNonAnimated", sender: nil)
             }
         }
     }
-    
+
 }

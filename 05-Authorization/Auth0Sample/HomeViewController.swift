@@ -71,13 +71,15 @@ class HomeViewController: UIViewController {
         let loadingAlert = UIAlertController.loadingAlert()
         loadingAlert.presentInViewController(viewController: self)
         SessionManager.shared.retrieveProfile { error in
-            loadingAlert.dismiss(animated: true) {
-                guard error == nil else {
-                    return self.showLock()
+            DispatchQueue.main.async {
+                loadingAlert.dismiss(animated: true) {
+                    guard error == nil else {
+                        return self.showLock()
+                    }
+                    self.performSegue(withIdentifier: "ShowProfileNonAnimated", sender: nil)
                 }
-                self.performSegue(withIdentifier: "ShowProfileNonAnimated", sender: nil)
             }
         }
     }
-    
+
 }
