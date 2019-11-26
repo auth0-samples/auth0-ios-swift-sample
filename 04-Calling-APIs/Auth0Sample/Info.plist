@@ -57,7 +57,7 @@
             <string>auth0</string>
             <key>CFBundleURLSchemes</key>
             <array>
-                <string>auth0.samples.Auth0Sample</string>
+                <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
             </array>
         </dict>
     </array>
