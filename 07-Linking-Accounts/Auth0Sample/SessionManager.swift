@@ -70,7 +70,7 @@ class SessionManager {
 
     func retrieveIdentity(_ callback: @escaping (Error?, [Identity]?) -> ()) {
         guard let accessToken  = self.keychain.string(forKey: "access_token") else {
-            return callback(SessionManagerError.noIdToken, nil)
+            return callback(SessionManagerError.noAccessToken, nil)
         }
         guard let userId = profile?.sub else {
             return callback(SessionManagerError.noIdToken, nil)
