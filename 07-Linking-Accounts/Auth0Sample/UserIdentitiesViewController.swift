@@ -54,7 +54,8 @@ class UserIdentitiesViewController: UIViewController {
         guard let clientInfo = plistValues(bundle: Bundle.main) else { return }
         Auth0
             .webAuth()
-            .audience("https://" + clientInfo.domain + "/userinfo")
+            .parameters(["prompt": "login"])
+            .audience("https://" + clientInfo.domain + "/api/v2/")
             .scope("openid profile email")
             .start {
                 switch $0 {

@@ -69,14 +69,14 @@ class SessionManager {
 
 
     func retrieveIdentity(_ callback: @escaping (Error?, [Identity]?) -> ()) {
-        guard let idToken = self.keychain.string(forKey: "id_token") else {
-            return callback(SessionManagerError.noIdToken, nil)
+        guard let accessToken  = self.keychain.string(forKey: "access_token") else {
+            return callback(SessionManagerError.noAccessToken, nil)
         }
         guard let userId = profile?.sub else {
             return callback(SessionManagerError.noIdToken, nil)
         }
         Auth0
-            .users(token: idToken)
+            .users(token: accessToken)
             .get(userId, fields: ["identities"], include: true)
             .start { result in
                 switch result {
