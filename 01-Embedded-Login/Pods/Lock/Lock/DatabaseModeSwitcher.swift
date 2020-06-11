@@ -84,22 +84,22 @@ class DatabaseModeSwitcher: UIView {
         dimension(dimension: segmented.heightAnchor, withValue: 45)
         segmented.translatesAutoresizingMaskIntoConstraints = false
 
-        segmented.setDividerImage(image(named: "ic_switcher_left", compatibleWithTraitCollection: self.traitCollection), forLeftSegmentState: .selected, rightSegmentState: UIControlState(), barMetrics: .default)
-        segmented.setDividerImage(image(named: "ic_switcher_right", compatibleWithTraitCollection: self.traitCollection), forLeftSegmentState: UIControlState(), rightSegmentState: .selected, barMetrics: .default)
+        segmented.setDividerImage(image(named: "ic_switcher_left", compatibleWithTraitCollection: self.traitCollection), forLeftSegmentState: .selected, rightSegmentState: .normal, barMetrics: .default)
+        segmented.setDividerImage(image(named: "ic_switcher_right", compatibleWithTraitCollection: self.traitCollection), forLeftSegmentState: .normal, rightSegmentState: .selected, barMetrics: .default)
         segmented.setDividerImage(image(named: "ic_switcher_both", compatibleWithTraitCollection: self.traitCollection), forLeftSegmentState: .selected, rightSegmentState: .selected, barMetrics: .default)
         segmented.setDividerImage(image(named: "ic_switcher_both", compatibleWithTraitCollection: self.traitCollection), forLeftSegmentState: .highlighted, rightSegmentState: .selected, barMetrics: .default)
         segmented.setDividerImage(image(named: "ic_switcher_both", compatibleWithTraitCollection: self.traitCollection), forLeftSegmentState: .selected, rightSegmentState: .highlighted, barMetrics: .default)
-        segmented.setDividerImage(image(named: "ic_switcher_none", compatibleWithTraitCollection: self.traitCollection), forLeftSegmentState: UIControlState(), rightSegmentState: UIControlState(), barMetrics: .default)
+        segmented.setDividerImage(image(named: "ic_switcher_none", compatibleWithTraitCollection: self.traitCollection), forLeftSegmentState: .normal, rightSegmentState: .normal, barMetrics: .default)
         segmented.setBackgroundImage(image(named: "ic_switcher_selected", compatibleWithTraitCollection: self.traitCollection), for: .selected, barMetrics: .default)
         segmented.setBackgroundImage(image(named: "ic_switcher_selected", compatibleWithTraitCollection: self.traitCollection), for: .highlighted, barMetrics: .default)
-        segmented.setBackgroundImage(image(named: "ic_switcher_normal", compatibleWithTraitCollection: self.traitCollection), for: UIControlState(), barMetrics: .default)
+        segmented.setBackgroundImage(image(named: "ic_switcher_normal", compatibleWithTraitCollection: self.traitCollection), for: .normal, barMetrics: .default)
         segmented.setTitleTextAttributes([
-            NSForegroundColorAttributeName: Style.Auth0.tabTextColor,
-            NSFontAttributeName: mediumSystemFont(size: 15)
-            ], for: UIControlState())
+            NSAttributedString.attributedKeyColor: Style.Auth0.tabTextColor,
+            NSAttributedString.attributedFont: mediumSystemFont(size: 15)
+            ], for: .normal)
         segmented.setTitleTextAttributes([
-            NSForegroundColorAttributeName: Style.Auth0.tabTextColor,
-            NSFontAttributeName: semiBoldSystemFont(size: 15)
+            NSAttributedString.attributedKeyColor: Style.Auth0.tabTextColor,
+            NSAttributedString.attributedFont: semiBoldSystemFont(size: 15)
             ], for: .selected)
         segmented.tintColor = Style.Auth0.tabTintColor
         segmented.addTarget(self, action: #selector(selectedIndex), for: .valueChanged)
@@ -109,12 +109,12 @@ class DatabaseModeSwitcher: UIView {
     }
 
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: UIViewNoIntrinsicMetric, height: 55)
+        return CGSize(width: UIView.viewNoIntrinsicMetric, height: 55)
     }
 
     // MARK: - Internal
 
-    func selectedIndex(_ sender: UISegmentedControl) {
+    @objc func selectedIndex(_ sender: UISegmentedControl) {
         self.onSelectionChange(self)
     }
 }
@@ -124,12 +124,12 @@ extension DatabaseModeSwitcher: Stylable {
     func apply(style: Style) {
         self.segmentedControl?.tintColor = style.tabTintColor
         self.segmentedControl?.setTitleTextAttributes([
-            NSForegroundColorAttributeName: style.tabTextColor,
-            NSFontAttributeName: mediumSystemFont(size: 15)
-            ], for: UIControlState())
+            NSAttributedString.attributedKeyColor: style.tabTextColor,
+            NSAttributedString.attributedFont: mediumSystemFont(size: 15)
+            ], for: .normal)
         self.segmentedControl?.setTitleTextAttributes([
-            NSForegroundColorAttributeName: style.tabTextColor,
-            NSFontAttributeName: semiBoldSystemFont(size: 15)
+            NSAttributedString.attributedKeyColor: style.tabTextColor,
+            NSAttributedString.attributedFont: semiBoldSystemFont(size: 15)
             ], for: .selected)
     }
 }

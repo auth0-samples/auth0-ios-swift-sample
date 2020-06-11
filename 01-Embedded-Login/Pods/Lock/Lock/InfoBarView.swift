@@ -84,7 +84,7 @@ class InfoBarView: UIView {
         constraintEqual(anchor: iconView.centerYAnchor, toAnchor: titleView.centerYAnchor)
         iconView.translatesAutoresizingMaskIntoConstraints = false
 
-        container.backgroundColor = UIColor(red:0.97, green:0.97, blue:0.97, alpha:1.0)
+        container.backgroundColor = UIColor(red: 0.97, green: 0.97, blue: 0.97, alpha: 1.0)
 
         titleView.font = UIFont.systemFont(ofSize: 12.5)
         titleView.textColor = UIColor.black.withAlphaComponent(0.56)
@@ -97,7 +97,7 @@ class InfoBarView: UIView {
     }
 
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: UIViewNoIntrinsicMetric, height: 35)
+        return CGSize(width: UIView.viewNoIntrinsicMetric, height: 35)
     }
 
     static var ssoInfoBar: InfoBarView {

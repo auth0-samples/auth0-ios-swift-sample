@@ -1,6 +1,6 @@
-// SafariAuthenticationCallback.swift
+// AuthenticationServicesSessionCallback.swift
 //
-// Copyright (c) 2017 Auth0 (http://auth0.com)
+// Copyright (c) 2020 Auth0 (http://auth0.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,33 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import UIKit
-import SafariServices
+#if canImport(AuthenticationServices)
+import AuthenticationServices
 
-#if swift(>=3.2)
-@available(iOS 11.0, *)
-class SafariAuthenticationSessionCallback: AuthTransaction {
+@available(iOS 12.0, macOS 10.15, *)
+final class AuthenticationServicesSessionCallback: SessionCallbackTransaction {
 
-    var state: String?
-    var authSession: SFAuthenticationSession?
-    var callback: (Bool) -> Void = { _ in }
+    init(url: URL, schemeURL: URL, callback: @escaping (Bool) -> Void) {
+        super.init(callback: callback)
 
-    init(url: URL, schemeURL: String, callback: @escaping (Bool) -> Void) {
-        self.callback = callback
-        self.authSession = SFAuthenticationSession(url: url, callbackURLScheme: schemeURL) { [unowned self] url, _ in
-            self.callback(url != nil)
+        let authSession = ASWebAuthenticationSession(url: url,
+                                                     callbackURLScheme: schemeURL.scheme) { [weak self] url, _ in
+            self?.callback(url != nil)
             TransactionStore.shared.clear()
         }
-        self.authSession?.start()
+
+        #if swift(>=5.1)
+        if #available(iOS 13.0, *) {
+            authSession.presentationContextProvider = self
+        }
+        #endif
+
+        self.authSession = authSession
+        authSession.start()
     }
 
-    func resume(_ url: URL, options: [UIApplicationOpenURLOptionsKey : Any]) -> Bool {
-        self.callback(true)
-        return true
-    }
-
-    func cancel() {
-        self.callback(false)
-    }
 }
 #endif

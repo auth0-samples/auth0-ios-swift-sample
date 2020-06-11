@@ -28,6 +28,8 @@ public protocol Options {
     var termsOfServiceURL: URL { get }
     var privacyPolicyURL: URL { get }
     var supportURL: URL? { get }
+    var mustAcceptTerms: Bool { get }
+    var showTerms: Bool { get }
 
     var logLevel: LoggerLevel { get }
     var loggerOutput: LoggerOutput? { get }
@@ -48,8 +50,12 @@ public protocol Options {
 
     var oidcConformant: Bool { get }
     var audience: String? { get }
+    var leeway: Int? { get }
+    var maxAge: Int? { get }
 
     var passwordlessMethod: PasswordlessMethod { get }
     var passwordManager: OnePassword { get }
     var allowShowPassword: Bool { get }
+
+    var configurationBaseURL: URL? { get }
 }

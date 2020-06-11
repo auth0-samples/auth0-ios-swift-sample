@@ -72,11 +72,11 @@ class IconButton: UIView {
         self.button = button
     }
 
-    func pressed(_ sender: Any) {
+    @objc func pressed(_ sender: Any) {
         self.onPress(self)
     }
 
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: 50, height: UIViewNoIntrinsicMetric)
+        return CGSize(width: 50, height: UIView.viewNoIntrinsicMetric)
     }
 }

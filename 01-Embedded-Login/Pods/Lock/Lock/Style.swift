@@ -52,7 +52,7 @@ public struct Style {
     public var headerColor: UIColor?
 
         /// Blur effect style used. It can be any value defined in `UIBlurEffectStyle`
-    public var headerBlur: UIBlurEffectStyle = .light
+    public var headerBlur: A0BlurEffectStyle = .light
 
         /// Header close button image
     public var headerCloseIcon: LazyImage = lazyImage(named: "ic_close")
@@ -73,7 +73,7 @@ public struct Style {
         /// Main body text color
     public var textColor = UIColor.black
 
-        /// Hide primary bytton title (show only icon). By default is false
+        /// Hide primary button title (show only icon). By default is false
     public var hideButtonTitle = false
 
         /// Header logo image
@@ -106,6 +106,15 @@ public struct Style {
         /// Input field icon color
     public var inputIconColor = UIColor(red: 0.5725, green: 0.5804, blue: 0.5843, alpha: 1.0)
 
+        /// Password rule text color default
+    public var ruleTextColor = UIColor(red: 0.016, green: 0.016, blue: 0.016, alpha: 1.0)
+
+        /// Password rule text color valid
+    public var ruleTextColorSuccess = UIColor(red: 0.502, green: 0.820, blue: 0.208, alpha: 1.0)
+
+        /// Password rule text color invalid
+    public var ruleTextColorError = UIColor(red: 0.745, green: 0.271, blue: 0.153, alpha: 1.0)
+
         /// Secondary button color
     public var secondaryButtonColor = UIColor.black
 
@@ -125,10 +134,10 @@ public struct Style {
     public var statusBarStyle: UIStatusBarStyle = .default
 
         /// Passwordless search bar style
-    public var searchBarStyle: UISearchBarStyle = .default
+    public var searchBarStyle: A0SearchBarStyle = .default
 
-        /// 1Password Icon color
-    public var onePasswordIconColor = UIColor(red: 0.5725, green: 0.5804, blue: 0.5843, alpha: 1.0)
+        /// iPad Modal Presentation Style
+    public var modalPopup = true
 
     var headerMask: UIImage? {
         let image = self.logo.image(compatibleWithTraits: nil)
@@ -138,7 +147,7 @@ public struct Style {
         return image
     }
 
-    func primaryButtonColor(forState state: UIControlState) -> UIColor {
+    func primaryButtonColor(forState state: A0ControlState) -> UIColor {
         if state.contains(.highlighted) {
             return self.primaryColor.a0_darker(0.20)
         }
@@ -150,7 +159,7 @@ public struct Style {
         return self.primaryColor
     }
 
-    func primaryButtonTintColor(forState state: UIControlState) -> UIColor {
+    func primaryButtonTintColor(forState state: A0ControlState) -> UIColor {
         if state.contains(.disabled) {
             return self.disabledTextColor
         }

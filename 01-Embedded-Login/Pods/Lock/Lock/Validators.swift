@@ -44,7 +44,11 @@ public class PhoneValidator: InputValidator {
 public class OneTimePasswordValidator: InputValidator {
     func validate(_ value: String?) -> Error? {
         guard let value = value?.trimmed, !value.isEmpty else { return InputValidationError.mustNotBeEmpty }
-        guard value.characters.count > 3, value.rangeOfCharacter(from: CharacterSet.decimalDigits.inverted) == nil else { return InputValidationError.notAOneTimePassword }
+        #if swift(>=3.2)
+            guard value.count > 3, value.rangeOfCharacter(from: CharacterSet.decimalDigits.inverted) == nil else { return InputValidationError.notAOneTimePassword }
+        #else
+            guard value.characters.count > 3, value.rangeOfCharacter(from: CharacterSet.decimalDigits.inverted) == nil else { return InputValidationError.notAOneTimePassword }
+        #endif
         return nil
     }
 }
@@ -60,6 +64,7 @@ public class UsernameValidator: InputValidator {
 
     let invalidSet: CharacterSet?
     let range: CountableClosedRange<Int>
+    let emailValidator = EmailValidator()
 
     var min: Int { return self.range.lowerBound }
     var max: Int { return self.range.upperBound }
@@ -76,16 +81,21 @@ public class UsernameValidator: InputValidator {
 
     func validate(_ value: String?) -> Error? {
         guard let username = value?.trimmed, !username.isEmpty else { return InputValidationError.mustNotBeEmpty }
+        #if swift(>=3.2)
+        guard self.range ~= username.count else { return self.invalidSet == nil ? InputValidationError.mustNotBeEmpty : InputValidationError.notAUsername }
+        #else
         guard self.range ~= username.characters.count else { return self.invalidSet == nil ? InputValidationError.mustNotBeEmpty : InputValidationError.notAUsername }
+        #endif
         guard let characterSet = self.invalidSet else { return nil }
         guard username.rangeOfCharacter(from: characterSet) == nil else { return InputValidationError.notAUsername }
+        guard self.emailValidator.validate(username) != nil else { return InputValidationError.notAUsername }
         return nil
     }
 
-    open static var auth0: CharacterSet {
+    public static var auth0: CharacterSet {
         let set = NSMutableCharacterSet()
         set.formUnion(with: CharacterSet.alphanumerics)
-        set.addCharacters(in: "_")
+        set.addCharacters(in: "_.-!#$'^`~@+")
         return set.inverted
     }
 }
@@ -94,7 +104,7 @@ public class EmailValidator: InputValidator {
     let predicate: NSPredicate
 
     public init() {
-        let regex = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
+        let regex = "[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\\.)+[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?"
         self.predicate = NSPredicate(format: "SELF MATCHES %@", regex)
     }
 
@@ -113,14 +123,14 @@ public class PasswordPolicyValidator: InputValidator {
     let policy: PasswordPolicy
     weak var delegate: PasswordPolicyValidatorDelegate?
 
-    init(policy: PasswordPolicy) {
+    public init(policy: PasswordPolicy) {
         self.policy = policy
     }
 
     func validate(_ value: String?) -> Error? {
         let result = self.policy.on(value)
         self.delegate?.update(withRules: result)
-        let valid = result.reduce(true) { $0 && $1.valid }
+        let valid = result.allSatisfy { $0.valid }
         guard !valid else { return nil }
         return InputValidationError.passwordPolicyViolation(result: result.filter { !$0.valid })
     }

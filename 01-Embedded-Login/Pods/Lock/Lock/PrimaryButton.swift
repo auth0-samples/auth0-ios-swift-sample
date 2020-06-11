@@ -75,7 +75,11 @@ class PrimaryButton: UIView, Stylable {
 
     private func layoutButton() {
         let button = UIButton(type: .custom)
+        #if swift(>=4.2)
+        let indicator = UIActivityIndicatorView(style: .whiteLarge)
+        #else
         let indicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+        #endif
 
         self.addSubview(button)
         self.addSubview(indicator)
@@ -106,7 +110,7 @@ class PrimaryButton: UIView, Stylable {
         button.setAttributedTitle(nil, for: .normal)
         button.setAttributedTitle(nil, for: .disabled)
         guard let title = title, !self.hideTitle else {
-            button.setImage(image(named: "ic_submit", compatibleWithTraitCollection: self.traitCollection), for: UIControlState())
+            button.setImage(image(named: "ic_submit", compatibleWithTraitCollection: self.traitCollection), for: .normal)
             button.setImage(UIImage(), for: .disabled)
             return
         }
@@ -116,29 +120,28 @@ class PrimaryButton: UIView, Stylable {
         attachment.image = image(named: "ic_chevron_right", compatibleWithTraitCollection: self.traitCollection)
         attachment.bounds = CGRect(x: 0.0, y: font.descender / 2.0, width: attachment.image!.size.width, height: attachment.image!.size.height)
 
-        let attributedText = NSMutableAttributedString()
-        attributedText.append(NSAttributedString(
-            string: "\(title)  ",
-            attributes: [
-                NSForegroundColorAttributeName: self.textColor ?? Style.Auth0.buttonTintColor,
-                NSFontAttributeName: font
-            ]
-        ))
+        let attributedText = NSMutableAttributedString(string: "\(title)  ")
         attributedText.append(NSAttributedString(attachment: attachment))
+        attributedText.addAttributes(
+            [
+                NSAttributedString.attributedKeyColor: self.textColor ?? Style.Auth0.buttonTintColor,
+                NSAttributedString.attributedFont: font
+            ],
+            range: NSRange(location: 0, length: attributedText.length))
         button.setAttributedTitle(attributedText, for: .normal)
         button.setAttributedTitle(NSAttributedString(), for: .disabled)
     }
 
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: UIViewNoIntrinsicMetric, height: 95)
+        return CGSize(width: UIView.viewNoIntrinsicMetric, height: 95)
     }
 
-    func pressed(_ sender: Any) {
+    @objc func pressed(_ sender: Any) {
         self.onPress(self)
     }
 
     func apply(style: Style) {
-        self.button?.setBackgroundImage(image(withColor: style.primaryColor), for: UIControlState())
+        self.button?.setBackgroundImage(image(withColor: style.primaryColor), for: .normal)
         self.button?.setBackgroundImage(image(withColor: style.primaryColor.a0_darker(0.20)), for: .highlighted)
         self.button?.setBackgroundImage(image(withColor: style.disabledColor), for: .disabled)
         self.textColor = style.buttonTintColor

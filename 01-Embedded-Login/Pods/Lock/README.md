@@ -1,11 +1,11 @@
-# Lock.swift
+# Lock.swift 
 
 [![CircleCI](https://img.shields.io/circleci/project/github/auth0/Lock.swift.svg?style=flat-square)](https://circleci.com/gh/auth0/Lock.swift/tree/master)
 [![Version](https://img.shields.io/cocoapods/v/Lock.svg?style=flat-square)](http://cocoadocs.org/docsets/Lock)
 [![License](https://img.shields.io/cocoapods/l/Lock.svg?style=flat-square)](http://cocoadocs.org/docsets/Lock)
 [![Platform](https://img.shields.io/cocoapods/p/Lock.svg?style=flat-square)](http://cocoadocs.org/docsets/Lock)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat-square)](https://github.com/Carthage/Carthage)
-![Swift 3.1](https://img.shields.io/badge/Swift-3.1-orange.svg?style=flat-square)
+![Swift 5.0](https://img.shields.io/badge/Swift-5.0-orange.svg?style=flat-square)
 
 [Auth0](https://auth0.com) is an authentication broker that supports social identity providers as well as enterprise identity providers such as Active Directory, LDAP, Google Apps and Salesforce.
 
@@ -20,9 +20,9 @@ Need help migrating from v1? Please check our [Migration Guide](MIGRATION.md)
 
 ## Requirements
 
-- iOS 9 or later
-- Xcode 8.3 / 9.0
-- Swift 3.1+
+- iOS 9+
+- Xcode 10.x/11.x
+- Swift 4.x/5.x
 
 ## Install
 
@@ -31,7 +31,7 @@ Need help migrating from v1? Please check our [Migration Guide](MIGRATION.md)
  Add the following line to your Podfile:
 
  ```ruby
- pod "Lock", "~> 2.4"
+ pod "Lock", "~> 2.17"
  ```
 
 ### Carthage
@@ -39,7 +39,7 @@ Need help migrating from v1? Please check our [Migration Guide](MIGRATION.md)
 In your `Cartfile` add
 
 ```ruby
-github "auth0/Lock.swift" ~> 2.4
+github "auth0/Lock.swift" ~> 2.17
 ```
 
 ## Usage
@@ -60,13 +60,13 @@ func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpe
 
 ### Configuration
 
-In order to use Lock you need to provide your Auth0 Client Id and Domain.
+In order to use Lock you need to provide your Auth0 Client ID and Domain.
 
-> Auth0 ClientId & Domain can be found in your [Auth0 Dashboard](https://manage.auth0.com)
+> The Auth0 Client ID & Domain can be found in your [Auth0 Dashboard](https://manage.auth0.com)
 
 #### Auth0.plist file
 
-In your application bundle you can add a `plist` file named `Auth0.plist` with the following format
+In your application bundle you can add a `plist` file named `Auth0.plist` with the following information:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -87,7 +87,7 @@ Lock Classic handles authentication using Database, Social & Enterprise connecti
 
 ### OIDC Conformant Mode
 
-It is strongly encouraged that this SDK be used in OIDC Conformant mode. When this mode is enabled, it will force the SDK to use Auth0's current authentication pipeline and will prevent it from reaching legacy endpoints. By default this is `false`
+It is strongly encouraged that this SDK be used in OIDC Conformant mode. When this mode is enabled, it will force the SDK to use Auth0's current authentication pipeline and will prevent it from reaching legacy endpoints. By default this is `false`.
 
 ```swift
 .withOptions {
@@ -121,9 +121,14 @@ Lock
     .present(from: self)
 ```
 
+### Important: Database Connection Authentication
+
+Since June 2017 new Clients no longer have the **Password Grant Type** enabled by default.
+If you are using a Database Connection in Lock then you will need to enable the Password Grant Type, please follow [this guide](https://auth0.com/docs/clients/client-grant-types#how-to-edit-the-client-grant_types-property).
+
 #### Specify Connections
 
-Lock will automatically load your client configuration automatically, if you wish to override this behaviour you can manually specify which of your connections to use.  
+Lock will automatically load your application configuration automatically, if you wish to override this behaviour you can manually specify which of your connections to use.  
 
 Before presenting Lock you can tell it what connections it should display and use to authenticate an user. You can do that by calling the method and supply a closure that can specify the connections.
 
@@ -153,6 +158,17 @@ Before presenting Lock you can tell it what connections it should display and us
 }
 ```
 
+### Custom Domains
+
+If you are using [Custom Domains](https://auth0.com/docs/custom-domains), you will need to set the `configurationBaseURL` to your Auth0 Domain so the Lock configuration can 
+be read correctly.
+
+```swift
+.withOptions {
+   $0.configurationBase = "https://<YOUR DOMAIN>.auth0.com"
+}
+```
+
 ### Logging
 
 You can easily turn on/off logging capabilities.
@@ -169,6 +185,16 @@ Lock
 ## Styling Lock
 
 Lock provides many styling options to help you apply your own brand identity to Lock.
+
+### iPad Modal Presentation
+
+iPad presentation is show in a modal popup, this can be disabled to use full screen as follows.
+
+```swift
+.withStyle {
+  $0.modalPopup = false
+}
+```
 
 ### Customize your header and primary color
 
@@ -198,7 +224,11 @@ Lock provides many styling options to help you apply your own brand identity to 
 
 Lock Passwordless handles authentication using Passwordless & Social Connections.
 
-> The Passwordless feature requires your client to have the *Resource Owner* Legacy Grant Type enabled. Check [this article](https://auth0.com/docs/clients/client-grant-types) for more information.
+> The Passwordless feature requires your application to have the *Passwordless OTP* Grant Type enabled. Check [this article](https://auth0.com/docs/clients/client-grant-types) for more information.
+
+To use Passwordless Authentication with Lock, you need to configure it with **OIDC Conformant Mode** set to `true`.
+
+> OIDC Conformant Mode will force Lock to use Auth0's current authentication pipeline and will prevent it from reaching legacy endpoints. By default this mode is disabled. For more information, please see the [OIDC adoption guide](https://auth0.com/docs/api-auth/tutorials/adoption).
 
 To show Lock, add the following snippet in your `UIViewController`
 
@@ -206,7 +236,7 @@ To show Lock, add the following snippet in your `UIViewController`
 Lock
     .passwordless()
     .withOptions {
-        $0.closable = false
+        $0.oidcConformant = true
     }
     .withStyle {
       $0.title = "Welcome to my App!"
@@ -228,11 +258,10 @@ Lock
 
 **Notes:**
 - Passwordless can only be used with a single connection and will prioritize the use of email connections over sms.  
-- The `audience` option is not available in Passwordless.
 
 #### Passwordless Method
 
-When using Lock passwordless the default `passwordlessMethod` is `.code` which sends the user a one time passcode to login. If you want to use [Universal Links](https://auth0.com/docs/clients/enable-universal-links) you can add the following:
+When using Lock Passwordless the default `passwordlessMethod` is `.code` which sends the user a one time passcode to login. If you want to use [Universal Links](https://auth0.com/docs/clients/enable-universal-links) you can add the following:
 
 ```swift
 .withOptions {
@@ -242,7 +271,7 @@ When using Lock passwordless the default `passwordlessMethod` is `.code` which s
 
 #### Activity callback
 
-If you are using Lock passwordless and have specified the `.magicLink` option to send the user a universal link then you will need to add the following to your `AppDelegate.swift`:
+If you are using Lock Passwordless and have specified the `.magicLink` option to send the user a universal link then you will need to add the following to your `AppDelegate.swift`:
 
 ```swift
 func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Void) -> Bool {
@@ -288,8 +317,29 @@ By default Lock will use Auth0's [Terms of Service](https://auth0.com/terms) and
 
 ```swift
 .withOptions {
-  $0.termsOfService = "https://mycompany.com/terms"
-  $0.privacyPolicy = "https://mycompany.com/privacy"
+    $0.termsOfService = "https://mycompany.com/terms"
+    $0.privacyPolicy = "https://mycompany.com/privacy"
+}
+```
+
+#### Must accept Terms of Service
+
+Database connection will require explicit acceptance of terms of service.
+
+```swift
+.withOptions {
+    $0.mustAcceptTerms = true
+}
+```
+
+#### Show Terms of Service
+
+Database connection will display the Terms & Service dialog. Default is `true`.
+Note: Terms will always be shown if the `mustAcceptTerms` flag has been enabled.
+
+```swift
+.withOptions {
+    $0.showTerms = true
 }
 ```
 
@@ -370,11 +420,17 @@ Allows you to set provider scopes for oauth2/social connections with a comma sep
 
 When signing up the default information requirements are the user's *email* and *password*. You can expand your data capture requirements as needed.
 
+If you want to save the value of the attribute in the root of a user's profile, ensure you set the  `storage` parameter to `.rootAttribute`. Only a subset of values can be stored this way. The list of attributes that can be added to your root profile is [here](https://auth0.com/docs/api/authentication#signup). By default, every additional sign up field is stored inside the user's `user_metadata` object.
+
+When signing up, your app may need to assign values to the user's profile that are not entered by the user. The `hidden` property of `CustomTextField` prevents the signup field from being shown to the user, allowing your app to assign default values to the user profile.
+
+
 ```swift
 .withOptions {
   $0.customSignupFields = [
-    CustomTextField(name: "first_name", placeholder: "First Name", icon: LazyImage(name: "ic_person", bundle: Lock.bundle)),
-    CustomTextField(name: "last_name", placeholder: "Last Name", icon: LazyImage(name: "ic_person", bundle: Lock.bundle))
+    CustomTextField(name: "first_name", placeholder: "First Name", storage: .rootAttribute, icon: LazyImage(name: "ic_person", bundle: Lock.bundle), contentType: .givenName),
+    CustomTextField(name: "last_name", placeholder: "Last Name", storage: .rootAttribute, icon: LazyImage(name: "ic_person", bundle: Lock.bundle), contentType: .familyName),
+    CustomTextField(name: "referral_code", placeholder: "Referral Code", defaultValue: referralCode, hidden: true)
   ]
 }
 ```
@@ -383,24 +439,19 @@ When signing up the default information requirements are the user's *email* and 
 
 #### Password Manager
 
-By default password manager support using [1Password](https://1password.com/) is enabled for database connections, although you will still need to have the 1Password app installed for the option to be visible in the login and signup screens. You can disable 1Password support using the `enabled` property of the `passwordManager`.
+This functionality has been removed as of Release 2.18 due to the 1Password extension using deprecated methods, which can result in your app being rejected by the AppStore. This functionality was superseded in iOS 12 when Apple introduced the integration of password managers into login forms.
+
+The following options are now deprecated:
 
 ```swift
 .withOptions {
     $0.passwordManager.enabled = false
-}
-```
-
-By default the `appIdentifier` will be set to the app's bundle identifier and the `displayName` will be set to the app's display name. You can customize these as follows:
-
-```swift
-.withOptions {
     $0.passwordManager.appIdentifier = "www.myapp.com"
     $0.passwordManager.displayName = "My App"
 }
 ```
 
-You will need to add the following to your app's `Info.plist`:
+You may also safely remove the following entry from your app's `Info.plist`:
 
 ```xml
 <key>LSApplicationQueriesSchemes</key>
@@ -408,17 +459,6 @@ You will need to add the following to your app's `Info.plist`:
     <string>org-appextension-feature-password-management</string>
 </array>
 ```
-
-> If your `Info.plist` is not shown in this format, you can **Right Click** on `Info.plist` in Xcode and then select **Open As / Source Code**.
-
-
-If you see the following debug error:
-
-```text
-canOpenURL: failed for URL: "org-appextension-feature-password-management://" - error: "This app is not allowed to query for scheme org-appextension-feature-password-management"
-```
-
-This is normal and expected behavior when there is no app that can open a custom URL. In this case when the 1Password app is not installed.  Unfortunately, the message can be a little confusing but it is coming from iOS itself.
 
 #### Show Password
 

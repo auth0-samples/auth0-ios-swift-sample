@@ -28,12 +28,14 @@ struct LockOptions: OptionBuildable {
     var termsOfServiceURL: URL = URL(string: "https://auth0.com/terms")!
     var privacyPolicyURL: URL = URL(string: "https://auth0.com/privacy")!
     var supportURL: URL?
+    var mustAcceptTerms: Bool = false
+    var showTerms: Bool = true
     var logLevel: LoggerLevel = .off
     var loggerOutput: LoggerOutput?
     var logHttpRequest: Bool = false
     var scope: String = "openid"
     var connectionScope: [String: String] = [:]
-    var parameters: [String : Any] = [:]
+    var parameters: [String: Any] = [:]
     var allow: DatabaseMode = [.Login, .Signup, .ResetPassword]
     var autoClose: Bool = true
     var initialScreen: DatabaseScreen = .login
@@ -46,8 +48,12 @@ struct LockOptions: OptionBuildable {
 
     var oidcConformant: Bool = false
     var audience: String?
+    var leeway: Int?
+    var maxAge: Int?
 
     var passwordlessMethod: PasswordlessMethod = .code
     var passwordManager: OnePassword = OnePassword()
+
     var allowShowPassword: Bool = true
+    var configurationBaseURL: URL?
 }

@@ -34,7 +34,6 @@ class DatabaseOnlyView: UIView, DatabaseView {
     weak var ssoBar: InfoBarView?
     weak var spacer: UIView?
     private var style: Style?
-    weak var passwordManagerButton: IconButton?
     weak var showPasswordButton: IconButton?
 
     weak var identityField: InputField?
@@ -92,7 +91,7 @@ class DatabaseOnlyView: UIView, DatabaseView {
     private let separatorIndex = 2
     private let socialIndex = 1
 
-    func showLogin(withIdentifierStyle style: DatabaseIdentifierStyle, identifier: String? = nil, authCollectionView: AuthCollectionView? = nil, showPassswordManager: Bool, showPassword: Bool) {
+    func showLogin(withIdentifierStyle style: DatabaseIdentifierStyle, identifier: String? = nil, authCollectionView: AuthCollectionView? = nil, showPassword: Bool) {
         let form = CredentialView()
 
         let type: InputField.InputType
@@ -111,15 +110,13 @@ class DatabaseOnlyView: UIView, DatabaseView {
         form.identityField.nextField = form.passwordField
         form.passwordField.returnKey = .done
         primaryButton?.title = "LOG IN".i18n(key: "com.auth0.lock.submit.login.title", comment: "Login Button title")
-        layoutInStack(form, authCollectionView: authCollectionView)
         self.layoutSecondaryButton(self.allowedModes.contains(.ResetPassword))
+        layoutInStack(form, authCollectionView: authCollectionView)
         self.form = form
         self.identityField = form.identityField
         self.passwordField = form.passwordField
 
-        if showPassswordManager {
-            self.passwordManagerButton = form.passwordField.addFieldButton(withIcon: "ic_onepassword", color: Style.Auth0.onePasswordIconColor)
-        } else if showPassword, let passwordInput = form.passwordField.textField {
+        if showPassword, let passwordInput = form.passwordField.textField {
             self.showPasswordButton = form.passwordField.addFieldButton(withIcon: "ic_show_password_hidden", color: Style.Auth0.inputIconColor)
             self.showPasswordButton?.onPress = { [unowned self] button in
                 passwordInput.isSecureTextEntry = !passwordInput.isSecureTextEntry
@@ -129,7 +126,7 @@ class DatabaseOnlyView: UIView, DatabaseView {
     }
 
     // swiftlint:disable:next function_parameter_count
-    func showSignUp(withUsername showUsername: Bool, username: String?, email: String?, authCollectionView: AuthCollectionView? = nil, additionalFields: [CustomTextField], passwordPolicyValidator: PasswordPolicyValidator? = nil, showPassswordManager: Bool, showPassword: Bool) {
+    func showSignUp(withUsername showUsername: Bool, username: String?, email: String?, authCollectionView: AuthCollectionView? = nil, additionalFields: [CustomTextField], passwordPolicyValidator: PasswordPolicyValidator? = nil, showPassword: Bool, showTerms: Bool) {
         let form = SignUpView(additionalFields: additionalFields)
         form.showUsername = showUsername
         form.emailField.text = email
@@ -139,18 +136,21 @@ class DatabaseOnlyView: UIView, DatabaseView {
 
         primaryButton?.title = "SIGN UP".i18n(key: "com.auth0.lock.submit.signup.title", comment: "Signup Button title")
         layoutInStack(form, authCollectionView: authCollectionView)
-        self.layoutSecondaryButton(true)
+        self.layoutSecondaryButton(showTerms)
         self.form = form
 
         self.identityField = showUsername ? form.usernameField : form.emailField
         self.passwordField = form.passwordField
-        self.allFields = form.stackView.arrangedSubviews.map { $0 as? InputField }.filter { $0 != nil }.map { $0! }
+        self.allFields = form.stackView.arrangedSubviews.compactMap { $0 as? InputField }
 
         if let passwordPolicyValidator = passwordPolicyValidator {
             let passwordPolicyView = PolicyView(rules: passwordPolicyValidator.policy.rules)
+            if let style = style {
+                passwordPolicyView.styleSubViews(style: style)
+            }
             passwordPolicyValidator.delegate = passwordPolicyView
-            let passwordIndex = form.stackView.arrangedSubviews.index(of: form.passwordField)
-            form.stackView.insertArrangedSubview(passwordPolicyView, at:passwordIndex!)
+            let passwordIndex = form.stackView.arrangedSubviews.firstIndex(of: form.passwordField)
+            form.stackView.insertArrangedSubview(passwordPolicyView, at: passwordIndex!)
             passwordPolicyView.isHidden = true
             form.passwordField.errorLabel?.removeFromSuperview()
             form.passwordField.onBeginEditing = { [weak self, weak passwordPolicyView] _ in
@@ -167,9 +167,7 @@ class DatabaseOnlyView: UIView, DatabaseView {
             }
         }
 
-        if showPassswordManager {
-            self.passwordManagerButton = form.passwordField.addFieldButton(withIcon: "ic_onepassword", color: Style.Auth0.onePasswordIconColor)
-        } else if showPassword, let passwordInput = form.passwordField.textField {
+       if showPassword, let passwordInput = form.passwordField.textField {
             self.showPasswordButton = form.passwordField.addFieldButton(withIcon: "ic_show_password_hidden", color: Style.Auth0.inputIconColor)
             self.showPasswordButton?.onPress = { [unowned self] button in
                 passwordInput.isSecureTextEntry = !passwordInput.isSecureTextEntry
@@ -274,6 +272,5 @@ class DatabaseOnlyView: UIView, DatabaseView {
     func apply(style: Style) {
         self.style = style
         self.separator?.textColor = style.seperatorTextColor
-        self.passwordManagerButton?.color = style.onePasswordIconColor
     }
 }

@@ -39,8 +39,9 @@ struct ClassicRouter: Router {
     var root: Presentable? {
         let connections = self.lock.connections
         guard !connections.isEmpty else {
-            self.lock.logger.debug("No connections configured. Loading client info from Auth0...")
-            let interactor = CDNLoaderInteractor(baseURL: self.lock.authentication.url, clientId: self.lock.authentication.clientId)
+            self.lock.logger.debug("No connections configured. Loading application info from Auth0...")
+            let baseURL = self.lock.options.configurationBaseURL ?? self.lock.authentication.url
+            let interactor = CDNLoaderInteractor(baseURL: baseURL, clientId: self.lock.authentication.clientId)
             return ConnectionLoadingPresenter(loader: interactor, navigator: self, dispatcher: lock.observerStore, options: self.lock.options)
         }
         let whitelistForActiveAuth = self.lock.options.enterpriseConnectionUsingActiveAuth
@@ -51,7 +52,6 @@ struct ClassicRouter: Router {
             guard self.lock.options.allow != [.ResetPassword] && self.lock.options.initialScreen != .resetPassword else { return forgotPassword }
             let authentication = self.lock.authentication
             let interactor = DatabaseInteractor(connection: database, authentication: authentication, user: self.user, options: self.lock.options, dispatcher: lock.observerStore)
-            self.lock.options.passwordManager.controller = self.controller
             let presenter = DatabasePresenter(interactor: interactor, connection: database, navigator: self, options: self.lock.options)
             if !oauth2.isEmpty {
                 let interactor = Auth0OAuth2Interactor(authentication: self.lock.authentication, dispatcher: lock.observerStore, options: self.lock.options, nativeHandlers: self.lock.nativeHandlers)
@@ -105,14 +105,14 @@ struct ClassicRouter: Router {
         return presenter
     }
 
-    var multifactor: Presentable? {
+    func multifactor(withToken mfaToken: String? = nil) -> Presentable? {
         let connections = self.lock.connections
         guard let database = connections.database else {
             exit(withError: UnrecoverableError.missingDatabaseConnection)
             return nil
         }
         let authentication = self.lock.authentication
-        let interactor = MultifactorInteractor(user: self.user, authentication: authentication, connection: database, options: self.lock.options, dispatcher: lock.observerStore)
+        let interactor = MultifactorInteractor(user: self.user, authentication: authentication, connection: database, options: self.lock.options, dispatcher: lock.observerStore, mfaToken: mfaToken)
         let presenter = MultifactorPresenter(interactor: interactor, connection: database, navigator: self)
         presenter.customLogger = self.lock.logger
         return presenter
@@ -152,7 +152,9 @@ struct ClassicRouter: Router {
         case .forgotPassword:
             presentable = self.forgotPassword
         case .multifactor:
-            presentable = self.multifactor
+            presentable = self.multifactor()
+        case .multifactorWithToken(let token):
+            presentable = self.multifactor(withToken: token)
         case .enterpriseActiveAuth(let connection, let domain):
             presentable = self.enterpriseActiveAuth(connection: connection, domain: domain)
         case .unrecoverableError(let error):

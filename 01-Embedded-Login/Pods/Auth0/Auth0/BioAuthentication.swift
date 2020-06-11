@@ -1,4 +1,4 @@
-// TouchAuthentication.swift
+// BioAuthentication.swift
 //
 // Copyright (c) 2017 Auth0 (http://auth0.com)
 //
@@ -23,7 +23,7 @@
 import Foundation
 import LocalAuthentication
 
-struct TouchAuthentication {
+struct BioAuthentication {
 
     private let authContext: LAContext
 
@@ -33,12 +33,13 @@ struct TouchAuthentication {
         set { self.authContext.localizedFallbackTitle = newValue }
     }
 
-    @available(iOS 10.0, *)
+    @available(iOS 10.0, macOS 10.15, *)
     var cancelTitle: String? {
         get { return self.authContext.localizedCancelTitle }
         set { self.authContext.localizedCancelTitle = newValue }
     }
 
+    @available(iOS 9.0, macOS 10.15, *)
     var available: Bool {
         return self.authContext.canEvaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, error: nil)
     }
@@ -46,14 +47,16 @@ struct TouchAuthentication {
     init(authContext: LAContext, title: String, cancelTitle: String? = nil, fallbackTitle: String? = nil) {
         self.authContext = authContext
         self.title = title
-        if #available(iOS 10, *) { self.cancelTitle = cancelTitle }
+        if #available(iOS 10.0, macOS 10.15, *) { self.cancelTitle = cancelTitle }
         self.fallbackTitle = fallbackTitle
     }
 
-    func requireTouch(callback: @escaping (Error?) -> Void) {
+    @available(iOS 9.0, macOS 10.15, *)
+    func validateBiometric(callback: @escaping (Error?) -> Void) {
         self.authContext.evaluatePolicy(LAPolicy.deviceOwnerAuthenticationWithBiometrics, localizedReason: self.title) {
             guard $1 == nil else { return callback($1) }
             callback($0 ? nil : LAError(LAError.authenticationFailed))
         }
     }
+
 }

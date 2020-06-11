@@ -147,7 +147,7 @@ class InternationalPhoneInputView: UIView, Form, Stylable {
 
         constraintEqual(anchor: countryLabel.leftAnchor, toAnchor: iconContainer.rightAnchor, constant: 16)
         constraintEqual(anchor: countryLabel.topAnchor, toAnchor: container.topAnchor)
-        constraintEqual(anchor: countryLabel.rightAnchor, toAnchor: codeLabel.leftAnchor, priority: UILayoutPriorityDefaultHigh)
+        constraintEqual(anchor: countryLabel.rightAnchor, toAnchor: codeLabel.leftAnchor, priority: UILayoutPriority.priorityDefaultHigh)
         constraintEqual(anchor: countryLabel.bottomAnchor, toAnchor: container.bottomAnchor)
         countryLabel.translatesAutoresizingMaskIntoConstraints = false
 
@@ -156,7 +156,7 @@ class InternationalPhoneInputView: UIView, Form, Stylable {
         constraintEqual(anchor: codeLabel.rightAnchor, toAnchor: actionIconContainer.leftAnchor)
         constraintEqual(anchor: codeLabel.bottomAnchor, toAnchor: container.bottomAnchor)
         dimension(dimension: codeLabel.widthAnchor, withValue: 60.0)
-        codeLabel.setContentCompressionResistancePriority(UILayoutPriorityRequired, for: .horizontal)
+        codeLabel.setContentCompressionResistancePriority(UILayoutPriority.priorityRequired, for: .horizontal)
         codeLabel.translatesAutoresizingMaskIntoConstraints = false
 
         constraintGreaterOrEqual(anchor: actionIconContainer.leftAnchor, toAnchor: codeLabel.rightAnchor)
@@ -196,14 +196,16 @@ class InternationalPhoneInputView: UIView, Form, Stylable {
         container.layer.borderColor = Style.Auth0.inputBorderColor.cgColor
     }
 
-    func launchCountryTable(_ sender: UITapGestureRecognizer) {
+    @objc func launchCountryTable(_ sender: UITapGestureRecognizer) {
         let countryTableView = CountryTableViewController(withData: self.countryStore) {
             self.updateCountry($0)
         }
-        let navigationController = UINavigationController(rootViewController: countryTableView)
-        navigationController.modalPresentationStyle = .overFullScreen
+        let navigationController = CustomNagivationController(rootViewController: countryTableView)
+        if let style = self.style {
+            countryTableView.apply(style: style)
+            navigationController.modalPresentationStyle = style.modalPopup ? .formSheet : .overFullScreen
+        }
         self.onPresent(navigationController)
-        if let style = self.style { countryTableView.apply(style: style) }
     }
 
     func apply(style: Style) {
@@ -215,5 +217,15 @@ class InternationalPhoneInputView: UIView, Form, Stylable {
         self.actionIconView?.tintColor = style.inputIconBackgroundColor
         self.container.backgroundColor = style.inputBackgroundColor
         self.container.layer.borderColor = style.inputBorderColor.cgColor
+    }
+}
+
+class CustomNagivationController: UINavigationController {
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let superview = self.view.superview {
+            superview.layer.cornerRadius  = 4.0
+        }
     }
 }

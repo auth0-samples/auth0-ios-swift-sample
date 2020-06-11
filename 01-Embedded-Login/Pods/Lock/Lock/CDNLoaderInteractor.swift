@@ -34,7 +34,7 @@ struct CDNLoaderInteractor: RemoteConnectionLoader, Loggable {
     }
 
     func load(_ callback: @escaping (UnrecoverableError?, Connections?) -> Void) {
-        self.logger.info("Loading client info from \(self.url)")
+        self.logger.info("Loading application info from \(self.url)")
         let task = URLSession.shared.dataTask(with: self.url, completionHandler: { (data, response, error) in
             guard error?._code != NSURLErrorTimedOut else { return callback(.connectionTimeout, nil) }
             guard error == nil else {
@@ -77,7 +77,7 @@ struct CDNLoaderInteractor: RemoteConnectionLoader, Loggable {
             do {
                 var connections = OfflineConnections()
                 let json = try JSONSerialization.jsonObject(with: jsonp.data(using: String.Encoding.utf8)!, options: []) as? JSONObject
-                self.logger.debug("Client configuration is \(json.verbatim())")
+                self.logger.debug("Application configuration is \(json.verbatim())")
                 let info = ClientInfo(json: json)
                 if let auth0 = info.auth0 {
                     auth0.connections.forEach { connection in
@@ -108,8 +108,8 @@ struct CDNLoaderInteractor: RemoteConnectionLoader, Loggable {
 
                 guard !connections.isEmpty else { return callback(.clientWithNoConnections, connections) }
                 callback(nil, connections)
-            } catch let e {
-                self.logger.error("Failed to parse \(jsonp) with error \(e)")
+            } catch let exception {
+                self.logger.error("Failed to parse \(jsonp) with error \(exception)")
                 return callback(.invalidClientOrDomain, nil)
             }
         })
@@ -209,18 +209,19 @@ private struct ConnectionInfo {
 
     var passwordPolicy: PasswordPolicy {
         let name = (json["passwordPolicy"] as? String) ?? "none"
-        guard let policy = PasswordPolicy.Auth0(rawValue: name) else { return .none }
+        guard let policy = PasswordPolicy.Auth0(rawValue: name) else { return .none() }
+        let options = (json["password_complexity_options"] as? [String: Any]) ?? nil
         switch policy {
         case .excellent:
-            return .excellent
+            return .excellent(withOptions: options)
         case .good:
-            return .good
+            return .good(withOptions: options)
         case .fair:
-            return .fair
+            return .fair(withOptions: options)
         case .low:
-            return .low
+            return .low(withOptions: options)
         case .none:
-            return .none
+            return .none(withOptions: options)
         }
     }
 

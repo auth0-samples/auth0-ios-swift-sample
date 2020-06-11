@@ -52,15 +52,25 @@ class InputField: UIView, Stylable {
     var type: InputType = .email {
         didSet {
             self.textField?.placeholder = type.placeholder
+            if self.textField?.text?.isEmpty ?? true {
+                self.textField?.text = type.defaultValue
+            }
             self.textField?.isSecureTextEntry = type.secure
-            self.textField?.autocorrectionType = .no
-            self.textField?.autocapitalizationType = .none
+            self.textField?.autocorrectionType = type.autocorrectionType
+            self.textField?.autocapitalizationType = type.autocapitalizationType
             self.textField?.keyboardType = type.keyboardType
+            if #available(iOS 10.0, *) {
+                self.textField?.textContentType = type.contentType
+            }
             if let icon = type.icon {
                 self.iconView?.image = icon.image(compatibleWithTraits: self.traitCollection)
             } else if let textField = self.textField, let container = self.containerView {
                 self.iconContainer?.removeFromSuperview()
                 textFieldLeftAnchor = constraintEqual(anchor: textField.leftAnchor, toAnchor: container.leftAnchor, constant: 16)
+            }
+            isHidden = type.hidden
+            if isHidden {
+                showValid()
             }
         }
     }
@@ -120,10 +130,10 @@ class InputField: UIView, Stylable {
             self.errorLabel?.text = self.state.text
             self.errorLabelTopPadding?.constant = self.state.padding
             switch self.state {
-                case .valid:
-                    self.containerView?.layer.borderColor = self.borderColor?.cgColor
-                case .invalid:
-                    self.containerView?.layer.borderColor = self.borderColorError?.cgColor
+            case .valid:
+                self.containerView?.layer.borderColor = self.borderColor?.cgColor
+            case .invalid:
+                self.containerView?.layer.borderColor = self.borderColorError?.cgColor
             }
         }
     }
@@ -152,8 +162,8 @@ class InputField: UIView, Stylable {
         constraintEqual(anchor: errorLabel.leftAnchor, toAnchor: self.leftAnchor)
         constraintEqual(anchor: errorLabel.rightAnchor, toAnchor: self.rightAnchor)
         constraintEqual(anchor: errorLabel.bottomAnchor, toAnchor: self.bottomAnchor)
-        errorLabel.setContentHuggingPriority(UILayoutPriorityDefaultHigh, for: .vertical)
-        errorLabel.setContentCompressionResistancePriority(UILayoutPriorityDefaultHigh, for: .vertical)
+        errorLabel.setContentHuggingPriority(UILayoutPriority.priorityDefaultHigh, for: .vertical)
+        errorLabel.setContentCompressionResistancePriority(UILayoutPriority.priorityDefaultHigh, for: .vertical)
         errorLabel.translatesAutoresizingMaskIntoConstraints = false
 
         constraintEqual(anchor: iconContainer.leftAnchor, toAnchor: container.leftAnchor)
@@ -244,9 +254,18 @@ class InputField: UIView, Stylable {
                 return 0
             }
         }
+
+        var isValid: Bool {
+            switch self {
+            case .valid:
+                return true
+            case .invalid:
+                return false
+            }
+        }
     }
 
-    func textChanged(_ field: UITextField) {
+    @objc func textChanged(_ field: UITextField) {
         self.onTextChange(self)
     }
 
@@ -258,7 +277,7 @@ class InputField: UIView, Stylable {
         case password
         case phone
         case oneTimePassword
-        case custom(name: String, placeholder: String, icon: LazyImage?, keyboardType: UIKeyboardType, autocorrectionType: UITextAutocorrectionType, secure: Bool)
+        case custom(name: String, placeholder: String, defaultValue: String?, storage: UserStorage, icon: LazyImage?, keyboardType: UIKeyboardType, autocorrectionType: UITextAutocorrectionType, autocapitalizationType: UITextAutocapitalizationType, secure: Bool, hidden: Bool, contentType: UITextContentType?)
 
         var placeholder: String? {
             switch self {
@@ -274,20 +293,38 @@ class InputField: UIView, Stylable {
                 return "Phone Number".i18n(key: "com.auth0.lock.input.phone.placeholder", comment: "Phone placeholder")
             case .oneTimePassword:
                 return "Code".i18n(key: "com.auth0.lock.input.otp.placeholder", comment: "OTP placeholder")
-            case .custom(_, let placeholder, _, _, _, _):
+            case .custom(_, let placeholder, _, _, _, _, _, _, _, _, _):
                 return placeholder
             }
         }
 
-        var secure: Bool {
-            if case .password = self {
-                return true
+        var defaultValue: String? {
+            switch self {
+            case .custom(_, _, let defaultValue, _, _, _, _, _, _, _, _):
+                return defaultValue
+            default:
+                return nil
             }
+        }
 
-            if case .custom(_, _, _, _, _, let secure) = self {
+        var secure: Bool {
+            switch self {
+            case .password:
+                return true
+            case .custom(_, _, _, _, _, _, _, _, let secure, _, _):
                 return secure
+            default:
+                return false
             }
-            return false
+        }
+
+        var hidden: Bool {
+            switch self {
+            case .custom(_, _, _, _, _, _, _, _, _, let hidden, _):
+                return hidden
+            default:
+                return false
+            }
         }
 
         var icon: LazyImage? {
@@ -304,7 +341,7 @@ class InputField: UIView, Stylable {
                 return lazyImage(named: "ic_phone")
             case .oneTimePassword:
                 return lazyImage(named: "ic_lock")
-            case .custom(_, _, let icon, _, _, _):
+            case .custom(_, _, _, _, let icon, _, _, _, _, _, _):
                 return icon
             }
         }
@@ -323,17 +360,60 @@ class InputField: UIView, Stylable {
                 return .phonePad
             case .oneTimePassword:
                 return .decimalPad
-            case .custom(_, _, _, let keyboardType, _, _):
+            case .custom(_, _, _, _, _, let keyboardType, _, _, _, _, _):
                 return keyboardType
+            }
+        }
+
+        var contentType: UITextContentType? {
+            switch self {
+            case .email, .emailOrUsername:
+                if #available(iOS 10.0, *) {
+                    return .emailAddress
+                }
+                return nil
+            case .username:
+                if #available(iOS 11.0, *) {
+                    return .username
+                }
+                return nil
+            case .password:
+                if #available(iOS 11.0, *) {
+                    return .password
+                }
+                return nil
+            case .phone:
+                if #available(iOS 10.0, *) {
+                    return .telephoneNumber
+                }
+                return nil
+            case .oneTimePassword:
+                #if swift(>=4.0)
+                    if #available(iOS 12.0, *) {
+                        return .oneTimeCode
+                    }
+                #endif
+                return nil
+            case .custom(_, _, _, _, _, _, _, _, _, _, let contentType):
+                return contentType
             }
         }
 
         var autocorrectionType: UITextAutocorrectionType {
             switch self {
-            case .custom(_, _, _, _, let autocorrectionType, _):
+            case .custom(_, _, _, _, _, _, let autocorrectionType, _, _, _, _):
                 return autocorrectionType
             default:
                 return .no
+            }
+        }
+
+        var autocapitalizationType: UITextAutocapitalizationType {
+            switch self {
+            case .custom(_, _, _, _, _, _, _, let autocapitalizationType, _, _, _):
+                return autocapitalizationType
+            default:
+                return .none
             }
         }
     }
@@ -344,7 +424,7 @@ class InputField: UIView, Stylable {
         self.borderColorError = style.inputBorderColorError
         self.textField?.textColor = style.inputTextColor
         self.textField?.attributedPlaceholder = NSAttributedString(string: self.textField?.placeholder ?? "",
-                                                               attributes: [NSForegroundColorAttributeName: style.inputPlaceholderTextColor])
+                                                                   attributes: [NSAttributedString.attributedKeyColor: style.inputPlaceholderTextColor])
         self.containerView?.backgroundColor = style.inputBackgroundColor
         self.containerView?.layer.borderColor = style.inputBorderColor.cgColor
         self.errorLabel?.textColor = style.inputBorderColorError

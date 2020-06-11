@@ -36,6 +36,7 @@ public struct PasswordPolicy {
 
     let name: String
     let rules: [Rule]
+    static let mininumLengthKey = "min_length"
 
     enum Auth0: String {
         case none
@@ -49,15 +50,29 @@ public struct PasswordPolicy {
         return rules.map { $0.evaluate(on: password) }
     }
 
+    @available(*, deprecated, message: "see none(withOptions: options)")
     public static var none: PasswordPolicy {
         return PasswordPolicy(name: Auth0.none.rawValue, rules: [withPassword(lengthInRange: 1...Int.max, message: nonEmpty)])
     }
 
+    public static func none(withOptions options: [String: Any]? = nil) -> PasswordPolicy {
+        let minLength = (options?[mininumLengthKey] as? Int) ?? 1
+        return PasswordPolicy(name: Auth0.none.rawValue, rules: [withPassword(lengthInRange: minLength...Int.max, message: nonEmpty)])
+    }
+
+    @available(*, deprecated, message: "see low(withOptions: options)")
     public static var low: PasswordPolicy {
         let message = String(format: atLeast, 6)
         return PasswordPolicy(name: Auth0.low.rawValue, rules: [withPassword(lengthInRange: 6...Int.max, message: message)])
     }
 
+    public static func low(withOptions options: [String: Any]? = nil) -> PasswordPolicy {
+        let minLength = (options?[mininumLengthKey] as? Int) ?? 6
+        let message = String(format: atLeast, minLength)
+        return PasswordPolicy(name: Auth0.low.rawValue, rules: [withPassword(lengthInRange: minLength...Int.max, message: message)])
+    }
+
+    @available(*, deprecated, message: "see fair(withOptions: options)")
     public static var fair: PasswordPolicy {
         return PasswordPolicy(name: Auth0.fair.rawValue, rules: [
             withPassword(lengthInRange: 8...Int.max, message: String(format: atLeast, 8)),
@@ -69,6 +84,19 @@ public struct PasswordPolicy {
             ])
     }
 
+    public static func fair(withOptions options: [String: Any]? = nil) -> PasswordPolicy {
+        let minLength = (options?[mininumLengthKey] as? Int) ?? 8
+        return PasswordPolicy(name: Auth0.fair.rawValue, rules: [
+            withPassword(lengthInRange: minLength...Int.max, message: String(format: atLeast, minLength)),
+            AtLeastRule(minimum: 3, rules: [
+                withPassword(havingCharactersIn: .lowercaseLetters, message: lowercase),
+                withPassword(havingCharactersIn: .uppercaseLetters, message: upperCase),
+                withPassword(havingCharactersIn: .decimalDigits, message: numbers)
+                ], message: shouldContain)
+            ])
+    }
+
+    @available(*, deprecated, message: "see good(withOptions: options)")
     public static var good: PasswordPolicy {
         var specialCharacterSet = CharacterSet.punctuationCharacters
         specialCharacterSet.formUnion(.symbols)
@@ -83,6 +111,22 @@ public struct PasswordPolicy {
             ])
     }
 
+    public static func good(withOptions options: [String: Any]? = nil) -> PasswordPolicy {
+        var specialCharacterSet = CharacterSet.punctuationCharacters
+        specialCharacterSet.formUnion(.symbols)
+        let minLength = (options?[mininumLengthKey] as? Int) ?? 8
+        return PasswordPolicy(name: Auth0.good.rawValue, rules: [
+            withPassword(lengthInRange: minLength...Int.max, message: String(format: atLeast, minLength)),
+            AtLeastRule(minimum: 3, rules: [
+                withPassword(havingCharactersIn: .lowercaseLetters, message: lowercase),
+                withPassword(havingCharactersIn: .uppercaseLetters, message: upperCase),
+                withPassword(havingCharactersIn: .decimalDigits, message: numbers),
+                withPassword(havingCharactersIn: specialCharacterSet, message: specialCharacters)
+                ], message: String(format: containAtLeast, 3, 4))
+            ])
+    }
+
+    @available(*, deprecated, message: "see excellent(withOptions: options)")
     public static var excellent: PasswordPolicy {
         var specialCharacterSet = CharacterSet.punctuationCharacters
         specialCharacterSet.formUnion(.symbols)
@@ -98,14 +142,20 @@ public struct PasswordPolicy {
             ])
     }
 
-}
-
-extension PasswordPolicy {
-    func onePasswordRules() -> [String: Any] {
-        // Excellent
-        return [ AppExtensionGeneratedPasswordMinLengthKey: "10",
-                 AppExtensionGeneratedPasswordMaxLengthKey: "128",
-                 AppExtensionGeneratedPasswordRequireDigitsKey: true,
-                 AppExtensionGeneratedPasswordRequireSymbolsKey: true ]
+    public static func excellent(withOptions options: [String: Any]? = nil) -> PasswordPolicy {
+        var specialCharacterSet = CharacterSet.punctuationCharacters
+        specialCharacterSet.formUnion(.symbols)
+        let minLength = (options?[mininumLengthKey] as? Int) ?? 10
+        return PasswordPolicy(name: Auth0.excellent.rawValue, rules: [
+            withPassword(lengthInRange: minLength...128, message: String(format: atLeast, minLength)),
+            AtLeastRule(minimum: 3, rules: [
+                withPassword(havingCharactersIn: .lowercaseLetters, message: lowercase),
+                withPassword(havingCharactersIn: .uppercaseLetters, message: upperCase),
+                withPassword(havingCharactersIn: .decimalDigits, message: numbers),
+                withPassword(havingCharactersIn: specialCharacterSet, message: specialCharacters)
+                ], message: String(format: containAtLeast, 3, 4)),
+            withPassword(havingMaxConsecutiveRepeats: 2, message: String(format: noMoreThanSimilar, 2, "aaa"))
+            ])
     }
+
 }

@@ -27,7 +27,7 @@ class AuthCollectionView: UIView, View {
     let connections: [OAuth2Connection]
     let mode: Mode
     let onAction: (String) -> Void
-    let customStyle: [String : AuthStyle]
+    let customStyle: [String: AuthStyle]
 
     enum Mode {
         case expanded(isLogin: Bool)
@@ -66,7 +66,7 @@ class AuthCollectionView: UIView, View {
     }
 
     public override var intrinsicContentSize: CGSize {
-        return CGSize(width: UIViewNoIntrinsicMetric, height: self.height)
+        return CGSize(width: UIView.viewNoIntrinsicMetric, height: self.height)
     }
 
     private func layout(_ connections: [OAuth2Connection], mode: Mode, insets: UIEdgeInsets) {
@@ -147,6 +147,7 @@ func oauth2Buttons(forConnections connections: [OAuth2Connection], customStyle: 
         button.title = login ? style.localizedLoginTitle : style.localizedSignUpTitle
         button.normalColor = style.normalColor
         button.highlightedColor = style.highlightedColor
+        button.borderColor = style.borderColor
         button.titleColor = style.foregroundColor
         button.icon = style.image.image(compatibleWithTraits: button.traitCollection)
         button.onPress = { _ in

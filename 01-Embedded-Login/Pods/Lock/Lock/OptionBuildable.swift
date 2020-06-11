@@ -39,6 +39,12 @@ public protocol OptionBuildable: Options {
         /// Support page url that will be displayed (Inside Safari) when an unrecoverable error occurs and the user taps the "Contact Support" button in the error screen.
     var supportURL: URL? { get set }
 
+        /// Whether the user needs to accept the terms before sign up or not. By default is false.
+    var mustAcceptTerms: Bool { get set }
+
+        /// Whether the terms should be shown on the signup screen. By default is true.
+    var showTerms: Bool { get set }
+
         /// Log level for Lock. By default is `Off`.
     var logLevel: LoggerLevel { get set }
 
@@ -95,10 +101,14 @@ public protocol OptionBuildable: Options {
     var passwordlessMethod: PasswordlessMethod { get set }
 
         /// Specify the password manager configuration, specify the appIdentifier, displyName and enable/disable manager.  By default manager is enabled and defaults to the app's bundle identifier and display name.
+    @available(*, deprecated, message: "replaced by iOS built-in password manager support")
     var passwordManager: OnePassword { get set }
 
         /// Should Lock display the option to toggle the visibility of the password field text, will not be visible if password manager is available.  By default is true
     var allowShowPassword: Bool { get set }
+
+        /// Set configuration URL to use for Lock configuration. Required when using Custom Domains
+    var configurationBaseURL: URL? { get set }
 }
 
 extension OptionBuildable {
@@ -116,9 +126,10 @@ extension OptionBuildable {
     }
 
     func validatePasswordless() -> UnrecoverableError? {
-        guard self.audience == nil else { return UnrecoverableError.invalidOptions(cause: "Audience option not available in Lock Passwordless") }
+        guard self.oidcConformant || self.audience == nil else { return UnrecoverableError.invalidOptions(cause: "Must set OIDC-Conformant flag in Lock to use audience option") }
         return nil
     }
+
 }
 
 public extension OptionBuildable {
@@ -129,7 +140,7 @@ public extension OptionBuildable {
             return self.termsOfServiceURL.absoluteString
         }
         set {
-            guard let url = URL(string: newValue) else { return } // FIXME: log error
+            guard let url = URL(string: newValue) else { return }
             self.termsOfServiceURL = url
         }
     }
@@ -140,7 +151,7 @@ public extension OptionBuildable {
             return self.privacyPolicyURL.absoluteString
         }
         set {
-            guard let url = URL(string: newValue) else { return } // FIXME: log error
+            guard let url = URL(string: newValue) else { return }
             self.privacyPolicyURL = url
         }
     }
@@ -152,8 +163,20 @@ public extension OptionBuildable {
             return url.absoluteString
         }
         set {
-            guard let value = newValue, let url = URL(string: value) else { return } // FIXME: log error
+            guard let value = newValue, let url = URL(string: value) else { return }
             self.supportURL = url
+        }
+    }
+
+        /// Base CDN URL. By default is not set.
+    var configurationBase: String? {
+        get {
+            guard let url = self.configurationBaseURL else { return nil }
+            return url.absoluteString
+        }
+        set {
+            guard let value = newValue, let url = URL(string: value) else { return }
+            self.configurationBaseURL = url
         }
     }
 

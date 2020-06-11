@@ -11,7 +11,6 @@
 #endif
 
 #import "Lock.h"
-#import "OnePasswordExtension.h"
 
 FOUNDATION_EXPORT double LockVersionNumber;
 FOUNDATION_EXPORT const unsigned char LockVersionString[];

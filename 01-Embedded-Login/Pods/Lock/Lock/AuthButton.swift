@@ -33,14 +33,13 @@ public class AuthButton: UIView {
         }
         set {
             self.normalColor = newValue
-            self.highlightedColor = newValue.a0_darker(0.3)
         }
     }
 
     public var normalColor: UIColor = UIColor.a0_orange {
         didSet {
             let normal = image(withColor: self.normalColor)
-            self.button?.setBackgroundImage(normal, for: UIControlState())
+            self.button?.setBackgroundImage(normal, for: .normal)
         }
     }
 
@@ -48,8 +47,17 @@ public class AuthButton: UIView {
         didSet {
             let highlighted = image(withColor: self.highlightedColor)
             self.button?.setBackgroundImage(highlighted, for: .highlighted)
-            if case .big = size {
-                self.iconView?.backgroundColor = self.highlightedColor
+        }
+    }
+
+    public var borderColor: UIColor? {
+        didSet {
+            if let borderColor = self.borderColor {
+                self.layer.borderWidth = 1
+                self.layer.borderColor = borderColor.cgColor
+            } else {
+                self.layer.borderWidth = 0
+                self.layer.borderColor = UIColor.clear.cgColor
             }
         }
     }
@@ -117,6 +125,9 @@ public class AuthButton: UIView {
     // MARK: - Layout
 
     private func layout(size: Size) {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.layer.cornerRadius = 3
+        self.layer.masksToBounds = true
 
         let button = UIButton(type: .custom)
         let iconView = UIImageView()
@@ -134,26 +145,22 @@ public class AuthButton: UIView {
         constraintEqual(anchor: button.topAnchor, toAnchor: self.topAnchor)
         constraintEqual(anchor: button.rightAnchor, toAnchor: self.rightAnchor)
         constraintEqual(anchor: button.bottomAnchor, toAnchor: self.bottomAnchor)
+
         if case .small = size {
             constraintEqual(anchor: button.widthAnchor, toAnchor: button.heightAnchor)
         }
+
         dimension(dimension: button.heightAnchor, greaterThanOrEqual: 50)
         button.translatesAutoresizingMaskIntoConstraints = false
 
-        button.layer.cornerRadius = 3
-        button.layer.masksToBounds = true
-
-        if case .big = size {
-            iconView.backgroundColor = self.highlightedColor
-        }
         iconView.image = self.icon ?? image(named: "ic_auth_auth0", compatibleWithTraitCollection: self.traitCollection)
         iconView.contentMode = .center
         iconView.tintColor = self.titleColor
 
-        button.setBackgroundImage(image(withColor: self.color), for: UIControlState())
-        button.setBackgroundImage(image(withColor: self.color.a0_darker(0.3)), for: .highlighted)
-        button.setTitleColor(self.titleColor, for: UIControlState())
-        button.titleLabel?.font = .systemFont(ofSize: 13.33, weight: UIFontWeightMedium)
+        button.setBackgroundImage(image(withColor: self.color), for: .normal)
+        button.setBackgroundImage(image(withColor: self.highlightedColor), for: .highlighted)
+        button.setTitleColor(self.titleColor, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 16, weight: UIFont.weightMedium)
         button.titleLabel?.adjustsFontSizeToFitWidth = true
         button.titleLabel?.minimumScaleFactor = 0.5
         button.contentVerticalAlignment = .center
@@ -161,7 +168,7 @@ public class AuthButton: UIView {
         button.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
 
         if case .big = self.size {
-            button.setTitle(self.title, for: UIControlState())
+            button.setTitle(self.title, for: .normal)
         }
 
         self.button = button
@@ -170,7 +177,7 @@ public class AuthButton: UIView {
 
     public override func updateConstraints() {
         super.updateConstraints()
-        self.button?.titleEdgeInsets = UIEdgeInsets(top: 0, left: max(self.frame.size.height, 50) + 18, bottom: 0, right: 18)
+        self.button?.titleEdgeInsets = UIEdgeInsets(top: 0, left: max(self.frame.size.height, 50) + 12, bottom: 0, right: 12)
     }
 
     public override var intrinsicContentSize: CGSize {
@@ -184,7 +191,7 @@ public class AuthButton: UIView {
 
     // MARK: - Event
 
-    func buttonPressed(_ sender: Any) {
+    @objc func buttonPressed(_ sender: Any) {
         self.onPress(self)
     }
 }
@@ -196,5 +203,12 @@ extension UIColor {
         var hue: CGFloat = 0, saturation: CGFloat = 0, brightness: CGFloat = 0, alpha: CGFloat = 0
         guard self.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha) else { return self }
         return UIColor(hue: hue, saturation: saturation, brightness: (brightness - percentage), alpha: alpha)
+    }
+
+    func a0_lighter(_ percentage: CGFloat) -> UIColor {
+        guard percentage >= 0 && percentage <= 1 else { return self }
+        var hue: CGFloat = 0, saturation: CGFloat = 0, brightness: CGFloat = 0, alpha: CGFloat = 0
+        guard self.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha) else { return self }
+        return UIColor(hue: hue, saturation: saturation, brightness: (brightness + percentage), alpha: alpha)
     }
 }

@@ -38,8 +38,6 @@ class DatabasePresenter: Presentable, Loggable {
         }
     }
 
-    var passwordManager: PasswordManager
-
     var authPresenter: AuthPresenter?
     var enterpriseInteractor: EnterpriseDomainInteractor?
 
@@ -59,7 +57,6 @@ class DatabasePresenter: Presentable, Loggable {
         self.database = connection
         self.navigator = navigator
         self.options = options
-        self.passwordManager = options.passwordManager
     }
 
     var view: View {
@@ -96,7 +93,7 @@ class DatabasePresenter: Presentable, Loggable {
         self.messagePresenter?.hideCurrent()
         let authCollectionView = self.authPresenter?.newViewToEmbed(withInsets: UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20), isLogin: true)
         let style = self.database.requiresUsername ? self.options.usernameStyle : [.Email]
-        view.showLogin(withIdentifierStyle: style, identifier: identifier, authCollectionView: authCollectionView, showPassswordManager: self.passwordManager.available, showPassword: self.options.allowShowPassword)
+        view.showLogin(withIdentifierStyle: style, identifier: identifier, authCollectionView: authCollectionView, showPassword: self.options.allowShowPassword)
         self.currentScreen = .login
         let form = view.form
         form?.onValueChange = self.handleInput
@@ -118,6 +115,10 @@ class DatabasePresenter: Presentable, Loggable {
                     }
                     if case CredentialAuthError.multifactorRequired = error {
                         self.navigator.navigate(.multifactor)
+                        return
+                    } else if case CredentialAuthError.multifactorTokenRequired(let token) = error {
+                        self.navigator.navigate(.multifactorWithToken(token))
+                        return
                     } else {
                         form?.needsToUpdateState()
                         self.messagePresenter?.showError(error)
@@ -149,23 +150,6 @@ class DatabasePresenter: Presentable, Loggable {
         view.secondaryButton?.onPress = { button in
             self.navigator.navigate(.forgotPassword)
         }
-
-        if let identifyField = view.identityField, let passwordField = view.passwordField {
-            passwordManager.onUpdate = { [unowned self, unowned identifyField, unowned passwordField] identifier, password in
-                identifyField.text = identifier
-                passwordField.text = password
-                self.handleInput(identifyField)
-                self.handleInput(passwordField)
-            }
-        }
-        view.passwordManagerButton?.onPress = { _ in
-            self.passwordManager.login {
-                guard $0 == nil else {
-                    return self.logger.error("There was a problem with the password manager: \($0.verbatim())")
-                }
-            }
-        }
-
     }
 
     private func showSignup(inView view: DatabaseView, username: String?, email: String?) {
@@ -175,9 +159,11 @@ class DatabasePresenter: Presentable, Loggable {
         let passwordPolicyValidator = interactor?.passwordValidator as? PasswordPolicyValidator
         self.currentScreen = .signup
         interactor?.user.reset()
-        view.showSignUp(withUsername: self.database.requiresUsername, username: username, email: email, authCollectionView: authCollectionView, additionalFields: self.options.customSignupFields, passwordPolicyValidator: passwordPolicyValidator, showPassswordManager: self.passwordManager.available, showPassword: self.options.allowShowPassword)
+        view.showSignUp(withUsername: self.database.requiresUsername, username: username, email: email, authCollectionView: authCollectionView, additionalFields: self.options.customSignupFields, passwordPolicyValidator: passwordPolicyValidator, showPassword: self.options.allowShowPassword, showTerms: options.showTerms || options.mustAcceptTerms)
+        view.allFields?.filter { $0.text != nil && !$0.text!.isEmpty }.forEach(self.handleInput)
         let form = view.form
         view.form?.onValueChange = self.handleInput
+
         let action = { [weak form, weak view] (button: PrimaryButton) in
             self.messagePresenter?.hideCurrent()
             self.logger.info("Perform sign up for email \(self.creator.email.verbatim())")
@@ -203,6 +189,9 @@ class DatabasePresenter: Presentable, Loggable {
                     if let error = loginError, case .multifactorRequired = error {
                         self.navigator.navigate(.multifactor)
                         return
+                    } else if let error = loginError, case .multifactorTokenRequired(let token) = error {
+                        self.navigator.navigate(.multifactorWithToken(token))
+                        return
                     }
                     let error: LocalizableError = createError ?? loginError!
                     form?.needsToUpdateState()
@@ -212,13 +201,24 @@ class DatabasePresenter: Presentable, Loggable {
             }
         }
 
+        let checkTermsAndSignup = { [weak view] (button: PrimaryButton) in
+            if self.options.mustAcceptTerms {
+                let validForm = view?.allFields?
+                    .filter { !$0.state.isValid }
+                    .isEmpty ?? false
+                if validForm { self.showTermsPrompt(atButton: button) { _ in action(button) } }
+            } else {
+                action(button)
+            }
+        }
+
         view.form?.onReturn = { [weak view] field in
             guard let button = view?.primaryButton, field.returnKey == .done else { return } // FIXME: Log warn
-            action(button)
+            checkTermsAndSignup(button)
         }
-        view.primaryButton?.onPress = action
+        view.primaryButton?.onPress = checkTermsAndSignup
         view.secondaryButton?.title = "By signing up, you agree to our terms of\n service and privacy policy".i18n(key: "com.auth0.lock.database.button.tos", comment: "tos & privacy")
-        view.secondaryButton?.color = UIColor ( red: 0.9333, green: 0.9333, blue: 0.9333, alpha: 1.0 )
+        view.secondaryButton?.color = UIColor(red: 0.9333, green: 0.9333, blue: 0.9333, alpha: 1.0)
         view.secondaryButton?.onPress = { button in
             let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
             alert.popoverPresentationController?.sourceView = button
@@ -228,23 +228,6 @@ class DatabasePresenter: Presentable, Loggable {
             let privacy = UIAlertAction(title: "Privacy Policy".i18n(key: "com.auth0.lock.database.tos.sheet.privacy", comment: "Privacy"), style: .default, handler: safariBuilder(forURL: self.options.privacyPolicyURL as URL, navigator: self.navigator))
             [cancel, tos, privacy].forEach { alert.addAction($0) }
             self.navigator.present(alert)
-        }
-
-        if let identifyField = view.identityField, let passwordField = view.passwordField {
-            passwordManager.onUpdate = { [unowned self, unowned identifyField, unowned passwordField] identifier, password in
-                identifyField.text = identifier
-                passwordField.text = password
-                self.handleInput(identifyField)
-                self.handleInput(passwordField)
-            }
-        }
-
-        view.passwordManagerButton?.onPress = { _ in
-            self.passwordManager.store(withPolicy: passwordPolicyValidator?.policy.onePasswordRules(), identifier: self.creator.identifier) {
-                guard $0 == nil else {
-                    return self.logger.error("There was a problem with the password manager: \($0.verbatim())")
-                }
-            }
         }
     }
 
@@ -267,8 +250,8 @@ class DatabasePresenter: Presentable, Loggable {
             attribute = .password(enforcePolicy: self.currentScreen == .signup)
         case .username:
             attribute = .username
-        case .custom(let name, _, _, _, _, _):
-            attribute = .custom(name: name)
+        case .custom(let name, _, _, let storage, _, _, _, _, _, _, _):
+            attribute = .custom(name: name, storage: storage)
         default:
             return
         }
@@ -291,6 +274,19 @@ class DatabasePresenter: Presentable, Loggable {
         } catch {
             input.showError()
         }
+    }
+
+    func showTermsPrompt(atButton button: PrimaryButton, successHandler: @escaping (PrimaryButton) -> Void) {
+        let terms = "Terms & Policy".i18n(key: "com.auth0.lock.database.button.tos.title", comment: "tos title")
+        let alert = UIAlertController(title: terms, message: "By signing up, you agree to our terms of\n service and privacy policy".i18n(key: "com.auth0.lock.database.button.tos", comment: "tos & privacy"), preferredStyle: .alert)
+        alert.popoverPresentationController?.sourceView = button
+        alert.popoverPresentationController?.sourceRect = button.bounds
+        let cancelAction = UIAlertAction(title: "Cancel".i18n(key: "com.auth0.lock.database.tos.sheet.cancel", comment: "Cancel"), style: .cancel, handler: nil)
+        let okAction = UIAlertAction(title: "Accept".i18n(key: "com.auth0.lock.database.tos.sheet.accept", comment: "Accept"), style: .default) { _ in
+            successHandler(button)
+        }
+        [cancelAction, okAction].forEach { alert.addAction($0) }
+        self.navigator.present(alert)
     }
 }
 

@@ -27,6 +27,7 @@ public class LockViewController: UIViewController {
     weak var headerView: HeaderView!
     weak var scrollView: UIScrollView!
     weak var messageView: MessageView?
+    weak var scrollContentView: UIView!
     var current: View?
     var keyboard: Bool = false
     var routes: Routes = Routes()
@@ -41,6 +42,12 @@ public class LockViewController: UIViewController {
         self.lock = lock
         super.init(nibName: nil, bundle: nil)
         lock.observerStore.controller = self
+        if self.lock.style.modalPopup && UIDevice.current.userInterfaceIdiom == .pad {
+            self.modalPresentationStyle = .formSheet
+            self.preferredContentSize = CGSize(width: 375, height: 667)
+        } else {
+            self.modalPresentationStyle = .fullScreen
+        }
         self.router = lock.classicMode ? ClassicRouter(lock: lock, controller: self) : PasswordlessRouter(lock: lock, controller: self)
     }
 
@@ -74,6 +81,9 @@ public class LockViewController: UIViewController {
         let scrollView = UIScrollView()
         scrollView.bounces = false
         scrollView.keyboardDismissMode = .interactive
+        if #available(iOS 11.0, *) {
+            scrollView.contentInsetAdjustmentBehavior = .never
+        }
         self.view.addSubview(scrollView)
         constraintEqual(anchor: scrollView.leftAnchor, toAnchor: self.view.leftAnchor)
         constraintEqual(anchor: scrollView.topAnchor, toAnchor: self.view.topAnchor)
@@ -82,12 +92,22 @@ public class LockViewController: UIViewController {
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         self.scrollView = scrollView
 
+        let scrollContentView = UIView()
+        self.scrollView.addSubview(scrollContentView)
+        constraintEqual(anchor: scrollContentView.leftAnchor, toAnchor: scrollView.leftAnchor)
+        constraintEqual(anchor: scrollContentView.topAnchor, toAnchor: scrollView.topAnchor)
+        constraintEqual(anchor: scrollContentView.rightAnchor, toAnchor: scrollView.rightAnchor)
+        constraintEqual(anchor: scrollContentView.bottomAnchor, toAnchor: scrollView.bottomAnchor)
+        constraintEqual(anchor: scrollContentView.widthAnchor, toAnchor: scrollView.widthAnchor)
+        constraintEqual(anchor: scrollContentView.heightAnchor, toAnchor: view.heightAnchor, priority: .defaultLow)
+        scrollContentView.translatesAutoresizingMaskIntoConstraints = false
+        self.scrollContentView = scrollContentView
+
         let header = HeaderView()
-        self.scrollView.addSubview(header)
-        constraintEqual(anchor: header.leftAnchor, toAnchor: scrollView.leftAnchor)
-        constraintEqual(anchor: header.topAnchor, toAnchor: scrollView.topAnchor)
-        constraintEqual(anchor: header.rightAnchor, toAnchor: scrollView.rightAnchor)
-        constraintEqual(anchor: header.widthAnchor, toAnchor: scrollView.widthAnchor)
+        self.scrollContentView.addSubview(header)
+        constraintEqual(anchor: header.leftAnchor, toAnchor: scrollContentView.leftAnchor)
+        constraintEqual(anchor: header.topAnchor, toAnchor: scrollContentView.topAnchor)
+        constraintEqual(anchor: header.rightAnchor, toAnchor: scrollContentView.rightAnchor)
         header.translatesAutoresizingMaskIntoConstraints = false
 
         header.showClose = self.lock.options.closable
@@ -100,12 +120,19 @@ public class LockViewController: UIViewController {
         self.messagePresenter = BannerMessagePresenter(root: root, messageView: nil)
     }
 
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let superview = self.view.superview {
+            superview.layer.cornerRadius  = 4.0
+        }
+    }
+
     public override func viewDidLoad() {
         super.viewDidLoad()
 
         let center = NotificationCenter.default
-        center.addObserver(self, selector: #selector(keyboardWasShown), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        center.addObserver(self, selector: #selector(keyboardWasHidden), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        center.addObserver(self, selector: #selector(keyboardWasShown), name: UIResponder.responderKeyboardWillShowNotification, object: nil)
+        center.addObserver(self, selector: #selector(keyboardWasHidden), name: UIResponder.responderKeyboardWillHideNotification, object: nil)
 
         self.present(self.router.root, title: Route.root.title(withStyle: self.lock.style))
     }
@@ -115,7 +142,7 @@ public class LockViewController: UIViewController {
         self.current?.remove()
         let view = presenter.view
         view.applyAll(withStyle: self.lock.style)
-        self.anchorConstraint = view.layout(inView: self.scrollView, below: self.headerView)
+        self.anchorConstraint = view.layout(inView: self.scrollContentView, below: self.headerView)
         presenter.messagePresenter = self.messagePresenter
         self.current = view
         self.headerView.title = title
@@ -143,18 +170,18 @@ public class LockViewController: UIViewController {
 
     // MARK: - Keyboard
 
-    func keyboardWasShown(_ notification: Notification) {
+    @objc func keyboardWasShown(_ notification: Notification) {
         guard
-            let value = notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue,
-            let duration = notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber,
-            let curveValue = notification.userInfo?[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber
+            let value = notification.userInfo?[UIResponder.responderKeyboardFrameEndUserInfoKey] as? NSValue,
+            let duration = notification.userInfo?[UIResponder.responderKeyboardAnimationDurationUserInfoKey] as? NSNumber,
+            let curveValue = notification.userInfo?[UIResponder.responderKeyboardAnimationCurveUserInfoKey] as? NSNumber
             else { return }
         let frame = value.cgRectValue
         let insets = UIEdgeInsets(top: 0, left: 0, bottom: frame.height, right: 0)
 
         self.keyboard = true
         self.scrollView.contentInset = insets
-        let options = UIViewAnimationOptions(rawValue: UInt(curveValue.intValue << 16))
+        let options = A0ViewAnimationOptions(rawValue: UInt(curveValue.intValue << 16))
         UIView.animate(
             withDuration: duration.doubleValue,
             delay: 0,
@@ -165,15 +192,15 @@ public class LockViewController: UIViewController {
             completion: nil)
     }
 
-    func keyboardWasHidden(_ notification: Notification) {
+    @objc func keyboardWasHidden(_ notification: Notification) {
         guard
-            let duration = notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber,
-            let curveValue = notification.userInfo?[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber
+            let duration = notification.userInfo?[UIResponder.responderKeyboardAnimationDurationUserInfoKey] as? NSNumber,
+            let curveValue = notification.userInfo?[UIResponder.responderKeyboardAnimationCurveUserInfoKey] as? NSNumber
             else { return }
         self.scrollView.contentInset = UIEdgeInsets.zero
 
         self.keyboard = false
-        let options = UIViewAnimationOptions(rawValue: UInt(curveValue.intValue << 16))
+        let options = A0ViewAnimationOptions(rawValue: UInt(curveValue.intValue << 16))
         UIView.animate(
             withDuration: duration.doubleValue,
             delay: 0,
