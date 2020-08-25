@@ -21,6 +21,7 @@
 // THE SOFTWARE.
 
 import Foundation
+import JWTDecode
 
 protocol OAuth2Grant {
     var defaults: [String: String] { get }
@@ -30,11 +31,24 @@ protocol OAuth2Grant {
 
 struct ImplicitGrant: OAuth2Grant {
 
+    let authentication: Authentication
     let defaults: [String: String]
     let responseType: [ResponseType]
+    let issuer: String
+    let leeway: Int
+    let maxAge: Int?
 
-    init(responseType: [ResponseType] = [.token], nonce: String? = nil) {
+    init(authentication: Authentication,
+         responseType: [ResponseType] = [.token],
+         issuer: String,
+         leeway: Int,
+         maxAge: Int? = nil,
+         nonce: String? = nil) {
+        self.authentication = authentication
         self.responseType = responseType
+        self.issuer = issuer
+        self.leeway = leeway
+        self.maxAge = maxAge
         if let nonce = nonce {
             self.defaults = ["nonce": nonce]
         } else {
@@ -43,15 +57,19 @@ struct ImplicitGrant: OAuth2Grant {
     }
 
     func credentials(from values: [String: String], callback: @escaping (Result<Credentials>) -> Void) {
-        guard validate(responseType: self.responseType, token: values["id_token"], nonce: self.defaults["nonce"]) else {
-            return callback(.failure(error: WebAuthError.invalidIdTokenNonce))
+        let responseType = self.responseType
+        let validatorContext = IDTokenValidatorContext(authentication: authentication,
+                                                       issuer: issuer,
+                                                       leeway: leeway,
+                                                       maxAge: maxAge,
+                                                       nonce: self.defaults["nonce"])
+        validateFrontChannelIDToken(idToken: values["id_token"], for: responseType, with: validatorContext) { error in
+            if let error = error { return callback(.failure(error: error)) }
+            guard !responseType.contains(.token) || values["access_token"] != nil else {
+                return callback(.failure(error: WebAuthError.missingAccessToken))
+            }
+            callback(.success(result: Credentials(json: values as [String: Any])))
         }
-
-        guard !responseType.contains(.token) || values["access_token"] != nil else {
-            return callback(.failure(error: WebAuthError.missingAccessToken))
-        }
-
-        callback(.success(result: Credentials(json: values as [String: Any])))
     }
 
     func values(fromComponents components: URLComponents) -> [String: String] {
@@ -67,50 +85,106 @@ struct PKCE: OAuth2Grant {
     let defaults: [String: String]
     let verifier: String
     let responseType: [ResponseType]
+    let issuer: String
+    let leeway: Int
+    let maxAge: Int?
 
-    init(authentication: Authentication, redirectURL: URL, generator: A0SHA256ChallengeGenerator = A0SHA256ChallengeGenerator(), reponseType: [ResponseType] = [.code], nonce: String? = nil) {
-        self.init(authentication: authentication, redirectURL: redirectURL, verifier: generator.verifier, challenge: generator.challenge, method: generator.method, responseType: reponseType, nonce: nonce)
+    init(authentication: Authentication,
+         redirectURL: URL,
+         generator: A0SHA256ChallengeGenerator = A0SHA256ChallengeGenerator(),
+         responseType: [ResponseType] = [.code],
+         issuer: String,
+         leeway: Int,
+         maxAge: Int? = nil,
+         nonce: String? = nil) {
+        self.init(authentication: authentication,
+                  redirectURL: redirectURL,
+                  verifier: generator.verifier,
+                  challenge: generator.challenge,
+                  method: generator.method,
+                  responseType: responseType,
+                  issuer: issuer,
+                  leeway: leeway,
+                  maxAge: maxAge,
+                  nonce: nonce)
     }
 
-    init(authentication: Authentication, redirectURL: URL, verifier: String, challenge: String, method: String, responseType: [ResponseType], nonce: String? = nil) {
+    init(authentication: Authentication,
+         redirectURL: URL,
+         verifier: String,
+         challenge: String,
+         method: String,
+         responseType: [ResponseType],
+         issuer: String,
+         leeway: Int,
+         maxAge: Int? = nil,
+         nonce: String? = nil) {
         self.authentication = authentication
         self.redirectURL = redirectURL
         self.verifier = verifier
         self.responseType = responseType
-
+        self.issuer = issuer
+        self.leeway = leeway
+        self.maxAge = maxAge
         var newDefaults: [String: String] = [
             "code_challenge": challenge,
             "code_challenge_method": method
         ]
-
         if let nonce = nonce {
             newDefaults["nonce"] = nonce
         }
-
         self.defaults = newDefaults
     }
 
+    // swiftlint:disable function_body_length
     func credentials(from values: [String: String], callback: @escaping (Result<Credentials>) -> Void) {
-        guard
-            let code = values["code"]
-            else {
-                let string = "No code found in parameters \(values)"
-                return callback(.failure(error: AuthenticationError(string: string)))
+        guard let code = values["code"] else {
+            let string = "No code found in parameters \(values)"
+            return callback(.failure(error: AuthenticationError(string: string)))
         }
-        guard validate(responseType: self.responseType, token: values["id_token"], nonce: self.defaults["nonce"]) else {
-            return callback(.failure(error: WebAuthError.invalidIdTokenNonce))
-        }
-        let clientId = self.authentication.clientId
-        self.authentication
-            .tokenExchange(withCode: code, codeVerifier: verifier, redirectURI: redirectURL.absoluteString)
-            .start { result in
-                // Special case for PKCE when the correct method for token endpoint authentication is not set (it should be None)
-                if case .failure(let cause as AuthenticationError) = result, cause.description == "Unauthorized" {
-                    let error = WebAuthError.pkceNotAllowed("Unable to complete authentication with PKCE. PKCE support can be enabled by setting Application Type to 'Native' and Token Endpoint Authentication Method to 'None' for this app at 'https://manage.auth0.com/#/applications/\(clientId)/settings'.")
-                    callback(Result.failure(error: error))
-                } else {
-                    callback(result)
-                }
+        let idToken = values["id_token"]
+        let responseType = self.responseType
+        let authentication = self.authentication
+        let issuer = self.issuer
+        let leeway = self.leeway
+        let nonce = self.defaults["nonce"]
+        let maxAge = self.maxAge
+        let verifier = self.verifier
+        let redirectUrlString = self.redirectURL.absoluteString
+        let clientId = authentication.clientId
+        let isFrontChannelIdTokenExpected = responseType.contains(.idToken)
+        let validatorContext = IDTokenValidatorContext(authentication: authentication,
+                                                       issuer: issuer,
+                                                       leeway: leeway,
+                                                       maxAge: maxAge,
+                                                       nonce: nonce)
+        validateFrontChannelIDToken(idToken: idToken, for: responseType, with: validatorContext) { error in
+            if let error = error { return callback(.failure(error: error)) }
+            authentication
+                .tokenExchange(withCode: code, codeVerifier: verifier, redirectURI: redirectUrlString)
+                .start { result in
+                    switch result {
+                    case .failure(let error as AuthenticationError) where error.description == "Unauthorized":
+                        // Special case for PKCE when the correct method for token endpoint authentication is not set (it should be None)
+                        let webAuthError = WebAuthError.pkceNotAllowed("Unable to complete authentication with PKCE. PKCE support can be enabled by setting Application Type to 'Native' and Token Endpoint Authentication Method to 'None' for this app at 'https://manage.auth0.com/#/applications/\(clientId)/settings'.")
+                        return callback(.failure(error: webAuthError))
+                    case .failure(let error): return callback(.failure(error: error))
+                    case .success(let credentials):
+                        guard isFrontChannelIdTokenExpected else {
+                            return validate(idToken: credentials.idToken, with: validatorContext) { error in
+                                if let error = error { return callback(.failure(error: error)) }
+                                callback(result)
+                            }
+                        }
+                        let newCredentials = Credentials(accessToken: credentials.accessToken,
+                                                         tokenType: credentials.tokenType,
+                                                         idToken: idToken,
+                                                         refreshToken: credentials.refreshToken,
+                                                         expiresIn: credentials.expiresIn,
+                                                         scope: credentials.scope)
+                        return callback(.success(result: newCredentials))
+                    }
+            }
         }
     }
 
@@ -119,37 +193,17 @@ struct PKCE: OAuth2Grant {
         components.a0_queryValues.forEach { items[$0] = $1 }
         return items
     }
+
 }
 
-private func validate(responseType: [ResponseType], token: String?, nonce: String?) -> Bool {
-    guard responseType.contains(.idToken) else { return true }
-    guard
-        let expectedNonce = nonce,
-        let token = token
-        else { return false }
-    let claims = decode(jwt: token)
-    let actualNonce = claims?["nonce"] as? String
-    return actualNonce == expectedNonce
-}
-
-private func decode(jwt: String) -> [String: Any]? {
-    let parts = jwt.components(separatedBy: ".")
-    guard parts.count == 3 else { return nil }
-    var base64 = parts[1]
-        .replacingOccurrences(of: "-", with: "+")
-        .replacingOccurrences(of: "_", with: "/")
-    let length = Double(base64.lengthOfBytes(using: String.Encoding.utf8))
-    let requiredLength = 4 * ceil(length / 4.0)
-    let paddingLength = requiredLength - length
-    if paddingLength > 0 {
-        let padding = "".padding(toLength: Int(paddingLength), withPad: "=", startingAt: 0)
-        base64 += padding
+// This method will skip the validation if the response type does not contain "id_token"
+private func validateFrontChannelIDToken(idToken: String?,
+                                         for responseType: [ResponseType],
+                                         with context: IDTokenValidatorContext,
+                                         callback: @escaping (LocalizedError?) -> Void) {
+    guard responseType.contains(.idToken) else { return callback(nil) }
+    validate(idToken: idToken, with: context) { error in
+        if let error = error { return callback(error) }
+        callback(nil)
     }
-
-    guard
-        let bodyData = Data(base64Encoded: base64, options: .ignoreUnknownCharacters)
-        else { return nil }
-
-    let json = try? JSONSerialization.jsonObject(with: bodyData, options: [])
-    return json as? [String: Any]
 }
