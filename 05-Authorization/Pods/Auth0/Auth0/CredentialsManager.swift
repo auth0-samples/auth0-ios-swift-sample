@@ -147,7 +147,7 @@ public struct CredentialsManager {
     /// - Note: [Auth0 Refresh Tokens Docs](https://auth0.com/docs/tokens/concepts/refresh-tokens)
     #if WEB_AUTH_PLATFORM
     public func credentials(withScope scope: String? = nil, minTTL: Int = 0, callback: @escaping (CredentialsManagerError?, Credentials?) -> Void) {
-        guard self.hasValid() else { return callback(.noCredentials, nil) }
+        guard self.hasValid(minTTL: minTTL) else { return callback(.noCredentials, nil) }
         if #available(iOS 9.0, macOS 10.15, *), let bioAuth = self.bioAuth {
             guard bioAuth.available else { return callback(.touchFailed(LAError(LAError.touchIDNotAvailable)), nil) }
             bioAuth.validateBiometric {
@@ -162,7 +162,7 @@ public struct CredentialsManager {
     }
     #else
     public func credentials(withScope scope: String? = nil, minTTL: Int = 0, callback: @escaping (CredentialsManagerError?, Credentials?) -> Void) {
-        guard self.hasValid() else { return callback(.noCredentials, nil) }
+        guard self.hasValid(minTTL: minTTL) else { return callback(.noCredentials, nil) }
         self.retrieveCredentials(withScope: scope, minTTL: minTTL, callback: callback)
     }
     #endif
@@ -171,9 +171,9 @@ public struct CredentialsManager {
         guard let data = self.storage.data(forKey: self.storeKey),
             let credentials = NSKeyedUnarchiver.unarchiveObject(with: data) as? Credentials else { return callback(.noCredentials, nil) }
         guard let expiresIn = credentials.expiresIn else { return callback(.noCredentials, nil) }
-        guard self.willExpire(credentials, within: minTTL) ||
-            self.hasExpired(credentials) ||
-            self.hasScopeChanged(credentials, than: scope) else { return callback(nil, credentials) }
+        guard self.hasExpired(credentials) ||
+            self.willExpire(credentials, within: minTTL) ||
+            self.hasScopeChanged(credentials, from: scope) else { return callback(nil, credentials) }
         guard let refreshToken = credentials.refreshToken else { return callback(.noRefreshToken, nil) }
 
         self.authentication.renew(withRefreshToken: refreshToken, scope: scope).start {
@@ -186,7 +186,7 @@ public struct CredentialsManager {
                                                  expiresIn: credentials.expiresIn,
                                                  scope: credentials.scope)
                 if self.willExpire(newCredentials, within: minTTL) {
-                    let accessTokenLifetime = Int(expiresIn.timeIntervalSinceNow / 1000)
+                    let accessTokenLifetime = Int(expiresIn.timeIntervalSinceNow)
                     // TODO: On the next major add a new case to CredentialsManagerError
                     let error = NSError(domain: "The lifetime of the renewed Access Token (\(accessTokenLifetime)s) is less than minTTL requested (\(minTTL)s). Increase the 'Token Expiration' setting of your Auth0 API in the dashboard or request a lower minTTL",
                         code: -99999,
@@ -204,7 +204,7 @@ public struct CredentialsManager {
 
     func willExpire(_ credentials: Credentials, within ttl: Int) -> Bool {
         if let expiresIn = credentials.expiresIn {
-            return expiresIn < Date(timeIntervalSinceNow: TimeInterval(ttl * 1000))
+            return expiresIn < Date(timeIntervalSinceNow: TimeInterval(ttl))
         }
 
         return false
@@ -222,7 +222,7 @@ public struct CredentialsManager {
         return false
     }
 
-    func hasScopeChanged(_ credentials: Credentials, than scope: String?) -> Bool {
+    func hasScopeChanged(_ credentials: Credentials, from scope: String?) -> Bool {
         if let newScope = scope, let lastScope = credentials.scope {
             let newScopeList = newScope.lowercased().split(separator: " ").sorted()
             let lastScopeList = lastScope.lowercased().split(separator: " ").sorted()

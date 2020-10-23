@@ -10,10 +10,10 @@
 #endif
 #endif
 
+#import "Auth0.h"
 #import "A0ChallengeGenerator.h"
 #import "A0RSA.h"
 #import "A0SHA.h"
-#import "Auth0.h"
 
 FOUNDATION_EXPORT double Auth0VersionNumber;
 FOUNDATION_EXPORT const unsigned char Auth0VersionString[];
