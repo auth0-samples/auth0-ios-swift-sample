@@ -20,6 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#if WEB_AUTH_PLATFORM
+import Foundation
+
 @objc(A0WebAuth)
 /// Web-based Auth with Auth0
 // swiftlint:disable:next type_name
@@ -103,8 +106,8 @@ public class _ObjectiveOAuth2: NSObject {
 
      ```
      A0WebAuth *auth = [[A0WebAuth alloc] initWithClientId:clientId url: url];
-     [auth startWithCallback:^(NSError *error, A0Credentials *credentials) {
-        NSLog(@"error: %@, credetials: %@", error, credentials);
+     [auth start:^(NSError * _Nullable error, A0Credentials * _Nullable credentials {
+        NSLog(@"error: %@, credentials: %@", error, credentials);
      }];
      ```
 
@@ -132,6 +135,37 @@ public class _ObjectiveOAuth2: NSObject {
     }
 
     /**
+    Removes Auth0 session and optionally remove the Identity Provider session.
+    - seeAlso: [Auth0 Logout docs](https://auth0.com/docs/logout)
+
+    For iOS 11+ you will need to ensure that the **Callback URL** has been added
+    to the **Allowed Logout URLs** section of your application in the [Auth0 Dashboard](https://manage.auth0.com/#/applications/).
+
+    ```
+     A0WebAuth *auth = [[A0WebAuth alloc] initWithClientId:clientId url: url];
+     [auth clearSessionWithFederated:NO:^(BOOL result) {
+        // ...
+     }];
+    ```
+
+    Remove Auth0 session and remove the IdP session.
+
+    ```
+    [auth clearSessionWithFederated:YES:^(BOOL result) {
+       // ...
+    }];
+    ```
+
+    - parameter federated: Bool to remove the IdP session
+    - parameter callback: callback called with bool outcome of the call
+    */
+    @objc public func clearSession(federated: Bool, _ callback: @escaping (Bool) -> Void) {
+        self.webAuth.clearSession(federated: federated) { result in
+            callback(result)
+        }
+    }
+
+    /**
      Avoid Auth0.swift sending its version on every request to Auth0 API.
      By default we collect our libraries and SDKs versions to help us during support and evaluate usage.
 
@@ -141,3 +175,4 @@ public class _ObjectiveOAuth2: NSObject {
         self.webAuth.tracking(enabled: enabled)
     }
 }
+#endif
