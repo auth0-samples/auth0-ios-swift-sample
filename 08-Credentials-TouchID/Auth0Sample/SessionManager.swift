@@ -33,7 +33,7 @@ class SessionManager {
 
     private init () {
         self.credentialsManager = CredentialsManager(authentication: Auth0.authentication())
-        self.credentialsManager.enableTouchAuth(withTitle: "Touch to Authenticate")
+        self.credentialsManager.enableBiometrics(withTitle: "Touch to Authenticate")
         // _ = self.authentication.logging(enabled: true) // API Logging
     }
 
@@ -58,19 +58,28 @@ class SessionManager {
         guard self.credentialsManager.hasValid() else {
             return callback(CredentialsManagerError.noCredentials)
         }
-        self.credentialsManager.credentials { error, credentials in
-            guard error == nil, let credentials = credentials else {
-                return callback(error)
+        self.credentialsManager.credentials { result in
+            switch result {
+            case .success(let credentials):
+                self.credentials = credentials
+                callback(nil)
+            case .failure(let error):
+                callback(error)
             }
-            self.credentials = credentials
-            callback(nil)
         }
     }
 
     func logout(_ callback: @escaping (Error?) -> Void) {
         // Remove credentials from KeyChain
         self.credentials = nil
-        self.credentialsManager.revoke(callback)
+        self.credentialsManager.revoke { result in
+            switch result {
+            case .success():
+                callback(nil)
+            case .failure(let error):
+                callback(error)
+            }
+        }
     }
 
     func store(credentials: Credentials) -> Bool {

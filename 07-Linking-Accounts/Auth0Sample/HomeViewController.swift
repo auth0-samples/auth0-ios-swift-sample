@@ -45,15 +45,14 @@ class HomeViewController: UIViewController {
         Auth0
             .webAuth()
             .audience("https://" + clientInfo.domain + "/api/v2/")
-            .scope("openid profile email update:current_user_identities")
+            .scope("openid profile email update:current_user_identities read:current_user")
             .start {
                 switch $0 {
                 case .failure(let error):
                     // Handle the error
                     print("Error: \(error)")
                 case .success(let credentials):
-                    guard let accessToken = credentials.accessToken, let idToken = credentials.idToken else { return }
-                    SessionManager.shared.storeTokens(accessToken, idToken: idToken)
+                    SessionManager.shared.storeTokens(credentials.accessToken, idToken: credentials.idToken)
                     SessionManager.shared.retrieveProfile { error in
                         DispatchQueue.main.async {
                             guard error == nil else {

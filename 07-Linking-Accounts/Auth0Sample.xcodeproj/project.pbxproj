@@ -18,6 +18,7 @@
 		51E4B6BC1D0B4819000D9038 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 51E4B6BA1D0B4819000D9038 /* LaunchScreen.storyboard */; };
 		51F8D0A11D1DC3D800BA17B9 /* AlertController+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51F8D0A01D1DC3D800BA17B9 /* AlertController+Convenience.swift */; };
 		5B9AA6B51E4888EF0071ABB1 /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B9AA6B41E4888EF0071ABB1 /* SessionManager.swift */; };
+		D5D98FC7276371DA0052C093 /* Identity.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5D98FC6276371DA0052C093 /* Identity.swift */; };
 		D7EC61EABA1B386BDD19F788 /* Pods_Auth0Sample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD1B99A9491B7418D9949C22 /* Pods_Auth0Sample.framework */; };
 /* End PBXBuildFile section */
 
@@ -35,6 +36,7 @@
 		51E4B6BD1D0B4819000D9038 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		51F8D0A01D1DC3D800BA17B9 /* AlertController+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AlertController+Convenience.swift"; sourceTree = "<group>"; };
 		5B9AA6B41E4888EF0071ABB1 /* SessionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
+		D5D98FC6276371DA0052C093 /* Identity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Identity.swift; sourceTree = "<group>"; };
 		E37FB73D3D2A295CEC295A57 /* Pods-Auth0Sample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Auth0Sample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Auth0Sample/Pods-Auth0Sample.debug.xcconfig"; sourceTree = "<group>"; };
 		E6A389FCD1B3C374C57AB29A /* Pods-Auth0Sample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Auth0Sample.release.xcconfig"; path = "Pods/Target Support Files/Pods-Auth0Sample/Pods-Auth0Sample.release.xcconfig"; sourceTree = "<group>"; };
 		FD1B99A9491B7418D9949C22 /* Pods_Auth0Sample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Auth0Sample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -102,6 +104,7 @@
 				51E4B6BD1D0B4819000D9038 /* Info.plist */,
 				51F8D0A01D1DC3D800BA17B9 /* AlertController+Convenience.swift */,
 				517250D01D240A070076CFCC /* Auth0.plist */,
+				D5D98FC6276371DA0052C093 /* Identity.swift */,
 			);
 			path = Auth0Sample;
 			sourceTree = "<group>";
@@ -228,6 +231,7 @@
 				51E4B6B21D0B4819000D9038 /* AppDelegate.swift in Sources */,
 				510EF5541D26ADBB006E7A02 /* UserIdentitiesViewController.swift in Sources */,
 				510EF5561D26B07D006E7A02 /* UserIdentityCell.swift in Sources */,
+				D5D98FC7276371DA0052C093 /* Identity.swift in Sources */,
 				51F8D0A11D1DC3D800BA17B9 /* AlertController+Convenience.swift in Sources */,
 				51A8A0BA1D0B4C0C000E53CC /* ProfileViewController.swift in Sources */,
 				51A8A0B81D0B4C07000E53CC /* HomeViewController.swift in Sources */,
@@ -366,7 +370,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Auth0Sample/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = auth0.samples.Auth0Sample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -381,7 +385,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = Auth0Sample/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = auth0.samples.Auth0Sample;
 				PRODUCT_NAME = "$(TARGET_NAME)";

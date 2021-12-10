@@ -1,24 +1,33 @@
 PODS:
-  - Auth0 (1.30.0):
-    - JWTDecode
+  - Auth0 (2.0.0-beta):
+    - JWTDecode (~> 2.0)
     - SimpleKeychain
-  - JWTDecode (2.5.0)
-  - SimpleKeychain (0.12.1)
+  - JWTDecode (2.6.3)
+  - SimpleKeychain (0.12.5)
 
 DEPENDENCIES:
-  - Auth0 (~> 1.0)
+  - Auth0 (from `https://github.com/auth0/Auth0.swift.git`, branch `beta`)
 
 SPEC REPOS:
   trunk:
-    - Auth0
     - JWTDecode
     - SimpleKeychain
 
+EXTERNAL SOURCES:
+  Auth0:
+    :branch: beta
+    :git: https://github.com/auth0/Auth0.swift.git
+
+CHECKOUT OPTIONS:
+  Auth0:
+    :commit: 08340ccb2db174ac4d2b21e0d01e3e21fab966f2
+    :git: https://github.com/auth0/Auth0.swift.git
+
 SPEC CHECKSUMS:
-  Auth0: b0e75f59f9ed7c2daa03146d5fe46445dea0d2f8
-  JWTDecode: d4c176a28a29f7e6f9abf5c90ad3002f69b98c7c
-  SimpleKeychain: 77443015b0f29005c16f74bf858469a9e9fb05e8
+  Auth0: d53398594c475b8570f3b8304b6815a8b2b41c85
+  JWTDecode: 33e5e26e5ddbd21b2065820894c08fef0cad9509
+  SimpleKeychain: 8193a9e40967eccac933c1fde82de46c07a5ae26
 
-PODFILE CHECKSUM: c5054239f13b56f2ce7f927b5a25d1e8ffc02353
+PODFILE CHECKSUM: 1eb63ecbd0d6ad14805ac239285120eb36fbc25a
 
-COCOAPODS: 1.10.0
+COCOAPODS: 1.11.2

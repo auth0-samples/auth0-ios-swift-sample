@@ -53,8 +53,7 @@ class HomeViewController: UIViewController {
                     // Handle the error
                     print("Error: \(error)")
                 case .success(let credentials):
-                    guard let accessToken = credentials.accessToken, let idToken = credentials.idToken else { return }
-                    SessionManager.shared.storeTokens(accessToken, idToken: idToken)
+                    SessionManager.shared.storeTokens(credentials.accessToken, idToken: credentials.idToken)
                     SessionManager.shared.retrieveProfile { error in
                         guard error == nil else {
                             return self.showLock()

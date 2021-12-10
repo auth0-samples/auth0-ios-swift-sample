@@ -1,25 +1,3 @@
-// Telemetry.swift
-//
-// Copyright (c) 2016 Auth0 (http://auth0.com)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-
 import Foundation
 
 public struct Telemetry {
@@ -50,7 +28,7 @@ public struct Telemetry {
         if let libVersion = info[Telemetry.VersionKey] as? String {
             env[Telemetry.WrappedVersion] = libVersion
         } else {
-            env[Telemetry.WrappedVersion] =  Telemetry.NoVersion
+            env[Telemetry.WrappedVersion] = Telemetry.NoVersion
         }
         let wrapped: [String: Any] = [
             Telemetry.NameKey: name,
@@ -76,7 +54,7 @@ public struct Telemetry {
         return items
     }
 
-    static func versionInformation(bundle: Bundle = Bundle(for: Credentials.classForCoder())) -> [String: Any] {
+    static func versionInformation(bundle: Bundle = Bundle(for: Credentials.self)) -> [String: Any] {
         let version = bundle.infoDictionary?["CFBundleShortVersionString"] as? String ?? Telemetry.NoVersion
         let dict: [String: Any] = [
             Telemetry.NameKey: Telemetry.LibraryName,
@@ -100,13 +78,7 @@ public struct Telemetry {
     }
 
     static func swiftVersion() -> String {
-        #if swift(>=5.0)
         return "5.x"
-        #elseif swift(>=4.0)
-        return "4.x"
-        #elseif swift(>=3.0)
-        return "3.x"
-        #endif
     }
 
     static func osPlatform() -> String {
@@ -134,24 +106,24 @@ public protocol Trackable {
 
 }
 
-extension Trackable {
+public extension Trackable {
     /**
      Avoid Auth0.swift sending its version on every request to Auth0 API.
      By default we collect our libraries and SDKs versions to help us during support and evaluate usage.
      
-     - parameter enabled: if Auth0.swift should send it's version on every request.
+     - Parameter enabled: if Auth0.swift should send it's version on every request.
      */
-    public mutating func tracking(enabled: Bool) {
+    mutating func tracking(enabled: Bool) {
         self.telemetry.enabled = enabled
     }
 
     /**
-     Send the library/framework, that has Auth0.swift as dependency, when sending telemetry information
+     Send the library/framework, that has Auth0.swift as dependency, when sending telemetry information.
      
-     - parameter name:    name of library or framework that uses Auth0.swift
-     - parameter version: version of library or framework
+     - Parameter name:    Name of library or framework that uses Auth0.swift.
+     - Parameter version: Version of library or framework.
      */
-    public mutating func using(inLibrary name: String, version: String) {
+    mutating func using(inLibrary name: String, version: String) {
         self.telemetry.wrapped(inLibrary: name, version: version)
     }
 }

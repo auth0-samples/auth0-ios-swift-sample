@@ -59,19 +59,35 @@ class SessionManager {
         guard self.credentialsManager.hasValid() else {
             return callback(CredentialsManagerError.noCredentials)
         }
-        self.credentialsManager.credentials { error, credentials in
-            guard error == nil, let credentials = credentials else {
-                return callback(error)
-            }
-            self.credentials = credentials
-            callback(nil)
+//        self.credentialsManager.credentials { error, credentials in
+//            guard error == nil, let credentials = credentials else {
+//                return callback(error)
+//            }
+//            self.credentials = credentials
+//            callback(nil)
+//        }
+        credentialsManager.credentials { result in
+          switch result {
+            case .success(let credentials):
+                self.credentials = credentials
+                callback(nil)
+            case .failure(let error):
+                callback(error)
+          }
         }
     }
 
     func logout(_ callback: @escaping (Error?) -> Void) {
         // Remove credentials from KeyChain
         self.credentials = nil
-        self.credentialsManager.revoke(callback)
+        credentialsManager.revoke { result in
+          switch result {
+            case .success():
+                callback(nil)
+            case .failure(let error):
+                callback(error)
+          }
+        }
     }
 
     func store(credentials: Credentials) -> Bool {

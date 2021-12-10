@@ -1,7 +1,7 @@
-platform :ios, '9.0'
+platform :ios, '12.0'
 inhibit_all_warnings!
 use_frameworks!
 
 target 'Auth0Sample' do
-    pod 'Auth0', '~> 1.0'
+ pod 'Auth0', :git => 'https://github.com/auth0/Auth0.swift.git', :branch => 'beta'
 end

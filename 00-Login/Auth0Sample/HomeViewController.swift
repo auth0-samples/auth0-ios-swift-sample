@@ -41,10 +41,8 @@ class HomeViewController: UIViewController {
                         case .failure(let error):
                             print("Error: \(error)")
                         case .success(let credentials):
-                            guard let accessToken = credentials.accessToken else { return }
-                            
                             DispatchQueue.main.async {
-                                self.showSuccessAlert("accessToken: \(accessToken)")
+                                self.showSuccessAlert("accessToken: \(credentials.accessToken)")
                                 self.isAuthenticated = true
                                 sender.setTitle("Log out", for: .normal)
                             }
@@ -54,19 +52,20 @@ class HomeViewController: UIViewController {
         else{
             Auth0
                 .webAuth()
-                .clearSession(federated:false){
-                    switch $0{
-                        case true:
-                            DispatchQueue.main.async {
-                                sender.setTitle("Log in", for: .normal)
-                                self.isAuthenticated = false
-                            }
-                        case false:
-                            DispatchQueue.main.async {
-                                self.showSuccessAlert("An error occurred")
+                .clearSession { result in
+                    switch result {
+                    case .success():
+                        DispatchQueue.main.async {
+                          sender.setTitle("Log in", for: .normal)
+                          self.isAuthenticated = false
+                        }
+                    case .failure(let error):
+                        DispatchQueue.main.async {
+                          self.showSuccessAlert("An error occurred \(error)")
                         }
                     }
                 }
+
         }
     }
 

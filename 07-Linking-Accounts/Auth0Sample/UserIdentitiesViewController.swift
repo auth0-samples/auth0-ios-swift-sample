@@ -64,11 +64,7 @@ class UserIdentitiesViewController: UIViewController {
                     print("Error: \(error)")
                 case .success(let credentials):
                     DispatchQueue.main.async {
-                        guard let idToken = credentials.idToken else {
-                            self.showMissingProfileOrTokenAlert()
-                            return
-                        }
-                        self.linkAccountWithIDToken(idToken)
+                        self.linkAccountWithIDToken(credentials.idToken)
                     }
                 }
         }
@@ -112,7 +108,10 @@ class UserIdentitiesViewController: UIViewController {
         SessionManager.shared.retrieveIdentity { error, identities in
             DispatchQueue.main.async {
                 loadingAlert.dismiss() {
-                    guard error == nil else { return }
+                    guard error == nil else {
+                        print(error.debugDescription)
+                        return
+                    }
                     self.identities = identities
                     self.tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
                 }

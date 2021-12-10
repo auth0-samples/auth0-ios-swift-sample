@@ -1,42 +1,47 @@
-// Auth0.swift
-//
-// Copyright (c) 2016 Auth0 (http://auth0.com)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-
 import Foundation
 
 /**
- Auth0 Authentication API to authenticate your user using a Database, Social, Enterprise or Passwordless connections
+ `Result` wrapper for Authentication API operations.
+ */
+public typealias AuthenticationResult<T> = Result<T, AuthenticationError>
+
+/**
+ `Result` wrapper for Management API operations.
+ */
+public typealias ManagementResult<T> = Result<T, ManagementError>
+
+#if WEB_AUTH_PLATFORM
+/**
+ `Result` wrapper for Web Auth operations.
+ */
+public typealias WebAuthResult<T> = Result<T, WebAuthError>
+#endif
+
+/**
+ `Result` wrapper for Credentials Manager operations.
+ */
+public typealias CredentialsManagerResult<T> = Result<T, CredentialsManagerError>
+
+/**
+ Default scope value used across Auth0.swift.
+ */
+public let defaultScope = "openid profile email"
+
+/**
+ Auth0 Authentication API to authenticate your user using a Database, Social, Enterprise or Passwordless connections.
 
  ```
  Auth0.authentication(clientId: clientId, domain: "samples.auth0.com")
  ```
 
- - parameter clientId: clientId of your Auth0 application
- - parameter domain:   domain of your Auth0 account. e.g.: 'samples.auth0.com'
- - parameter session:  instance of NSURLSession used for networking. By default it will use the shared NSURLSession
-
- - returns: Auth0 Authentication API
+ - Parameters:
+   - clientId: ClientId of your Auth0 application.
+   - domain:   Domain of your Auth0 account. e.g.: 'samples.auth0.com'.
+   - session:  Instance of `URLSession` used for networking. By default it will use the shared `URLSession`.
+ - Returns: Auth0 Authentication API.
  */
 public func authentication(clientId: String, domain: String, session: URLSession = .shared) -> Authentication {
-    return Auth0Authentication(clientId: clientId, url: .a0_url(domain), session: session)
+    return Auth0Authentication(clientId: clientId, url: .httpsURL(from: domain), session: session)
 }
 
 /**
@@ -61,11 +66,11 @@ public func authentication(clientId: String, domain: String, session: URLSession
  </plist>
  ```
 
- - parameter session:  instance of NSURLSession used for networking. By default it will use the shared NSURLSession
- - parameter bundle:    bundle used to locate the `Auth0.plist` file. By default is the main bundle
-
- - returns: Auth0 Authentication API
- - important: Calling this method without a valid `Auth0.plist` will crash your application
+ - Parameters:
+   - session: Instance of `URLSession` used for networking. By default it will use the shared `URLSession`.
+   - bundle:  Bundle used to locate the `Auth0.plist` file. By default it will use the main bundle.
+ - Returns: Auth0 Authentication API.
+ - Important: Calling this method without a valid `Auth0.plist` will crash your application.
  */
 public func authentication(session: URLSession = .shared, bundle: Bundle = .main) -> Authentication {
     let values = plistValues(bundle: bundle)!
@@ -101,12 +106,12 @@ public func authentication(session: URLSession = .shared, bundle: Bundle = .main
  </plist>
  ```
 
- - parameter token:     token of Management API v2 with the correct allowed scopes to perform the desired action
- - parameter session:   instance of NSURLSession used for networking. By default it will use the shared NSURLSession
- - parameter bundle:    bundle used to locate the `Auth0.plist` file. By default is the main bundle
-
- - returns: Auth0 Management API v2
- - important: Calling this method without a valid `Auth0.plist` will crash your application
+ - Parameters:
+   - token:   Token of Management API v2 with the correct allowed scopes to perform the desired action.
+   - session: Instance of `URLSession` used for networking. By default it will use the shared `URLSession`.
+   - bundle:  Bundle used to locate the `Auth0.plist` file. By default it will use the main bundle.
+ - Returns: Auth0 Management API v2.
+ - Important: Calling this method without a valid `Auth0.plist` will crash your application.
  */
 public func users(token: String, session: URLSession = .shared, bundle: Bundle = .main) -> Users {
     let values = plistValues(bundle: bundle)!
@@ -127,15 +132,67 @@ public func users(token: String, session: URLSession = .shared, bundle: Bundle =
  * Link users
  * Unlink users
 
- - parameter token:     token of Management API v2 with the correct allowed scopes to perform the desired action
- - parameter domain:    domain of your Auth0 account. e.g.: 'samples.auth0.com'
- - parameter session:   instance of NSURLSession used for networking. By default it will use the shared NSURLSession
-
- - returns: Auth0 Management API v2
+ - Parameters:
+   - token:   Token of Management API v2 with the correct allowed scopes to perform the desired action.
+   - domain:  Domain of your Auth0 account. e.g.: 'samples.auth0.com'.
+   - session: Instance of `URLSession` used for networking. By default it will use the shared `URLSession`.
+ - Returns: Auth0 Management API v2.
  */
 public func users(token: String, domain: String, session: URLSession = .shared) -> Users {
-    return Management(token: token, url: .a0_url(domain), session: session)
+    return Management(token: token, url: .httpsURL(from: domain), session: session)
 }
+
+#if WEB_AUTH_PLATFORM
+/**
+ Auth0 component for authenticating with web-based flow.
+
+ ```
+ Auth0.webAuth()
+ ```
+
+ Auth0 domain is loaded from the file `Auth0.plist` in your main bundle with the following content:
+
+ ```
+ <?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+ <plist version="1.0">
+ <dict>
+    <key>ClientId</key>
+    <string>{YOUR_CLIENT_ID}</string>
+    <key>Domain</key>
+    <string>{YOUR_DOMAIN}</string>
+ </dict>
+ </plist>
+ ```
+
+ - Parameters:
+   - session: Instance of `URLSession` used for networking. By default it will use the shared `URLSession`.
+   - bundle:  Bundle used to locate the `Auth0.plist` file. By default it will use the main bundle.
+ - Returns: Auth0 WebAuth component.
+ - Important: Calling this method without a valid `Auth0.plist` will crash your application.
+ */
+public func webAuth(session: URLSession = .shared, bundle: Bundle = Bundle.main) -> WebAuth {
+    let values = plistValues(bundle: bundle)!
+    return webAuth(clientId: values.clientId, domain: values.domain, session: session)
+}
+
+/**
+ Auth0 component for authenticating with web-based flow.
+
+ ```
+ Auth0.webAuth(clientId: clientId, domain: "samples.auth0.com")
+ ```
+
+ - Parameters:
+   - clientId: ClientId of your Auth0 application.
+   - domain:   Domain of your Auth0 account. e.g.: 'samples.auth0.com'.
+   - session:  Instance of `URLSession` used for networking. By default it will use the shared `URLSession`.
+ - Returns: Auth0 WebAuth component.
+ */
+public func webAuth(clientId: String, domain: String, session: URLSession = .shared) -> WebAuth {
+    return Auth0WebAuth(clientId: clientId, url: .httpsURL(from: domain), session: session)
+}
+#endif
 
 func plistValues(bundle: Bundle) -> (clientId: String, domain: String)? {
     guard
