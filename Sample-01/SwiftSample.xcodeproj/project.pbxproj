@@ -11,6 +11,10 @@
 		5C5DBE86277210C100E19935 /* Auth0 in Frameworks */ = {isa = PBXBuildFile; productRef = 5C5DBE85277210C100E19935 /* Auth0 */; };
 		5C5DBE88277212E000E19935 /* Auth0.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5C5DBE87277212E000E19935 /* Auth0.plist */; };
 		5C5DBE89277212E000E19935 /* Auth0.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5C5DBE87277212E000E19935 /* Auth0.plist */; };
+		5C6537242772F5D90035759D /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C6537232772F5D90035759D /* ProfileView.swift */; };
+		5C6537252772F5D90035759D /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C6537232772F5D90035759D /* ProfileView.swift */; };
+		5C6537272772F5EE0035759D /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C6537262772F5EE0035759D /* Profile.swift */; };
+		5C6537282772F5EE0035759D /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C6537262772F5EE0035759D /* Profile.swift */; };
 		5CDD8865277102DC00052307 /* SwiftSampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDD8855277102DA00052307 /* SwiftSampleApp.swift */; };
 		5CDD8866277102DC00052307 /* SwiftSampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDD8855277102DA00052307 /* SwiftSampleApp.swift */; };
 		5CDD8867277102DC00052307 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDD8856277102DA00052307 /* ContentView.swift */; };
@@ -21,6 +25,8 @@
 
 /* Begin PBXFileReference section */
 		5C5DBE87277212E000E19935 /* Auth0.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Auth0.plist; path = ../../Auth0.plist; sourceTree = "<group>"; };
+		5C6537232772F5D90035759D /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		5C6537262772F5EE0035759D /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		5CDD8855277102DA00052307 /* SwiftSampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftSampleApp.swift; sourceTree = "<group>"; };
 		5CDD8856277102DA00052307 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		5CDD8857277102DC00052307 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -71,6 +77,8 @@
 			children = (
 				5CDD8855277102DA00052307 /* SwiftSampleApp.swift */,
 				5CDD8856277102DA00052307 /* ContentView.swift */,
+				5C6537232772F5D90035759D /* ProfileView.swift */,
+				5C6537262772F5EE0035759D /* Profile.swift */,
 				5CDD8857277102DC00052307 /* Assets.xcassets */,
 				5C5DBE87277212E000E19935 /* Auth0.plist */,
 			);
@@ -204,6 +212,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				5CDD8867277102DC00052307 /* ContentView.swift in Sources */,
+				5C6537272772F5EE0035759D /* Profile.swift in Sources */,
+				5C6537242772F5D90035759D /* ProfileView.swift in Sources */,
 				5CDD8865277102DC00052307 /* SwiftSampleApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -213,6 +223,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				5CDD8868277102DC00052307 /* ContentView.swift in Sources */,
+				5C6537282772F5EE0035759D /* Profile.swift in Sources */,
+				5C6537252772F5D90035759D /* ProfileView.swift in Sources */,
 				5CDD8866277102DC00052307 /* SwiftSampleApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

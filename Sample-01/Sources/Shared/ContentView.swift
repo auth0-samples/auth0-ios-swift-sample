@@ -1,36 +1,5 @@
 import SwiftUI
 import Auth0
-import JWTDecode
-
-struct Profile {
-    let id: String
-    let email: String
-    let picture: String
-    let updatedAt: String
-
-    static var empty: Self {
-        return Profile(id: "", email: "", picture: "", updatedAt: "")
-    }
-
-    static func from(_ idToken: String) -> Self {
-        let jwt = try! decode(jwt: idToken)
-        return Profile(id: jwt.subject!,
-                       email: jwt.claim(name: "email").string!,
-                       picture: jwt.claim(name: "picture").string!,
-                       updatedAt: jwt.claim(name: "updated_at").string!)
-    }
-}
-
-struct ProfileView: View {
-    @Binding var profile: Profile
-
-    var body: some View {
-        AsyncImage(url: URL(string: profile.picture))
-        Text(profile.id)
-        Text(profile.email)
-        Text(profile.updatedAt)
-    }
-}
 
 struct ContentView: View {
     @State var profile = Profile.empty
@@ -38,7 +7,7 @@ struct ContentView: View {
 
     var body: some View {
         if loggedIn {
-            VStack(spacing: 24) {
+            VStack(spacing: 32) {
                 ProfileView(profile: self.$profile)
                 Button("Logout") {
                     Auth0
