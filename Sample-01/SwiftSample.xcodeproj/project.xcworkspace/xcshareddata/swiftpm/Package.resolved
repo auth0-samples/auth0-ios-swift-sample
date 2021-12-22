@@ -1,0 +1,34 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Auth0",
+        "repositoryURL": "https://github.com/auth0/Auth0.swift.git",
+        "state": {
+          "branch": "beta",
+          "revision": "6c9de26e037220731de43f780b7c4d3ef8807ee5",
+          "version": null
+        }
+      },
+      {
+        "package": "JWTDecode",
+        "repositoryURL": "https://github.com/auth0/JWTDecode.swift.git",
+        "state": {
+          "branch": null,
+          "revision": "3cd207fb9e943b6168a117baa3936c823204c2dc",
+          "version": "2.6.3"
+        }
+      },
+      {
+        "package": "SimpleKeychain",
+        "repositoryURL": "https://github.com/auth0/SimpleKeychain.git",
+        "state": {
+          "branch": null,
+          "revision": "b355c569efcd409e252ccbb500d9fc2713b4d64d",
+          "version": "0.12.5"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
