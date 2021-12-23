@@ -13,7 +13,7 @@ struct MainView: View {
             }
         } else {
             VStack {
-                Hero()
+                HeroView()
                 Button("Login", action: self.logout)
             }
         }
@@ -44,11 +44,5 @@ struct MainView: View {
                     print("Failed with: \(error)")
                 }
             }
-    }
-}
-
-struct MainView_Previews: PreviewProvider {
-    static var previews: some View {
-        MainView()
     }
 }

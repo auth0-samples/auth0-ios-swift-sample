@@ -31,7 +31,7 @@ commands:
           command: xcodebuild build -project 'Sample-01/<< parameters.scheme >>.xcodeproj' -scheme '<< parameters.scheme >> (macOS)' -destination 'platform=macOS,arch=x86_64' | xcpretty
 
 jobs:
-  build-and-test:
+  build:
     parameters:
       platform:
         type: string
@@ -60,9 +60,9 @@ jobs:
 workflows:
   build:
     jobs:
-      - build-and-test:
+      - build:
           scheme: "SwiftSample"
           matrix:
             parameters:
               platform: ["ios", "macos"]
-              xcode: ["13.0.0", "12.5.1"]
+              xcode: ["13.2.1"]

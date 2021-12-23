@@ -5,8 +5,8 @@ struct SwiftSampleApp: App {
     var body: some Scene {
         WindowGroup {
             MainView()
-            #if os(iOS)
                 .padding(.bottom, 32)
+            #if os(iOS)
                 .ignoresSafeArea(.keyboard, edges: .bottom)
                 .background(Color("Background").ignoresSafeArea())
                 .frame(maxWidth: .infinity, maxHeight: .infinity)

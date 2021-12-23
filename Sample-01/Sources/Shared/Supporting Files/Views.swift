@@ -16,7 +16,7 @@ struct PrimaryButton: ButtonStyle {
     }
 }
 
-struct Hero: View {
+struct HeroView: View {
     private let padding: CGFloat = 8
     private let tracking: CGFloat = -4
 
@@ -32,10 +32,7 @@ struct Hero: View {
                 .tracking(self.tracking)
                 .foregroundStyle(
                     .linearGradient(
-                      colors: [
-                        Color("Orange"),
-                        Color("Pink")
-                      ],
+                      colors: [Color("Orange"), Color("Pink")],
                       startPoint: .topLeading,
                       endPoint: .bottomTrailing
                     ))
@@ -64,18 +61,18 @@ struct ProfilePicture: View {
     private let size: CGFloat = 96
 
     var body: some View {
-        if #available(iOS 15.0, macOS 12.0, *) {
-            AsyncImage(url: URL(string: picture), content: { image in
-                image.resizable()
-            }, placeholder: {
-                Color.clear
-            })
-            .frame(width: self.size, height: self.size)
-            .clipShape(RoundedRectangle(cornerRadius: 24))
-            .padding(.bottom, 24)
-        } else {
-            Text("Profile")
-        }
+    #if os(iOS)
+        AsyncImage(url: URL(string: picture), content: { image in
+            image.resizable()
+        }, placeholder: {
+            Color.clear
+        })
+        .frame(width: self.size, height: self.size)
+        .clipShape(RoundedRectangle(cornerRadius: 24))
+        .padding(.bottom, 24)
+    #else
+        Text("Profile")
+    #endif
     }
 }
 
