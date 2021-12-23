@@ -9,12 +9,12 @@ struct MainView: View {
         if loggedIn {
             VStack {
                 ProfileView(profile: self.$profile)
-                Button("Logout", action: self.login)
+                Button("Logout", action: self.logout)
             }
         } else {
             VStack {
                 HeroView()
-                Button("Login", action: self.logout)
+                Button("Login", action: self.login)
             }
         }
     }
@@ -22,10 +22,11 @@ struct MainView: View {
     func login() {
         Auth0
             .webAuth()
-            .clearSession { result in
+            .start { result in
                 switch result {
-                case .success:
-                    self.loggedIn = false
+                case .success(let credentials):
+                    self.profile = Profile.from(credentials.idToken)
+                    self.loggedIn = true
                 case .failure(let error):
                     print("Failed with: \(error)")
                 }
@@ -35,11 +36,10 @@ struct MainView: View {
     func logout() {
         Auth0
             .webAuth()
-            .start { result in
+            .clearSession { result in
                 switch result {
-                case .success(let credentials):
-                    self.profile = Profile.from(credentials.idToken)
-                    self.loggedIn = true
+                case .success:
+                    self.loggedIn = false
                 case .failure(let error):
                     print("Failed with: \(error)")
                 }
