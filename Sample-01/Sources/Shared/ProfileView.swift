@@ -1,15 +1,17 @@
-import Foundation
 import SwiftUI
 
 struct ProfileView: View {
     @Binding var profile: Profile
 
     var body: some View {
-        VStack(spacing: 16) {
-            AsyncImage(url: URL(string: profile.picture))
-            Text(profile.id)
-            Text(profile.email)
-            Text(profile.updatedAt)
+        List {
+            Section(header: ProfilePicture(picture: profile.picture)) {
+                ProfileCell(key: "ID", value: profile.id)
+                ProfileCell(key: "Name", value: profile.name)
+                ProfileCell(key: "Email", value: profile.email)
+                ProfileCell(key: "Email verified?", value: profile.emailVerified)
+                ProfileCell(key: "Updated at", value: profile.updatedAt)
+            }
         }
     }
 }
