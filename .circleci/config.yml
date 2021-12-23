@@ -1,0 +1,68 @@
+version: 2.1
+
+executors:
+  macos-executor:
+    parameters:
+      xcode:
+        type: string
+    shell: /bin/bash --login -eo pipefail
+    macos:
+      xcode: << parameters.xcode >>
+    environment:
+      LC_ALL: en_US.UTF-8
+      LANG: en_US.UTF-8
+
+commands:
+  build-ios:
+    parameters:
+      scheme:
+        type: string
+    steps:
+      - run:
+          name: Build for iOS
+          command: xcodebuild build -project 'Sample-01/<< parameters.scheme >>.xcodeproj' -scheme '<< parameters.scheme >> (iOS)' -destination 'platform=iOS Simulator,name=IPhone 12' | xcpretty
+  build-macos:
+    parameters:
+      scheme:
+        type: string
+    steps:
+      - run:
+          name: Build for macOS
+          command: xcodebuild build -project 'Sample-01/<< parameters.scheme >>.xcodeproj' -scheme '<< parameters.scheme >> (macOS)' -destination 'platform=macOS,arch=x86_64' | xcpretty
+
+jobs:
+  build:
+    parameters:
+      platform:
+        type: string
+      xcode:
+        type: string
+      scheme:
+        type: string
+    executor:
+      name: macos-executor
+      xcode: << parameters.xcode >>
+    steps:
+      - checkout
+      - when:
+          condition:
+            equal: [ios, << parameters.platform >>]
+          steps:
+            - build-ios:
+                scheme: << parameters.scheme >>
+      - when:
+          condition:
+            equal: [macos, << parameters.platform >>]
+          steps:
+            - build-macos:
+                scheme: << parameters.scheme >>
+
+workflows:
+  build:
+    jobs:
+      - build:
+          scheme: "SwiftSample"
+          matrix:
+            parameters:
+              platform: ["ios", "macos"]
+              xcode: ["13.2.1"]
