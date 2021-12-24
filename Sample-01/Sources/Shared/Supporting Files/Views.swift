@@ -27,7 +27,7 @@ struct HeroView: View {
             .aspectRatio(contentMode: .fit)
             .frame(width: 25, height: 28, alignment: .center)
             .padding(.top, self.padding)
-        VStack(spacing: -24) {
+        VStack(spacing: -32) {
             Text("Swift")
                 .tracking(self.tracking)
                 .foregroundStyle(
