@@ -11,8 +11,17 @@ executors:
     environment:
       LC_ALL: en_US.UTF-8
       LANG: en_US.UTF-8
+      HOMEBREW_LOGS: ~/homebrew-logs
+      HOMEBREW_TEMP: ~/homebrew-temp
+      HOMEBREW_NO_AUTO_UPDATE: 1
+      HOMEBREW_NO_INSTALL_CLEANUP: 1
 
 commands:
+  prepare:
+    steps:
+      - run:
+          name: Install Swiftlint
+          command: brew install swiftlint
   build-ios:
     parameters:
       scheme:
@@ -44,6 +53,7 @@ jobs:
       xcode: << parameters.xcode >>
     steps:
       - checkout
+      - prepare
       - when:
           condition:
             equal: [ios, << parameters.platform >>]

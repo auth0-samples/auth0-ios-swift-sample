@@ -27,7 +27,7 @@ struct HeroView: View {
             .aspectRatio(contentMode: .fit)
             .frame(width: 25, height: 28, alignment: .center)
             .padding(.top, self.padding)
-        VStack(spacing: -24) {
+        VStack(spacing: -32) {
             Text("Swift")
                 .tracking(self.tracking)
                 .foregroundStyle(
@@ -50,7 +50,6 @@ struct HeroView: View {
     #else
         Text("Auth0 Swift Sample")
             .font(.title)
-            .frame(height: 16)
     #endif
     }
 }
@@ -58,7 +57,7 @@ struct HeroView: View {
 struct ProfilePicture: View {
     @State var picture: String
 
-    private let size: CGFloat = 96
+    private let size: CGFloat = 100
 
     var body: some View {
     #if os(iOS)
@@ -68,7 +67,7 @@ struct ProfilePicture: View {
             Color.clear
         })
         .frame(width: self.size, height: self.size)
-        .clipShape(RoundedRectangle(cornerRadius: 24))
+        .clipShape(Circle())
         .padding(.bottom, 24)
     #else
         Text("Profile")
