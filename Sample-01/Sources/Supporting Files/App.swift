@@ -9,7 +9,7 @@ struct SwiftSampleApp: App {
                 .padding(.bottom, 16)
                 .ignoresSafeArea(.keyboard, edges: .bottom)
                 .background(Color("Background").ignoresSafeArea())
-                .buttonStyle(PrimaryButton())
+                .buttonStyle(PrimaryButtonStyle())
                 .onAppear {
                     UITableView.appearance().backgroundColor = .clear
                     UITableView.appearance().bounces = false

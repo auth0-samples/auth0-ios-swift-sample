@@ -18,7 +18,9 @@ struct MainView: View {
             }
         }
     }
+}
 
+extension MainView {
     func login() {
         Auth0
             .webAuth()

@@ -1,21 +1,5 @@
 import SwiftUI
 
-struct PrimaryButton: ButtonStyle {
-    private let padding: CGFloat = 8
-
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(.system(size: 14, weight: .semibold))
-            .padding(.init(top: self.padding,
-                           leading: self.padding * 6,
-                           bottom: self.padding,
-                           trailing: self.padding * 6))
-            .background(Color.black)
-            .foregroundColor(.white)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
-    }
-}
-
 struct HeroView: View {
     private let tracking: CGFloat = -4
 
@@ -43,7 +27,7 @@ struct HeroView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .font(.custom("SpaceGrotesk-Medium", size: 80))
     #else
-        Text("Auth0 Swift Sample")
+        Text("Swift Sample App")
             .font(.title)
     #endif
     }
@@ -90,5 +74,21 @@ struct ProfileCell: View {
     #if os(iOS)
         .listRowBackground(Color.white)
     #endif
+    }
+}
+
+struct PrimaryButtonStyle: ButtonStyle {
+    private let padding: CGFloat = 8
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.system(size: 14, weight: .semibold))
+            .padding(.init(top: self.padding,
+                           leading: self.padding * 6,
+                           bottom: self.padding,
+                           trailing: self.padding * 6))
+            .background(Color.black)
+            .foregroundColor(.white)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
     }
 }
