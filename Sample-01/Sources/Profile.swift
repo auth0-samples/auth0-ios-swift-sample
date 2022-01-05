@@ -7,7 +7,9 @@ struct Profile {
     let emailVerified: String
     let picture: String
     let updatedAt: String
+}
 
+extension Profile {
     static var empty: Self {
         return Profile(id: "",
                        name: "",
