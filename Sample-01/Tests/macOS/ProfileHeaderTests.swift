@@ -6,9 +6,10 @@ extension ProfileHeader: Inspectable {}
 
 class ProfileHeaderTests: XCTestCase {
 
+    private let sut = ProfileHeader(picture: "")
+
     func testHasText() throws {
-        let sut = ProfileHeader(picture: "")
-        XCTAssertEqual(try sut.inspect().text().string(), "Profile")
+        XCTAssertEqual(try self.sut.inspect().text().string(), "Profile")
     }
 
 }

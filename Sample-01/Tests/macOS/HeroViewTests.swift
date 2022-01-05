@@ -6,14 +6,14 @@ extension HeroView: Inspectable {}
 
 class HeroViewTests: XCTestCase {
 
+    private let sut = HeroView()
+
     func testHasText() throws {
-        let sut = HeroView()
-        XCTAssertEqual(try sut.inspect().text().string(), "Auth0 Swift Sample")
+        XCTAssertEqual(try self.sut.inspect().text().string(), "Swift Sample App")
     }
 
-    func testUsesTitleFont() throws {
-        let sut = HeroView()
-        XCTAssertEqual(try sut.inspect().text().attributes().font().style(), .title)
+    func testTextUsesTitleFont() throws {
+        XCTAssertEqual(try self.sut.inspect().text().attributes().font().style(), .title)
     }
 
 }
