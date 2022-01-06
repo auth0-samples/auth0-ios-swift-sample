@@ -6,11 +6,10 @@ struct SwiftSampleApp: App {
         WindowGroup {
             MainView()
             #if os(iOS)
-                .padding(.bottom, 8)
+                .padding(.bottom, 16)
                 .ignoresSafeArea(.keyboard, edges: .bottom)
                 .background(Color("Background").ignoresSafeArea())
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .buttonStyle(PrimaryButton())
+                .buttonStyle(PrimaryButtonStyle())
                 .onAppear {
                     UITableView.appearance().backgroundColor = .clear
                     UITableView.appearance().bounces = false

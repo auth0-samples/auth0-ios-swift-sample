@@ -5,7 +5,7 @@ struct ProfileView: View {
 
     var body: some View {
         List {
-            Section(header: ProfilePicture(picture: profile.picture)) {
+            Section(header: ProfileHeader(picture: profile.picture)) {
                 ProfileCell(key: "ID", value: profile.id)
                 ProfileCell(key: "Name", value: profile.name)
                 ProfileCell(key: "Email", value: profile.email)

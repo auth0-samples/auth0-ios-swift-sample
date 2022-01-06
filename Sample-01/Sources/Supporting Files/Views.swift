@@ -1,23 +1,6 @@
 import SwiftUI
 
-struct PrimaryButton: ButtonStyle {
-    private let padding: CGFloat = 8
-
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(.system(size: 14, weight: .semibold))
-            .padding(.init(top: self.padding,
-                           leading: self.padding * 6,
-                           bottom: self.padding,
-                           trailing: self.padding * 6))
-            .background(Color.black)
-            .foregroundColor(.white)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
-    }
-}
-
 struct HeroView: View {
-    private let padding: CGFloat = 8
     private let tracking: CGFloat = -4
 
     var body: some View {
@@ -26,8 +9,8 @@ struct HeroView: View {
             .resizable()
             .aspectRatio(contentMode: .fit)
             .frame(width: 25, height: 28, alignment: .center)
-            .padding(.top, self.padding)
-        VStack(spacing: -32) {
+            .padding(.top, 8)
+        VStack(alignment: .leading, spacing: -32) {
             Text("Swift")
                 .tracking(self.tracking)
                 .foregroundStyle(
@@ -36,25 +19,21 @@ struct HeroView: View {
                       startPoint: .topLeading,
                       endPoint: .bottomTrailing
                     ))
-                .frame(maxWidth: .infinity, alignment: .leading)
             Text("Sample")
                 .tracking(self.tracking)
-                .frame(maxWidth: .infinity, alignment: .leading)
             Text("App")
                 .tracking(self.tracking)
-                .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .padding(.leading, self.padding * 4)
-        .frame(maxHeight: .infinity)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .font(.custom("SpaceGrotesk-Medium", size: 80))
     #else
-        Text("Auth0 Swift Sample")
+        Text("Swift Sample App")
             .font(.title)
     #endif
     }
 }
 
-struct ProfilePicture: View {
+struct ProfileHeader: View {
     @State var picture: String
 
     private let size: CGFloat = 100
@@ -95,5 +74,21 @@ struct ProfileCell: View {
     #if os(iOS)
         .listRowBackground(Color.white)
     #endif
+    }
+}
+
+struct PrimaryButtonStyle: ButtonStyle {
+    private let padding: CGFloat = 8
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.system(size: 14, weight: .semibold))
+            .padding(.init(top: self.padding,
+                           leading: self.padding * 6,
+                           bottom: self.padding,
+                           trailing: self.padding * 6))
+            .background(Color.black)
+            .foregroundColor(.white)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
     }
 }
