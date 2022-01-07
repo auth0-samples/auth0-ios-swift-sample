@@ -1,0 +1,2 @@
+*.swift text diff=swift
+*.otf   binary
