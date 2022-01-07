@@ -1,6 +1,6 @@
 # Swift Sample Application
 
-This sample application demonstrates the integration of the [Auth0.swift](https://github.com/auth0/Auth0.swift/tree/beta) SDK into a Swift iOS / macOS application. The sample is a companion to the [Auth0 Swift Quickstart](https://auth0.com/docs/quickstart/native/ios-swift/00-login).
+This sample application demonstrates the integration of the [Auth0.swift](https://github.com/auth0/Auth0.swift/tree/beta) SDK into a Swift iOS / macOS application. The sample is a companion to the [Auth0 Swift Quickstart](https://auth0.com/docs/quickstart/native/swift-beta).
 
 ## Requirements
 
@@ -9,13 +9,13 @@ This sample application demonstrates the integration of the [Auth0.swift](https:
 
 ## Configuration
 
-### Configure Bundle Identifier
+### 1. Configure Bundle Identifier
 
 Open `SwiftSample.xcodeproj` in Xcode and go to the settings of the application target you want to run. Change the default bundle identifier from `com.auth0.samples.SwiftSample` to another value of your choosing.
 
 There are two application targets available: **SwiftSample (iOS)** for the iOS sample and **SwiftSample (macOS)** for the macOS sample. 
 
-### Configure Auth0 Application
+### 2. Configure Auth0 Application
 
 Go to the settings page of your [Auth0 application](https://manage.auth0.com/#/applications/) and add the following value to **Allowed Callback URLs** and **Allowed Logout URLs**, according to the platform of your application.
 
@@ -39,7 +39,7 @@ com.company.myapp://company.us.auth0.com/ios/com.company.myapp/callback
 
 > ⚠️ Make sure that the [application type](https://auth0.com/docs/configure/applications) of the Auth0 application is **Native**. If you don’t have a Native Auth0 application, [create one](https://auth0.com/docs/get-started/create-apps/native-apps) before continuing.
 
-### Configure Auth0.swift
+### 3. Configure Auth0.swift
 
 Back in Xcode, rename the `Auth0.plist.example` file to `Auth0.plist`, and replace the placeholder `{CLIENT_ID}` and `{DOMAIN}` values with the Client ID and Domain of your Auth0 application. If you are using a [Custom Domain](https://auth0.com/docs/brand-and-customize/custom-domains), use the value of your Custom Domain instead of the value from the settings page.
 
