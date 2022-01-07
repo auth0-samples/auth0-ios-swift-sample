@@ -15,26 +15,9 @@ Open `SwiftSample.xcodeproj` in Xcode and go to the settings of the application 
 
 There are two application targets available: **SwiftSample (iOS)** for the iOS sample and **SwiftSample (macOS)** for the macOS sample. 
 
-### Configure Client ID and Domain
+### Configure Auth0 Application
 
-Rename the `Auth0.plist.example` file to `Auth0.plist`, and replace the placeholder `{CLIENT_ID}` and `{DOMAIN}` values with the Client ID and Domain of your [Auth0 application](https://manage.auth0.com/#/applications/):
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-  <key>ClientId</key>
-  <string>{CLIENT_ID}</string>
-  <key>Domain</key>
-  <string>{DOMAIN}</string>
-</dict>
-</plist>
-```
-
-### Configure Callback URL
-
-Go to the settings page of your [Auth0 application](https://manage.auth0.com/#/applications/) and add the corresponding URL to the **Allowed Callback URLs** field.
+Go to the settings page of your [Auth0 application](https://manage.auth0.com/#/applications/) and add the following value to **Allowed Callback URLs** and **Allowed Logout URLs**, according to the platform of your application.
 
 #### iOS
 
@@ -48,15 +31,30 @@ YOUR_BUNDLE_IDENTIFIER://YOUR_AUTH0_DOMAIN/ios/YOUR_BUNDLE_IDENTIFIER/callback
 YOUR_BUNDLE_IDENTIFIER://YOUR_AUTH0_DOMAIN/macos/YOUR_BUNDLE_IDENTIFIER/callback
 ```
 
-E.g. if the iOS bundle identifier you configured was `com.company.myapp` and your Auth0 Domain was `company.us.auth0.com`, then this value would be:
+E.g. if your iOS bundle identifier was `com.company.myapp` and your Auth0 Domain was `company.us.auth0.com`, then this value would be:
 
 ```text
 com.company.myapp://company.us.auth0.com/ios/com.company.myapp/callback
 ```
 
-### Configure Logout URL
+> ⚠️ Make sure that the [application type](https://auth0.com/docs/configure/applications) of the Auth0 application is **Native**. If you don’t have a Native Auth0 application, [create one](https://auth0.com/docs/get-started/create-apps/native-apps) before continuing.
 
-Go to the settings page of your [Auth0 application](https://manage.auth0.com/#/applications/) and copy the **Allowed Callback URLs** value you just added into the **Allowed Logout URLs** field.
+### Configure Auth0.swift
+
+Back in Xcode, rename the `Auth0.plist.example` file to `Auth0.plist`, and replace the placeholder `{CLIENT_ID}` and `{DOMAIN}` values with the Client ID and Domain of your Auth0 application. If you are using a [Custom Domain](https://auth0.com/docs/brand-and-customize/custom-domains), use the value of your Custom Domain instead of the value from the settings page.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>ClientId</key>
+    <string>{CLIENT_ID}</string>
+    <key>Domain</key>
+    <string>{DOMAIN}</string>
+</dict>
+</plist>
+```
 
 ## Issue Reporting
 
