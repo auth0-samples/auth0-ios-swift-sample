@@ -52,6 +52,7 @@ private extension SmokeTests {
         let passwordInput = app.webViews.secureTextFields.element(boundBy: 0)
         XCTAssertTrue(passwordInput.waitForExistence(timeout: timeout))
         passwordInput.tap()
+        sleep(1)
         passwordInput.typeText(password)
         app.webViews.buttons[continueButton].tap()
     }
