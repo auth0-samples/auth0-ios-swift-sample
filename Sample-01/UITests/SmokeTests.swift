@@ -55,8 +55,8 @@ private extension SmokeTests {
         emailInput.typeText("\(email)\n")
         let passwordInput = app.webViews.secureTextFields.firstMatch
         passwordInput.tap()
-        passwordInput.typeText("\(password)\n")
-        // app.webViews.buttons.firstMatch.tap()
+        passwordInput.typeText(password)
+        app.webViews.buttons.firstMatch.tap()
     }
 
 }
