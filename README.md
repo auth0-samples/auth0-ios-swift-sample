@@ -1,4 +1,4 @@
-# Auth0 Swift Samples
+# Auth0 Swift Samples TEST
 
 This is the sample application for the [Auth0 Swift Quickstart](https://auth0.com/docs/quickstart/native/swift-beta) using the [Auth0.swift](https://github.com/auth0/Auth0.swift/tree/beta) SDK. The sample source code can be found in the [Sample-01 directory](Sample-01).
 
