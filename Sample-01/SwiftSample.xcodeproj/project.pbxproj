@@ -15,7 +15,6 @@
 		5C6537252772F5D90035759D /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C6537232772F5D90035759D /* ProfileView.swift */; };
 		5C6537272772F5EE0035759D /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C6537262772F5EE0035759D /* Profile.swift */; };
 		5C6537282772F5EE0035759D /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C6537262772F5EE0035759D /* Profile.swift */; };
-		5C65372A2773FC6B0035759D /* SpaceGrotesk.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5C6537292773FC6B0035759D /* SpaceGrotesk.otf */; };
 		5C78D9C127740963000B4B71 /* Views.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C78D9C027740963000B4B71 /* Views.swift */; };
 		5C78D9C227740975000B4B71 /* Views.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C78D9C027740963000B4B71 /* Views.swift */; };
 		5CD3A4642784F5F900B67D88 /* ViewInspector in Frameworks */ = {isa = PBXBuildFile; productRef = 5CD3A4632784F5F900B67D88 /* ViewInspector */; };
@@ -36,6 +35,8 @@
 		5CDD8868277102DC00052307 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDD8856277102DA00052307 /* MainView.swift */; };
 		5CDD8869277102DC00052307 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5CDD8857277102DC00052307 /* Assets.xcassets */; };
 		5CDD886A277102DC00052307 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5CDD8857277102DC00052307 /* Assets.xcassets */; };
+		D5697769278D96C7008E6498 /* Auth0.plist in Resources */ = {isa = PBXBuildFile; fileRef = D5697768278D96C7008E6498 /* Auth0.plist */; };
+		D569776D278D97D3008E6498 /* SpaceGrotesk.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D569776C278D97D3008E6498 /* SpaceGrotesk.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,7 +60,6 @@
 		5C5DBE87277212E000E19935 /* Auth0.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Auth0.plist; path = ../Auth0.plist; sourceTree = "<group>"; };
 		5C6537232772F5D90035759D /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		5C6537262772F5EE0035759D /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
-		5C6537292773FC6B0035759D /* SpaceGrotesk.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SpaceGrotesk.otf; sourceTree = "<group>"; };
 		5C78D9C027740963000B4B71 /* Views.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views.swift; sourceTree = "<group>"; };
 		5CD3A4492784E54E00B67D88 /* SwiftSampleTests (iOS).xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SwiftSampleTests (iOS).xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5CD3A4572784E5BC00B67D88 /* SwiftSampleTests (macOS).xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SwiftSampleTests (macOS).xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -76,6 +76,8 @@
 		5CDD885C277102DC00052307 /* SwiftSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5CDD8862277102DC00052307 /* SwiftSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5CDD8864277102DC00052307 /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
+		D5697768278D96C7008E6498 /* Auth0.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Auth0.plist; sourceTree = "<group>"; };
+		D569776C278D97D3008E6498 /* SpaceGrotesk.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = SpaceGrotesk.ttf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,7 +131,7 @@
 		5C65372C2773FCFA0035759D /* iOS */ = {
 			isa = PBXGroup;
 			children = (
-				5C6537292773FC6B0035759D /* SpaceGrotesk.otf */,
+				D569776C278D97D3008E6498 /* SpaceGrotesk.ttf */,
 			);
 			path = iOS;
 			sourceTree = "<group>";
@@ -187,6 +189,7 @@
 		5CDD884F277102DA00052307 = {
 			isa = PBXGroup;
 			children = (
+				D5697768278D96C7008E6498 /* Auth0.plist */,
 				5C5DBE8A277217D800E19935 /* Sources */,
 				5CD3A4522784E56300B67D88 /* Tests */,
 				5CDD885D277102DC00052307 /* Products */,
@@ -369,9 +372,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5C65372A2773FC6B0035759D /* SpaceGrotesk.otf in Resources */,
 				5CDD8869277102DC00052307 /* Assets.xcassets in Resources */,
 				5C5DBE88277212E000E19935 /* Auth0.plist in Resources */,
+				D5697769278D96C7008E6498 /* Auth0.plist in Resources */,
+				D569776D278D97D3008E6498 /* SpaceGrotesk.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
