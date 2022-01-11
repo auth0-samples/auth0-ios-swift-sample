@@ -27,6 +27,10 @@ class SmokeTests: XCTestCase {
 
     func testLogout() {
         let app = XCUIApplication()
+        let sessionButton = app.webViews.staticTexts[email]
+        XCTAssertTrue(sessionButton.waitForExistence(timeout: timeout))
+        sessionButton.tap()
+        XCTAssertTrue(app.buttons[logoutButton].waitForExistence(timeout: timeout))
         app.buttons[logoutButton].tap()
         tapAlert(button: continueButton)
         XCTAssertTrue(app.buttons[loginButton].waitForExistence(timeout: timeout))
@@ -45,16 +49,14 @@ private extension SmokeTests {
 
     func login() {
         let app = XCUIApplication()
-        let emailInput = app.webViews.textFields.element(boundBy: 0)
+        let emailInput = app.webViews.textFields.firstMatch
         XCTAssertTrue(emailInput.waitForExistence(timeout: timeout))
         emailInput.tap()
-        emailInput.typeText(email)
-        let passwordInput = app.webViews.secureTextFields.element(boundBy: 0)
-        XCTAssertTrue(passwordInput.waitForExistence(timeout: timeout))
+        emailInput.typeText("\(email)\n")
+        let passwordInput = app.webViews.secureTextFields.firstMatch
         passwordInput.tap()
-        sleep(1)
-        passwordInput.typeText(password)
-        app.webViews.buttons[continueButton].tap()
+        passwordInput.typeText("\(password)\n")
+        // app.webViews.buttons.firstMatch.tap()
     }
 
 }
