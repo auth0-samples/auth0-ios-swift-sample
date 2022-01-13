@@ -31,7 +31,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5CD3A4892788DFCD00B67D88"
-            BuildableName = "SwiftSampleUITests (iOS).xctest"
+            BuildableName = "SwiftSampleUITests.xctest"
             BlueprintName = "SwiftSampleUITests"
             ReferencedContainer = "container:SwiftSample.xcodeproj">
          </BuildableReference>
@@ -64,7 +64,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "5CD3A4892788DFCD00B67D88"
-               BuildableName = "SwiftSampleUITests (iOS).xctest"
+               BuildableName = "SwiftSampleUITests.xctest"
                BlueprintName = "SwiftSampleUITests"
                ReferencedContainer = "container:SwiftSample.xcodeproj">
             </BuildableReference>
