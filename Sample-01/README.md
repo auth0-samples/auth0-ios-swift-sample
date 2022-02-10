@@ -11,9 +11,7 @@ This sample application demonstrates the integration of the [Auth0.swift](https:
 
 ### 1. Configure Bundle Identifier
 
-Open `SwiftSample.xcodeproj` in Xcode and go to the settings of the application target you want to run. Change the default bundle identifier from `com.auth0.samples.SwiftSample` to another value of your choosing.
-
-There are two application targets available: **SwiftSample (iOS)** and **SwiftSample (macOS)**. 
+Open `SwiftSample.xcodeproj` in Xcode and go to the settings of the application target you want to run. There are two application targets available: **SwiftSample (iOS)** and **SwiftSample (macOS)**. In the **General** tab, change the default bundle identifier from `com.auth0.samples.SwiftSample` to another value of your choosing.
 
 ### 2. Configure Auth0 Application
 
