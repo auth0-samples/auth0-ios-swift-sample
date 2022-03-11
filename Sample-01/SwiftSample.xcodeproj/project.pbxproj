@@ -963,7 +963,7 @@
 			repositoryURL = "https://github.com/auth0/Auth0.swift.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-                minimumVersion = 2.0.0;
+				minimumVersion = 2.0.0;
 			};
 		};
 		5CD3A4622784F5F900B67D88 /* XCRemoteSwiftPackageReference "ViewInspector" */ = {
