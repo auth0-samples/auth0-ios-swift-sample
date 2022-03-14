@@ -1,0 +1,98 @@
+version: 2.1
+
+executors:
+  macos-executor:
+    parameters:
+      xcode:
+        type: string
+    shell: /bin/bash --login -eo pipefail
+    macos:
+      xcode: << parameters.xcode >>
+    environment:
+      LC_ALL: en_US.UTF-8
+      LANG: en_US.UTF-8
+      HOMEBREW_LOGS: ~/homebrew-logs
+      HOMEBREW_TEMP: ~/homebrew-temp
+      HOMEBREW_NO_AUTO_UPDATE: 1
+      HOMEBREW_NO_INSTALL_CLEANUP: 1
+
+commands:
+  prepare:
+    steps:
+      - run:
+          name: Install Swiftlint
+          command: brew install swiftlint
+      - run:
+          name: Rename Auth0.plist.example
+          command: mv Sample-01/Auth0.plist.example Sample-01/Auth0.plist
+  build-ios:
+    parameters:
+      scheme:
+        type: string
+    steps:
+      - run:
+          name: Run iOS tests
+          command: |
+            SIMULATOR='platform=iOS Simulator,name=iPhone 13'
+            if [ -z "$CIRCLE_PR_NUMBER" ]; then
+              sed -i '' -e "s/{DOMAIN}/$AUTH0_DOMAIN/" Sample-01/Auth0.plist
+              sed -i '' -e "s/{CLIENT_ID}/$AUTH0_CLIENT_ID/" Sample-01/Auth0.plist
+              xcodebuild test \
+              -project 'Sample-01/<< parameters.scheme >>.xcodeproj' \
+              -scheme '<< parameters.scheme >> (iOS)' \
+              -destination "$SIMULATOR" \
+              -configuration Debug | xcpretty
+            else
+              xcodebuild test \
+              -project 'Sample-01/<< parameters.scheme >>.xcodeproj' \
+              -scheme '<< parameters.scheme >> (iOS)' \
+              -destination "$SIMULATOR" \
+              -configuration Debug \
+              -skip-testing:<< parameters.scheme >>UITests | xcpretty
+            fi
+  build-macos:
+    parameters:
+      scheme:
+        type: string
+    steps:
+      - run:
+          name: Run macOS tests
+          command: xcodebuild test -project 'Sample-01/<< parameters.scheme >>.xcodeproj' -scheme '<< parameters.scheme >> (macOS)' -destination 'platform=macOS,arch=x86_64' -configuration Debug | xcpretty
+
+jobs:
+  build:
+    parameters:
+      platform:
+        type: string
+      xcode:
+        type: string
+      scheme:
+        type: string
+    executor:
+      name: macos-executor
+      xcode: << parameters.xcode >>
+    steps:
+      - checkout
+      - prepare
+      - when:
+          condition:
+            equal: [ios, << parameters.platform >>]
+          steps:
+            - build-ios:
+                scheme: << parameters.scheme >>
+      - when:
+          condition:
+            equal: [macos, << parameters.platform >>]
+          steps:
+            - build-macos:
+                scheme: << parameters.scheme >>
+
+workflows:
+  build:
+    jobs:
+      - build:
+          scheme: "SwiftSample"
+          matrix:
+            parameters:
+              platform: ["ios", "macos"]
+              xcode: ["13.2.1"]
