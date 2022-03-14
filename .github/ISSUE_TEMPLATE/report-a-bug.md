@@ -50,5 +50,5 @@ Detail the steps taken to reproduce this error, and whether this issue can be re
 ⚠️ These are all required. Issues with an incomplete or missing checklist will be unceremoniously closed.
 -->
 
-- [ ] I have looked into the [README](https://github.com/auth0-samples/auth0-ios-swift-sample/blob/beta/Sample-01/README.md) and have not found a suitable solution or answer
+- [ ] I have looked into the [README](https://github.com/auth0-samples/auth0-ios-swift-sample/blob/master/Sample-01/README.md) and have not found a suitable solution or answer
 - [ ] I have searched the [issues](https://github.com/auth0-samples/auth0-ios-swift-sample/issues) and have not found a suitable solution or answer

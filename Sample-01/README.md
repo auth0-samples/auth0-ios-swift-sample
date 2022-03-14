@@ -1,6 +1,6 @@
 # Swift Sample Application
 
-This sample application demonstrates the integration of the [Auth0.swift](https://github.com/auth0/Auth0.swift/tree/beta) SDK into a Swift iOS / macOS application. The sample is a companion to the [Auth0 Swift Quickstart](https://auth0.com/docs/quickstart/native/swift-beta).
+This sample application demonstrates the integration of the [Auth0.swift](https://github.com/auth0/Auth0.swift) SDK into a Swift iOS / macOS application. The sample is a companion to the [Auth0 Swift Quickstart](https://auth0.com/docs/quickstart/native/ios-swift).
 
 ## Requirements
 

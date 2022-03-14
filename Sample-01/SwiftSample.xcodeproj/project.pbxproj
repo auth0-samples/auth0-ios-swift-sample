@@ -962,8 +962,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/auth0/Auth0.swift.git";
 			requirement = {
-				branch = beta;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
 			};
 		};
 		5CD3A4622784F5F900B67D88 /* XCRemoteSwiftPackageReference "ViewInspector" */ = {
