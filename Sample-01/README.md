@@ -4,7 +4,7 @@ This sample application demonstrates the integration of the [Auth0.swift](https:
 
 ## Requirements
 
-- iOS 12+ / macOS 10.15+
+- iOS 15+ / macOS 11+
 - Xcode 13.x
 
 ## Configuration
@@ -15,15 +15,15 @@ Open `SwiftSample.xcodeproj` in Xcode and go to the settings of the application 
 
 ### 2. Configure Auth0 Application
 
-Go to the settings page of your [Auth0 application](https://manage.auth0.com/#/applications/) and add the following value to **Allowed Callback URLs** and **Allowed Logout URLs**, according to the platform of your application.
+Go to the settings page of your [Auth0 application](https://manage.auth0.com/#/applications/) and add the corresponding URL to **Allowed Callback URLs** and **Allowed Logout URLs**, according to the application target you want to run. If you are using a [Custom Domain](https://auth0.com/docs/brand-and-customize/custom-domains), replace `YOUR_AUTH0_DOMAIN` with the value of your Custom Domain instead of the value from the settings page.
 
-#### iOS
+#### SwiftSample (iOS)
 
 ```text
 YOUR_BUNDLE_IDENTIFIER://YOUR_AUTH0_DOMAIN/ios/YOUR_BUNDLE_IDENTIFIER/callback
 ```
 
-#### macOS
+#### SwiftSample (macOS)
 
 ```text
 YOUR_BUNDLE_IDENTIFIER://YOUR_AUTH0_DOMAIN/macos/YOUR_BUNDLE_IDENTIFIER/callback
@@ -39,7 +39,7 @@ com.company.myapp://company.us.auth0.com/ios/com.company.myapp/callback
 
 ### 3. Configure Auth0.swift
 
-Back in Xcode, rename the `Auth0.plist.example` file to `Auth0.plist`, and replace the placeholder `{CLIENT_ID}` and `{DOMAIN}` values with the Client ID and Domain of your Auth0 application. If you are using a [Custom Domain](https://auth0.com/docs/brand-and-customize/custom-domains), use the value of your Custom Domain instead of the value from the settings page.
+Rename the `Auth0.plist.example` file to `Auth0.plist`, and replace the placeholder `{CLIENT_ID}` and `{DOMAIN}` values with the Client ID and Domain of your Auth0 application. If you are using a [Custom Domain](https://auth0.com/docs/brand-and-customize/custom-domains), use the value of your Custom Domain instead of the value from the settings page.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
