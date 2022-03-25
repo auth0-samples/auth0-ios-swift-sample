@@ -15,7 +15,7 @@ Open `SwiftSample.xcodeproj` in Xcode and go to the settings of the application 
 
 ### 2. Configure Auth0 Application
 
-Go to the settings page of your [Auth0 application](https://manage.auth0.com/#/applications/) and add a URL to **Allowed Callback URLs** and **Allowed Logout URLs** as follows, according to the application target you want to run. If you are using a [Custom Domain](https://auth0.com/docs/brand-and-customize/custom-domains), replace `YOUR_AUTH0_DOMAIN` with the value of your Custom Domain instead of the value from the settings page.
+Go to the settings page of your [Auth0 application](https://manage.auth0.com/#/applications/) and add the corresponding URL to **Allowed Callback URLs** and **Allowed Logout URLs**, according to the application target you want to run. If you are using a [Custom Domain](https://auth0.com/docs/brand-and-customize/custom-domains), replace `YOUR_AUTH0_DOMAIN` with the value of your Custom Domain instead of the value from the settings page.
 
 #### SwiftSample (iOS)
 
