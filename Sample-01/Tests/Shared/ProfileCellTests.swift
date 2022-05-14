@@ -5,7 +5,6 @@ import ViewInspector
 extension ProfileCell: Inspectable {}
 
 class ProfileCellTests: XCTestCase {
-
     private var sut: ProfileCell!
 
     override func setUp() {
@@ -33,5 +32,4 @@ class ProfileCellTests: XCTestCase {
         XCTAssertEqual(try key?.attributes().font().weight(), .regular)
         XCTAssertEqual(try key?.attributes().font().size(), 14)
     }
-
 }

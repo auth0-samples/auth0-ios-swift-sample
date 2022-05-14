@@ -5,7 +5,6 @@ import ViewInspector
 extension HeroView: Inspectable {}
 
 class HeroViewTests: XCTestCase {
-
     private let sut = HeroView()
 
     func testHasLogo() throws {
@@ -43,5 +42,4 @@ class HeroViewTests: XCTestCase {
         XCTAssertEqual(try vStack.flexFrame().maxWidth, .infinity)
         XCTAssertEqual(try vStack.flexFrame().maxHeight, .infinity)
     }
-
 }

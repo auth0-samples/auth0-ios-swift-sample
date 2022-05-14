@@ -1,16 +1,16 @@
 import SwiftUI
 
 struct ProfileView: View {
-    @Binding var profile: Profile
+    @Binding var user: User
 
     var body: some View {
         List {
-            Section(header: ProfileHeader(picture: profile.picture)) {
-                ProfileCell(key: "ID", value: profile.id)
-                ProfileCell(key: "Name", value: profile.name)
-                ProfileCell(key: "Email", value: profile.email)
-                ProfileCell(key: "Email verified?", value: profile.emailVerified)
-                ProfileCell(key: "Updated at", value: profile.updatedAt)
+            Section(header: ProfileHeader(picture: user.picture)) {
+                ProfileCell(key: "ID", value: user.id)
+                ProfileCell(key: "Name", value: user.name)
+                ProfileCell(key: "Email", value: user.email)
+                ProfileCell(key: "Email verified?", value: user.emailVerified)
+                ProfileCell(key: "Updated at", value: user.updatedAt)
             }
         }
     }
