@@ -5,7 +5,6 @@ import ViewInspector
 extension HeroView: Inspectable {}
 
 class HeroViewTests: XCTestCase {
-
     private let sut = HeroView()
 
     func testHasText() throws {
@@ -15,5 +14,4 @@ class HeroViewTests: XCTestCase {
     func testTextUsesTitleFont() throws {
         XCTAssertEqual(try self.sut.inspect().text().attributes().font().style(), .title)
     }
-
 }

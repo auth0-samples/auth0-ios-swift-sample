@@ -1,6 +1,6 @@
 import JWTDecode
 
-struct Profile {
+struct User {
     let id: String
     let name: String
     let email: String
@@ -9,14 +9,9 @@ struct Profile {
     let updatedAt: String
 }
 
-extension Profile {
+extension User {
     static var empty: Self {
-        return Profile(id: "",
-                       name: "",
-                       email: "",
-                       emailVerified: "",
-                       picture: "",
-                       updatedAt: "")
+        return User(id: "", name: "", email: "", emailVerified: "", picture: "", updatedAt: "")
     }
 
     static func from(_ idToken: String) -> Self {
@@ -29,11 +24,11 @@ extension Profile {
               let updatedAt = jwt.claim(name: "updated_at").string else {
                   return .empty
               }
-        return Profile(id: id,
-                       name: name,
-                       email: email,
-                       emailVerified: String(describing: emailVerified),
-                       picture: picture,
-                       updatedAt: updatedAt)
+        return User(id: id,
+                    name: name,
+                    email: email,
+                    emailVerified: String(describing: emailVerified),
+                    picture: picture,
+                    updatedAt: updatedAt)
     }
 }

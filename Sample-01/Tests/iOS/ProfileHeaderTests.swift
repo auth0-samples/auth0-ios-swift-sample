@@ -5,7 +5,6 @@ import ViewInspector
 extension ProfileHeader: Inspectable {}
 
 class ProfileHeaderTests: XCTestCase {
-
     private let sut = ProfileHeader(picture: "")
 
     func testHasAsyncImage() throws {
@@ -17,5 +16,4 @@ class ProfileHeaderTests: XCTestCase {
         XCTAssertEqual(try self.sut.inspect().asyncImage().fixedHeight(), size)
         XCTAssertEqual(try self.sut.inspect().asyncImage().fixedHeight(), size)
     }
-
 }
