@@ -1,5 +1,5 @@
 blank_issues_enabled: false
 contact_links:
-  - name: Auth0 Community
+  - name: 🤔 Help & Questions
     url: https://community.auth0.com/tags/c/sdks/5/swift
-    about: Ask general questions in the Auth0 Community forums
+    about: Ask general support or usage questions in the Auth0 Community forums
