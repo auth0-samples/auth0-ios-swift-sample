@@ -2,13 +2,12 @@ import SwiftUI
 import Auth0
 
 struct MainView: View {
-    @State var user = User.empty
-    @State var loggedIn = false
+    @State var user: User?
 
     var body: some View {
-        if loggedIn {
+        if let user = self.user {
             VStack {
-                ProfileView(user: self.$user)
+                ProfileView(user: user)
                 Button("Logout", action: self.logout)
             }
         } else {
@@ -27,8 +26,7 @@ extension MainView {
             .start { result in
                 switch result {
                 case .success(let credentials):
-                    self.user = User.from(credentials.idToken)
-                    self.loggedIn = true
+                    self.user = User(from: credentials.idToken)
                 case .failure(let error):
                     print("Failed with: \(error)")
                 }
@@ -41,7 +39,7 @@ extension MainView {
             .clearSession { result in
                 switch result {
                 case .success:
-                    self.loggedIn = false
+                    self.user = nil
                 case .failure(let error):
                     print("Failed with: \(error)")
                 }

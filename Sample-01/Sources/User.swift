@@ -10,11 +10,7 @@ struct User {
 }
 
 extension User {
-    static var empty: Self {
-        return User(id: "", name: "", email: "", emailVerified: "", picture: "", updatedAt: "")
-    }
-
-    static func from(_ idToken: String) -> Self {
+    init?(from idToken: String) {
         guard let jwt = try? decode(jwt: idToken),
               let id = jwt.subject,
               let name = jwt.claim(name: "name").string,
@@ -22,13 +18,13 @@ extension User {
               let emailVerified = jwt.claim(name: "email_verified").boolean,
               let picture = jwt.claim(name: "picture").string,
               let updatedAt = jwt.claim(name: "updated_at").string else {
-                  return .empty
-              }
-        return User(id: id,
-                    name: name,
-                    email: email,
-                    emailVerified: String(describing: emailVerified),
-                    picture: picture,
-                    updatedAt: updatedAt)
+            return nil
+        }
+        self.id = id
+        self.name = name
+        self.email = email
+        self.emailVerified = String(describing: emailVerified)
+        self.picture = picture
+        self.updatedAt = updatedAt
     }
 }

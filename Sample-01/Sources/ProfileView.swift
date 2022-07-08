@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ProfileView: View {
-    @Binding var user: User
+    let user: User
 
     var body: some View {
         List {
