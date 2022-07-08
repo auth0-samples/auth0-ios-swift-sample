@@ -8,13 +8,13 @@ extension ProfileView: Inspectable {}
 class ProfileViewTests: XCTestCase {
     func testHasHeader() throws {
         let user = User(id: "", name: "", email: "", emailVerified: "", picture: "", updatedAt: "")
-        let sut = ProfileView(user: Binding<User>(wrappedValue: user))
+        let sut = ProfileView(user: user)
         XCTAssertNotNil(try? sut.inspect().list().find(ProfileHeader.self))
     }
 
     func testHasProfileValues() throws {
         let user = User(id: "foo", name: "bar", email: "baz", emailVerified: "qux", picture: "", updatedAt: "quux")
-        let sut = ProfileView(user: Binding<User>(wrappedValue: user))
+        let sut = ProfileView(user: user)
         let cells = try sut.inspect().list().findAll(ProfileCell.self)
         XCTAssertEqual(cells.count, 5)
         XCTAssertEqual(try cells[0].findAll(ViewType.Text.self).last?.string(), user.id)

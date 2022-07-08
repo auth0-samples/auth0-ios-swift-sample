@@ -5,9 +5,9 @@ struct MainView: View {
     @State var user: User?
 
     var body: some View {
-        if let userBinding = Binding(self.$user) {
+        if let user = self.user {
             VStack {
-                ProfileView(user: userBinding)
+                ProfileView(user: user)
                 Button("Logout", action: self.logout)
             }
         } else {
