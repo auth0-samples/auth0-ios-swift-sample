@@ -17,21 +17,21 @@ class SmokeTests: XCTestCase {
 
     func testLogin() {
         let app = XCUIApplication()
-        app.activate()
         tap(button: loginButton)
         let emailInput = app.webViews.textFields.firstMatch
         XCTAssertTrue(emailInput.waitForExistence(timeout: timeout))
         emailInput.tap()
         emailInput.typeText(email)
+        emailInput.typeText("\n")
         let passwordInput = app.webViews.secureTextFields.firstMatch
         passwordInput.tap()
-        passwordInput.typeText("\(password)\n")
+        passwordInput.typeText(password)
+        passwordInput.typeText("\n")
         XCTAssertTrue(app.buttons[logoutButton].waitForExistence(timeout: timeout))
     }
 
     func testLogout() {
         let app = XCUIApplication()
-        app.activate()
         tap(button: loginButton)
         let sessionButton = app.webViews.staticTexts[email]
         XCTAssertTrue(sessionButton.waitForExistence(timeout: timeout))
