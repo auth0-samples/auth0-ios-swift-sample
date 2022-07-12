@@ -9,7 +9,7 @@ class ProfileViewTests: XCTestCase {
     func testHasHeader() throws {
         let user = User(id: "", name: "", email: "", emailVerified: "", picture: "", updatedAt: "")
         let sut = ProfileView(user: user)
-        XCTAssertNotNil(try? sut.inspect().list().find(ProfileHeader.self))
+        XCTAssertNoThrow(try sut.inspect().list().find(ProfileHeader.self))
     }
 
     func testHasProfileValues() throws {

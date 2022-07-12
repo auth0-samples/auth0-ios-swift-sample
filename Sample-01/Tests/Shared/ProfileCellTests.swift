@@ -22,14 +22,14 @@ class ProfileCellTests: XCTestCase {
     }
 
     func testKeyUsesSemiboldFont() throws {
-        let key = try self.sut.inspect().findAll(ViewType.Text.self).first
-        XCTAssertEqual(try key?.attributes().font().weight(), .semibold)
-        XCTAssertEqual(try key?.attributes().font().size(), 14)
+        let key = try XCTUnwrap(try self.sut.inspect().findAll(ViewType.Text.self).first)
+        XCTAssertEqual(try key.attributes().font().weight(), .semibold)
+        XCTAssertEqual(try key.attributes().font().size(), 14)
     }
 
     func testValueUsesRegularFont() throws {
-        let key = try self.sut.inspect().findAll(ViewType.Text.self).last
-        XCTAssertEqual(try key?.attributes().font().weight(), .regular)
-        XCTAssertEqual(try key?.attributes().font().size(), 14)
+        let key = try XCTUnwrap(try self.sut.inspect().findAll(ViewType.Text.self).last)
+        XCTAssertEqual(try key.attributes().font().weight(), .regular)
+        XCTAssertEqual(try key.attributes().font().size(), 14)
     }
 }

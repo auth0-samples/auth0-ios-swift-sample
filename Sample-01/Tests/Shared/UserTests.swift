@@ -13,18 +13,17 @@ extension User: Equatable {
 }
 
 class UserTests: XCTestCase {
-    func testReturnsUserFromIDToken() {
+    func testReturnsUserFromIDToken() throws {
         let idToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmb28iLCJuYW1lIjoiYmFyIiwiZW1haWwiOiJmb29AZXhhbXB"
             + "sZS5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwicGljdHVyZSI6ImJheiIsInVwZGF0ZWRfYXQiOiJxdXgifQ.vc9sxvhUVAHowIWJ"
             + "7D_WDzvqJxC4-qYXHmiBVYEKn9E"
-        let sut = User(from: idToken)
-        XCTAssertNotNil(sut)
-        XCTAssertEqual(sut?.id, "foo")
-        XCTAssertEqual(sut?.name, "bar")
-        XCTAssertEqual(sut?.email, "foo@example.com")
-        XCTAssertEqual(sut?.emailVerified, "true")
-        XCTAssertEqual(sut?.picture, "baz")
-        XCTAssertEqual(sut?.updatedAt, "qux")
+        let sut = try XCTUnwrap(User(from: idToken))
+        XCTAssertEqual(sut.id, "foo")
+        XCTAssertEqual(sut.name, "bar")
+        XCTAssertEqual(sut.email, "foo@example.com")
+        XCTAssertEqual(sut.emailVerified, "true")
+        XCTAssertEqual(sut.picture, "baz")
+        XCTAssertEqual(sut.updatedAt, "qux")
     }
 
     func testReturnsNilWhenIDTokenDecodingFails() {
