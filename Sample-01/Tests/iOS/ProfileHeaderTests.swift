@@ -8,7 +8,7 @@ class ProfileHeaderTests: XCTestCase {
     private let sut = ProfileHeader(picture: "")
 
     func testHasAsyncImage() throws {
-        XCTAssertNotNil(try? self.sut.inspect().asyncImage())
+        XCTAssertNoThrow(try self.sut.inspect().asyncImage())
     }
 
     func testAsyncImageUsesFixedSize() throws {
