@@ -11,25 +11,8 @@
 		5C5DBE86277210C100E19935 /* Auth0 in Frameworks */ = {isa = PBXBuildFile; productRef = 5C5DBE85277210C100E19935 /* Auth0 */; };
 		5C5DBE88277212E000E19935 /* Auth0.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5C5DBE87277212E000E19935 /* Auth0.plist */; };
 		5C5DBE89277212E000E19935 /* Auth0.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5C5DBE87277212E000E19935 /* Auth0.plist */; };
-		5C6537242772F5D90035759D /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C6537232772F5D90035759D /* ProfileView.swift */; };
-		5C6537252772F5D90035759D /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C6537232772F5D90035759D /* ProfileView.swift */; };
-		5C6537272772F5EE0035759D /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C6537262772F5EE0035759D /* User.swift */; };
-		5C6537282772F5EE0035759D /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C6537262772F5EE0035759D /* User.swift */; };
 		5C78D9C127740963000B4B71 /* Views.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C78D9C027740963000B4B71 /* Views.swift */; };
 		5C78D9C227740975000B4B71 /* Views.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C78D9C027740963000B4B71 /* Views.swift */; };
-		5CD3A4642784F5F900B67D88 /* ViewInspector in Frameworks */ = {isa = PBXBuildFile; productRef = 5CD3A4632784F5F900B67D88 /* ViewInspector */; };
-		5CD3A4672784F61200B67D88 /* ViewInspector in Frameworks */ = {isa = PBXBuildFile; productRef = 5CD3A4662784F61200B67D88 /* ViewInspector */; };
-		5CD3A46B27850B9000B67D88 /* HeroViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CD3A46A27850B9000B67D88 /* HeroViewTests.swift */; };
-		5CD3A46D27850BA200B67D88 /* HeroViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CD3A46C27850BA200B67D88 /* HeroViewTests.swift */; };
-		5CD3A470278510C600B67D88 /* ProfileHeaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CD3A46E2785107000B67D88 /* ProfileHeaderTests.swift */; };
-		5CD3A47227851EF500B67D88 /* ProfileHeaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CD3A47127851EF500B67D88 /* ProfileHeaderTests.swift */; };
-		5CD3A4742785217600B67D88 /* ProfileCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CD3A4732785217600B67D88 /* ProfileCellTests.swift */; };
-		5CD3A476278522C600B67D88 /* ProfileCellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CD3A4732785217600B67D88 /* ProfileCellTests.swift */; };
-		5CD3A4782785237000B67D88 /* ProfileViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CD3A4772785237000B67D88 /* ProfileViewTests.swift */; };
-		5CD3A4792785237000B67D88 /* ProfileViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CD3A4772785237000B67D88 /* ProfileViewTests.swift */; };
-		5CD3A4832785EB1000B67D88 /* UserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CD3A4822785EB1000B67D88 /* UserTests.swift */; };
-		5CD3A4842785EB1000B67D88 /* UserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CD3A4822785EB1000B67D88 /* UserTests.swift */; };
-		5CD3A48F2788DFCD00B67D88 /* SmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CD3A48E2788DFCD00B67D88 /* SmokeTests.swift */; };
 		5CDD8865277102DC00052307 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDD8855277102DA00052307 /* App.swift */; };
 		5CDD8866277102DC00052307 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDD8855277102DA00052307 /* App.swift */; };
 		5CDD8867277102DC00052307 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CDD8856277102DA00052307 /* MainView.swift */; };
@@ -65,20 +48,10 @@
 
 /* Begin PBXFileReference section */
 		5C5DBE87277212E000E19935 /* Auth0.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Auth0.plist; path = ../Auth0.plist; sourceTree = "<group>"; };
-		5C6537232772F5D90035759D /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
-		5C6537262772F5EE0035759D /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		5C78D9C027740963000B4B71 /* Views.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Views.swift; sourceTree = "<group>"; };
 		5CD3A4492784E54E00B67D88 /* SwiftSampleTests (iOS).xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SwiftSampleTests (iOS).xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5CD3A4572784E5BC00B67D88 /* SwiftSampleTests (macOS).xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SwiftSampleTests (macOS).xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		5CD3A46A27850B9000B67D88 /* HeroViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroViewTests.swift; sourceTree = "<group>"; };
-		5CD3A46C27850BA200B67D88 /* HeroViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroViewTests.swift; sourceTree = "<group>"; };
-		5CD3A46E2785107000B67D88 /* ProfileHeaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHeaderTests.swift; sourceTree = "<group>"; };
-		5CD3A47127851EF500B67D88 /* ProfileHeaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHeaderTests.swift; sourceTree = "<group>"; };
-		5CD3A4732785217600B67D88 /* ProfileCellTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCellTests.swift; sourceTree = "<group>"; };
-		5CD3A4772785237000B67D88 /* ProfileViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewTests.swift; sourceTree = "<group>"; };
-		5CD3A4822785EB1000B67D88 /* UserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTests.swift; sourceTree = "<group>"; };
 		5CD3A48A2788DFCD00B67D88 /* SwiftSampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftSampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		5CD3A48E2788DFCD00B67D88 /* SmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmokeTests.swift; sourceTree = "<group>"; };
 		5CDD8855277102DA00052307 /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		5CDD8856277102DA00052307 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		5CDD8857277102DC00052307 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -93,7 +66,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5CD3A4642784F5F900B67D88 /* ViewInspector in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -101,7 +73,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5CD3A4672784F61200B67D88 /* ViewInspector in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,8 +107,6 @@
 			children = (
 				5C78D9BF2774093F000B4B71 /* Supporting Files */,
 				5CDD8856277102DA00052307 /* MainView.swift */,
-				5C6537232772F5D90035759D /* ProfileView.swift */,
-				5C6537262772F5EE0035759D /* User.swift */,
 				5C5DBE87277212E000E19935 /* Auth0.plist */,
 			);
 			path = Sources;
@@ -176,8 +145,6 @@
 		5CD3A46827850B4F00B67D88 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
-				5CD3A46A27850B9000B67D88 /* HeroViewTests.swift */,
-				5CD3A46E2785107000B67D88 /* ProfileHeaderTests.swift */,
 			);
 			path = iOS;
 			sourceTree = "<group>";
@@ -185,8 +152,6 @@
 		5CD3A46927850B5400B67D88 /* macOS */ = {
 			isa = PBXGroup;
 			children = (
-				5CD3A46C27850BA200B67D88 /* HeroViewTests.swift */,
-				5CD3A47127851EF500B67D88 /* ProfileHeaderTests.swift */,
 			);
 			path = macOS;
 			sourceTree = "<group>";
@@ -194,9 +159,6 @@
 		5CD3A475278522A800B67D88 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				5CD3A4772785237000B67D88 /* ProfileViewTests.swift */,
-				5CD3A4732785217600B67D88 /* ProfileCellTests.swift */,
-				5CD3A4822785EB1000B67D88 /* UserTests.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -204,7 +166,6 @@
 		5CD3A48B2788DFCD00B67D88 /* UITests */ = {
 			isa = PBXGroup;
 			children = (
-				5CD3A48E2788DFCD00B67D88 /* SmokeTests.swift */,
 			);
 			path = UITests;
 			sourceTree = "<group>";
@@ -257,7 +218,6 @@
 			);
 			name = "SwiftSampleTests (iOS)";
 			packageProductDependencies = (
-				5CD3A4632784F5F900B67D88 /* ViewInspector */,
 			);
 			productName = "SwiftSampleTests (iOS)";
 			productReference = 5CD3A4492784E54E00B67D88 /* SwiftSampleTests (iOS).xctest */;
@@ -278,7 +238,6 @@
 			);
 			name = "SwiftSampleTests (macOS)";
 			packageProductDependencies = (
-				5CD3A4662784F61200B67D88 /* ViewInspector */,
 			);
 			productName = "SwiftSampleTests (macOS)";
 			productReference = 5CD3A4572784E5BC00B67D88 /* SwiftSampleTests (macOS).xctest */;
@@ -385,7 +344,6 @@
 			mainGroup = 5CDD884F277102DA00052307;
 			packageReferences = (
 				5C5DBE81277210B400E19935 /* XCRemoteSwiftPackageReference "Auth0.swift" */,
-				5CD3A4622784F5F900B67D88 /* XCRemoteSwiftPackageReference "ViewInspector" */,
 			);
 			productRefGroup = 5CDD885D277102DC00052307 /* Products */;
 			projectDirPath = "";
@@ -487,11 +445,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5CD3A46B27850B9000B67D88 /* HeroViewTests.swift in Sources */,
-				5CD3A4742785217600B67D88 /* ProfileCellTests.swift in Sources */,
-				5CD3A4782785237000B67D88 /* ProfileViewTests.swift in Sources */,
-				5CD3A470278510C600B67D88 /* ProfileHeaderTests.swift in Sources */,
-				5CD3A4832785EB1000B67D88 /* UserTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -499,11 +452,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5CD3A4792785237000B67D88 /* ProfileViewTests.swift in Sources */,
-				5CD3A476278522C600B67D88 /* ProfileCellTests.swift in Sources */,
-				5CD3A47227851EF500B67D88 /* ProfileHeaderTests.swift in Sources */,
-				5CD3A46D27850BA200B67D88 /* HeroViewTests.swift in Sources */,
-				5CD3A4842785EB1000B67D88 /* UserTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -511,7 +459,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5CD3A48F2788DFCD00B67D88 /* SmokeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -521,8 +468,6 @@
 			files = (
 				5CDD8867277102DC00052307 /* MainView.swift in Sources */,
 				5C78D9C127740963000B4B71 /* Views.swift in Sources */,
-				5C6537272772F5EE0035759D /* User.swift in Sources */,
-				5C6537242772F5D90035759D /* ProfileView.swift in Sources */,
 				5CDD8865277102DC00052307 /* App.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -533,8 +478,6 @@
 			files = (
 				5CDD8868277102DC00052307 /* MainView.swift in Sources */,
 				5C78D9C227740975000B4B71 /* Views.swift in Sources */,
-				5C6537282772F5EE0035759D /* User.swift in Sources */,
-				5C6537252772F5D90035759D /* ProfileView.swift in Sources */,
 				5CDD8866277102DC00052307 /* App.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -966,14 +909,6 @@
 				minimumVersion = 2.0.0;
 			};
 		};
-		5CD3A4622784F5F900B67D88 /* XCRemoteSwiftPackageReference "ViewInspector" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/nalexn/ViewInspector";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.9.1;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -986,16 +921,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 5C5DBE81277210B400E19935 /* XCRemoteSwiftPackageReference "Auth0.swift" */;
 			productName = Auth0;
-		};
-		5CD3A4632784F5F900B67D88 /* ViewInspector */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 5CD3A4622784F5F900B67D88 /* XCRemoteSwiftPackageReference "ViewInspector" */;
-			productName = ViewInspector;
-		};
-		5CD3A4662784F61200B67D88 /* ViewInspector */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 5CD3A4622784F5F900B67D88 /* XCRemoteSwiftPackageReference "ViewInspector" */;
-			productName = ViewInspector;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
