@@ -1,6 +1,12 @@
-# Swift Sample Application
+# Auth0.swift Reproduction App
 
-This sample application demonstrates the integration of the [Auth0.swift](https://github.com/auth0/Auth0.swift) SDK into a Swift iOS / macOS application. The sample is a companion to the [Auth0 Swift Quickstart](https://auth0.com/docs/quickstart/native/ios-swift).
+Use this app for reproducing issues with the Auth0.swift SDK. It has no dependencies other than Auth0.swift and features a complete, yet minimal integration scenario:
+
+- The app uses the Credentials Manager to check that there are valid credentials stored on startup.
+- If there are no valid credentials stored, the app shows a login button. Otherwise, it shows a logout button.
+- On login, the app requests refresh tokens (by requesting the `offline_access` scope).
+- After login, the app stores the credentials using the Credentials Manager.
+- After logout, the app deletes the credentials using the Credentials Manager.
 
 ## Requirements
 
