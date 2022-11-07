@@ -5,7 +5,7 @@ This sample application demonstrates the integration of the [Auth0.swift](https:
 ## Requirements
 
 - iOS 15+ / macOS 11+
-- Xcode 13.x
+- Xcode 14.x
 
 ## Configuration
 
