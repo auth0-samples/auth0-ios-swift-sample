@@ -95,4 +95,4 @@ workflows:
           matrix:
             parameters:
               platform: ["ios", "macos"]
-              xcode: ["13.2.1"]
+              xcode: ["14.0.1"]
