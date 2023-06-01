@@ -1,5 +1,6 @@
 import SwiftUI
 import Auth0
+import DeviceCheck
 
 struct MainView: View {
     @State var user: User?
@@ -21,16 +22,20 @@ struct MainView: View {
 
 extension MainView {
     func login() {
-        Auth0
-            .webAuth()
-            .start { result in
-                switch result {
-                case .success(let credentials):
-                    self.user = User(from: credentials.idToken)
-                case .failure(let error):
-                    print("Failed with: \(error)")
-                }
+        Task {
+            guard let dcToken = await deviceCheckToken()?.base64EncodedString() else {
+                return print("Failed to get Device Token!")
             }
+            
+            print(dcToken)
+
+            do {
+                let credentials = try await Auth0.webAuth().parameters(["dc_token": dcToken]).start()
+                self.user = User(from: credentials.idToken)
+            } catch {
+                print("Failed with: \(error)")
+            }
+        }
     }
 
     func logout() {
@@ -45,4 +50,10 @@ extension MainView {
                 }
             }
     }
+
+    func deviceCheckToken() async -> Data? {
+        guard DCDevice.current.isSupported else { return nil }
+        return try? await DCDevice.current.generateToken()
+    }
+
 }
