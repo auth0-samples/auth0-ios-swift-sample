@@ -3,8 +3,6 @@ import XCTest
 import ViewInspector
 @testable import SwiftSample
 
-extension ProfileView: Inspectable {}
-
 class ProfileViewTests: XCTestCase {
     func testHasHeader() throws {
         let user = User(id: "", name: "", email: "", emailVerified: "", picture: "", updatedAt: "")

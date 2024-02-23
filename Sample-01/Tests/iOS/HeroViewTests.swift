@@ -2,8 +2,6 @@ import XCTest
 import ViewInspector
 @testable import SwiftSample
 
-extension HeroView: Inspectable {}
-
 class HeroViewTests: XCTestCase {
     private let sut = HeroView()
 
