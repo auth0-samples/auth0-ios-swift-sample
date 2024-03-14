@@ -12,33 +12,27 @@ This sample application demonstrates the integration of the [Auth0.swift](https:
 >
 > **This feature requires Xcode 15.3+ and a paid Apple Developer account**.
 >
-> If you do not have a paid Apple Developer account, skip steps **2.2** and **3**, and comment out the two `useHTTPS()` calls in `MainView.swift`.
+> If you do not have a paid Apple Developer account, skip **step 2** and comment out the two `useHTTPS()` calls in `MainView.swift`.
 
 ## Configuration
 
-### 1. Configure code signing
-
-Open `SwiftSample.xcodeproj` in Xcode and go to the settings of the app target you want to run. There are two app targets available: **SwiftSample (iOS)** and **SwiftSample (macOS)**. In the **General** tab, change the default bundle identifier from `com.auth0.samples.SwiftSample` to another value of your choosing.
-
-Then, ensure the **Automatically manage signing** box is checked, and that your Apple Team is selected.
-
-### 2. Configure the Auth0 Application
+### 1. Configure the callback and logout URLs
 
 > [!IMPORTANT]
-> Make sure that the Auth0 application type is **Native**. Otherwise, you might run into errors due to the different configuration of other application types.
+> Make sure that the Auth0 application type is **Native**. Otherwise, you might run into errors due to the different configurations of other application types.
 
-#### 2.1. Configure the callback and logout URLs
+Go to the settings page of your [Auth0 application](https://manage.auth0.com/#/applications/) and add the following URLs to **Allowed Callback URLs** and **Allowed Logout URLs**, depending on the app target you want to run –either **SwiftSample (iOS)** or **SwiftSample (macOS)**.
 
-Go to the settings page of your [Auth0 application](https://manage.auth0.com/#/applications/) and add the corresponding URLs to **Allowed Callback URLs** and **Allowed Logout URLs**, according to the application target you want to run. If you have a [custom domain](https://auth0.com/docs/customize/custom-domains), replace `YOUR_AUTH0_DOMAIN` with your custom domain instead of the value from the settings page.
+If you have a [custom domain](https://auth0.com/docs/customize/custom-domains), replace `YOUR_AUTH0_DOMAIN` with your custom domain instead of the value from the settings page.
 
-##### SwiftSample (iOS)
+#### SwiftSample (iOS)
 
 ```text
 https://YOUR_AUTH0_DOMAIN/ios/YOUR_BUNDLE_IDENTIFIER/callback,
 YOUR_BUNDLE_IDENTIFIER://YOUR_AUTH0_DOMAIN/ios/YOUR_BUNDLE_IDENTIFIER/callback
 ```
 
-##### SwiftSample (macOS)
+#### SwiftSample (macOS)
 
 ```text
 https://YOUR_AUTH0_DOMAIN/macos/YOUR_BUNDLE_IDENTIFIER/callback,
@@ -56,23 +50,27 @@ com.example.MyApp://example.us.auth0.com/ios/com.example.MyApp/callback
 ```
 </details>
 
-#### 2.2. Configure the Team ID and bundle identifier
+### 2. Configure the associated domain
 
-Scroll to the end of the settings page of your Auth0 application and open **Advanced Settings > Device Settings**. In the **iOS** section, set **Team ID** to your [Apple Team ID](https://developer.apple.com/help/account/manage-your-team/locate-your-team-id/), and **App ID** to the app's bundle identifier.
+### 2.1. Configure the Team ID and bundle identifier
+
+Open the settings page of your Auth0 application, scroll to the end, and open **Advanced Settings > Device Settings**. In the **iOS** section, set **Team ID** to your [Apple Team ID](https://developer.apple.com/help/account/manage-your-team/locate-your-team-id/), and **App ID** to the app's bundle identifier.
 
 ![Screenshot of the iOS section inside the Auth0 application settings page](https://github.com/auth0/Auth0.swift/assets/5055789/7eb5f6a2-7cc7-4c70-acf3-633fd72dc506)
 
 This will add the app to your Auth0 tenant's `apple-app-site-association` file.
 
-### 3. Configure the associated domain
+### 2.2. Configure the entitlement
 
-In Xcode, go to the **Signing and Capabilities** tab of the app's target settings. Under **Associated Domains**, find the following entry:
+Open `SwiftSample.xcodeproj` in Xcode and go to the settings of the app target you want to run. In the **Signing & Capabilities** tab, change the default bundle identifier from `com.auth0.samples.SwiftSample` to another value of your choosing. Then, ensure the **Automatically manage signing** box is checked, and that your Apple Team is selected.
+
+Under **Associated Domains**, find the following entry:
 
 ```text
-webcredentials:{YOUR_AUTH0_DOMAIN}
+webcredentials:YOUR_AUTH0_DOMAIN
 ```
 
-Replace the placeholder `{YOUR_AUTH0_DOMAIN}` value with the domain of your Auth0 application.
+Replace the `YOUR_AUTH0_DOMAIN` placeholder with the domain of your Auth0 application. If you have a [custom domain](https://auth0.com/docs/customize/custom-domains), replace `YOUR_AUTH0_DOMAIN` with your custom domain instead of the value from the settings page.
 
 <details>
   <summary>Example</summary>
@@ -84,14 +82,12 @@ webcredentials:example.us.auth0.com
 ```
 </details>
 
-If you have a [custom domain](https://auth0.com/docs/customize/custom-domains), replace `{YOUR_AUTH0_DOMAIN}` with your custom domain instead of the value from the settings page.
-
 > [!NOTE]
 > For the associated domain to work, the app must be signed with your team certificate **even when building for the iOS simulator**. Make sure you are using the Apple Team whose Team ID is configured in the settings page of your Auth0 application.
 
-### 4. Configure Auth0.swift
+### 3. Configure Auth0.swift
 
-Rename the `Auth0.plist.example` file to `Auth0.plist`, and replace the placeholder `{CLIENT_ID}` and `{DOMAIN}` values with the Client ID and domain of your Auth0 application. If you have a [custom domain](https://auth0.com/docs/customize/custom-domains), use it instead of the value from the settings page.
+Rename the `Auth0.plist.example` file to `Auth0.plist`, and replace the `{CLIENT_ID}` and `{DOMAIN}` placeholders with the Client ID and domain of your Auth0 application. If you have a [custom domain](https://auth0.com/docs/customize/custom-domains), use it instead of the value from the settings page.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
