@@ -14,16 +14,14 @@ This sample application demonstrates the integration of the [Auth0.swift](https:
 >
 > If you do not have a paid Apple Developer account, skip **step 2** and comment out the two `useHTTPS()` calls in `MainView.swift`.
 
+> [!IMPORTANT]
+> On every step, if you have a [custom domain](https://auth0.com/docs/customize/custom-domains), replace the `YOUR_AUTH0_DOMAIN` and `{DOMAIN}` placeholders with your custom domain instead of the value from the settings page.
+
 ## Configuration
 
 ### 1. Configure the callback and logout URLs
 
-> [!IMPORTANT]
-> Make sure that the Auth0 application type is **Native**. Otherwise, you might run into errors due to the different configurations of other application types.
-
 Go to the settings page of your [Auth0 application](https://manage.auth0.com/#/applications/) and add the following URLs to **Allowed Callback URLs** and **Allowed Logout URLs**, depending on the app target you want to run –either **SwiftSample (iOS)** or **SwiftSample (macOS)**.
-
-If you have a [custom domain](https://auth0.com/docs/customize/custom-domains), replace `YOUR_AUTH0_DOMAIN` with your custom domain instead of the value from the settings page.
 
 #### SwiftSample (iOS)
 
@@ -50,6 +48,9 @@ com.example.MyApp://example.us.auth0.com/ios/com.example.MyApp/callback
 ```
 </details>
 
+> [!IMPORTANT]
+> Make sure that the Auth0 application type is **Native**. Otherwise, you might run into errors due to the different configurations of other application types.
+
 ### 2. Configure the associated domain
 
 ### 2.1. Configure the Team ID and bundle identifier
@@ -70,7 +71,7 @@ Under **Associated Domains**, find the following entry:
 webcredentials:YOUR_AUTH0_DOMAIN
 ```
 
-Replace the `YOUR_AUTH0_DOMAIN` placeholder with the domain of your Auth0 application. If you have a [custom domain](https://auth0.com/docs/customize/custom-domains), replace `YOUR_AUTH0_DOMAIN` with your custom domain instead of the value from the settings page.
+Replace the `YOUR_AUTH0_DOMAIN` placeholder with the domain of your Auth0 application.
 
 <details>
   <summary>Example</summary>
@@ -87,7 +88,7 @@ webcredentials:example.us.auth0.com
 
 ### 3. Configure Auth0.swift
 
-Rename the `Auth0.plist.example` file to `Auth0.plist`, and replace the `{CLIENT_ID}` and `{DOMAIN}` placeholders with the Client ID and domain of your Auth0 application. If you have a [custom domain](https://auth0.com/docs/customize/custom-domains), use it instead of the value from the settings page.
+Rename the `Auth0.plist.example` file to `Auth0.plist`, and replace the `{CLIENT_ID}` and `{DOMAIN}` placeholders with the Client ID and domain of your Auth0 application.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
