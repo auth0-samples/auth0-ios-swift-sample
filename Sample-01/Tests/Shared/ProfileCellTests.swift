@@ -2,8 +2,6 @@ import XCTest
 import ViewInspector
 @testable import SwiftSample
 
-extension ProfileCell: Inspectable {}
-
 class ProfileCellTests: XCTestCase {
     private var sut: ProfileCell!
 
