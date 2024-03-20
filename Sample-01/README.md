@@ -53,15 +53,7 @@ com.example.MyApp://example.us.auth0.com/ios/com.example.MyApp/callback
 
 ### 2. Configure the associated domain
 
-### 2.1. Configure the Team ID and bundle identifier
-
-Open the settings page of your Auth0 application, scroll to the end, and open **Advanced Settings > Device Settings**. In the **iOS** section, set **Team ID** to your [Apple Team ID](https://developer.apple.com/help/account/manage-your-team/locate-your-team-id/), and **App ID** to the app's bundle identifier.
-
-![Screenshot of the iOS section inside the Auth0 application settings page](https://github.com/auth0/Auth0.swift/assets/5055789/7eb5f6a2-7cc7-4c70-acf3-633fd72dc506)
-
-This will add the app to your Auth0 tenant's `apple-app-site-association` file.
-
-### 2.2. Configure the entitlement
+### 2.1. Configure the entitlement
 
 Open `SwiftSample.xcodeproj` in Xcode and go to the settings of the app target you want to run. In the **Signing & Capabilities** tab, change the default bundle identifier from `com.auth0.samples.SwiftSample` to another value of your choosing. Then, ensure the **Automatically manage signing** box is checked, and that your Apple Team is selected.
 
@@ -82,6 +74,14 @@ If your Auth0 Domain were `example.us.auth0.com`, then this value would be:
 webcredentials:example.us.auth0.com
 ```
 </details>
+
+### 2.2. Configure the Team ID and bundle identifier
+
+Open the settings page of your Auth0 application, scroll to the end, and open **Advanced Settings > Device Settings**. In the **iOS** section, set **Team ID** to your [Apple Team ID](https://developer.apple.com/help/account/manage-your-team/locate-your-team-id/), and **App ID** to the app's bundle identifier.
+
+![Screenshot of the iOS section inside the Auth0 application settings page](https://github.com/auth0/Auth0.swift/assets/5055789/7eb5f6a2-7cc7-4c70-acf3-633fd72dc506)
+
+This will add the app to your Auth0 tenant's `apple-app-site-association` file.
 
 > [!NOTE]
 > For the associated domain to work, the app must be signed with your team certificate **even when building for the iOS simulator**. Make sure you are using the Apple Team whose Team ID is configured in the settings page of your Auth0 application.
