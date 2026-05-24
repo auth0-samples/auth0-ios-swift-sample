@@ -1,50 +1,70 @@
-import SwiftUI
+﻿import SwiftUI
 import Auth0
 
 struct MainView: View {
-    @State var user: User?
+    @StateObject private var auth = AuthenticationService()
 
     var body: some View {
-        if let user = self.user {
+        if let user = auth.user {
             VStack {
                 ProfileView(user: user)
-                Button("Logout", action: self.logout)
+                Button("Logout") {
+                    Task { await auth.logout() }
+                }
             }
         } else {
             VStack {
                 HeroView()
-                Button("Login", action: self.login)
+                Button("Login") {
+                    Task { await auth.login() }
+                }
             }
         }
     }
 }
 
-extension MainView {
-    func login() {
-        Auth0
-            .webAuth()
-            .useHTTPS() // Use a Universal Link callback URL on iOS 17.4+ / macOS 14.4+
-            .start { result in
-                switch result {
-                case .success(let credentials):
-                    self.user = User(from: credentials.idToken)
-                case .failure(let error):
-                    print("Failed with: \(error)")
-                }
-            }
+@MainActor
+final class AuthenticationService: ObservableObject {
+    @Published var user: User?
+    private let credentialsManager = CredentialsManager(authentication: Auth0.authentication())
+
+    init() {
+        guard credentialsManager.canRenew() else { return }
+        Task { await loadStoredUser() }
     }
 
-    func logout() {
-        Auth0
-            .webAuth()
-            .useHTTPS() // Use a Universal Link logout URL on iOS 17.4+ / macOS 14.4+
-            .clearSession { result in
-                switch result {
-                case .success:
-                    self.user = nil
-                case .failure(let error):
-                    print("Failed with: \(error)")
-                }
-            }
+    func login() async {
+        do {
+            let credentials = try await Auth0
+                .webAuth()
+                .useHTTPS()
+                .scope("openid profile email offline_access")
+                .start()
+            _ = credentialsManager.store(credentials: credentials)
+            user = User(from: credentials.idToken)
+        } catch WebAuthError.userCancelled {
+            return
+        } catch {
+            print("Login failed: \(error)")
+        }
+    }
+
+    func logout() async {
+        do {
+            try await Auth0.webAuth().useHTTPS().clearSession()
+        } catch {
+            print("Logout failed: \(error)")
+        }
+        _ = credentialsManager.clear()
+        user = nil
+    }
+
+    private func loadStoredUser() async {
+        do {
+            let credentials = try await credentialsManager.credentials()
+            user = User(from: credentials.idToken)
+        } catch {
+            user = nil
+        }
     }
 }
