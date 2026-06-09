@@ -1,0 +1,3 @@
+Use `Auth0.webAuth()` to open Auth0 Universal Login in an `ASWebAuthenticationSession`. By default the callback uses a custom URL scheme (your bundle identifier), which is captured automatically — no `Info.plist` URL scheme entry is needed. After login, the user's profile is available from the ID token, so no extra network call is required. `CredentialsManager` encrypts the credentials (access token, ID token, refresh token) in the Keychain and restores them on app restart, so users stay logged in between sessions.
+
+On iOS 17.4+, add `.useHTTPS()` to the login and logout calls to use a Universal Link callback instead of a custom scheme. This requires a paid Apple Developer account and an associated domain.

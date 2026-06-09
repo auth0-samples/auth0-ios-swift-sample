@@ -1,0 +1,104 @@
+appType: "native"
+technology: "ios"
+technologyLabel: "iOS / Swift"
+sdkVersion: &sdkVersion "2.22"
+outputFolderName: &outputFolderName "auth0-ios-sample"
+
+# Native: origin is the Auth0 tenant domain, not localhost.
+# Callback URL (custom scheme): {bundleId}://{domain}/ios/{bundleId}/callback
+# Callback URL (Universal Link, opt-in): https://{domain}/ios/{bundleId}/callback
+defaultAppOrigin:
+  scheme: "https"
+  domain:
+    inputKey: "auth0Domain"
+callbackPath: "/ios/%BUNDLE_ID%/callback"
+logoutPath: "/ios/%BUNDLE_ID%/callback"
+
+inputs:
+  auth0Domain:
+  auth0ClientId:
+  bundleId:
+    default: "com.auth0.samples.Auth0Sample"
+  iosTeamId:
+
+placeholders:
+  "%GIT_REMOTE%":       { environmentKey: "gitRemote" }
+  "%GIT_BRANCH%":       { environmentKey: "gitBranch" }
+  "%DOWNLOAD_URL%":     { environmentKey: "downloadUrl" }
+  "%FOLDER_NAME%":      *outputFolderName
+  "%AUTH0_DOMAIN%":     { inputKey: "auth0Domain" }
+  "%AUTH0_CLIENT_ID%":  { inputKey: "auth0ClientId" }
+  "%BUNDLE_ID%":        { inputKey: "bundleId" }
+  "%SDK_VERSION%":      *sdkVersion
+
+snippets:
+  get-app: &getApp
+    source: "quickstart/scripts/get-app.sh"
+    language: "bash"
+  configure: &configure
+    source: "quickstart/scripts/configure.sh"
+    language: "bash"
+  auth0-plist: &auth0Plist
+    source: "auth0-ios-sample/Auth0.plist"
+    language: "xml"
+  content-view: &contentView
+    source: "auth0-ios-sample/ContentView.swift"
+    language: "swift"
+  build-and-run: &buildAndRun
+    source: "quickstart/scripts/build-and-run.sh"
+    language: "bash"
+
+tryOutStep: &tryOutStep
+  - title: "Try it out"
+    contentBlocks:
+      - type: markdown
+        source: "quickstart/markdown/try-steps.md"
+
+download:
+  - title: "Clone or download the sample app"
+    contentBlocks:
+      - type: markdown
+        source: "quickstart/markdown/git-clone.md"
+      - type: terminal
+        <<: *getApp
+      - type: markdown
+        source: "quickstart/markdown/get-app.md"
+  - title: "Configure your Auth0 credentials"
+    contentBlocks:
+      - type: markdown
+        source: "quickstart/markdown/configure.md"
+      - type: terminal
+        <<: *configure
+  - title: "Build and run"
+    contentBlocks:
+      - type: markdown
+        source: "quickstart/markdown/build-and-run.md"
+      - type: terminal
+        <<: *buildAndRun
+  - <<: *tryOutStep
+
+steps:
+  - title: "Add the Auth0.swift SDK"
+    contentBlocks:
+      - type: markdown
+        source: "quickstart/markdown/install-sdk.md"
+  - title: "Configure your Auth0 credentials"
+    contentBlocks:
+      - type: markdown
+        source: "quickstart/markdown/plist-config.md"
+      - type: snippet
+        <<: *auth0Plist
+  - title: "Add login and logout"
+    contentBlocks:
+      - type: markdown
+        source: "quickstart/markdown/add-login-logout.md"
+      - type: snippet
+        <<: *contentView
+  - <<: *tryOutStep
+
+nextSteps:
+  links:
+    - label: "Auth0.swift SDK"
+      url: "https://github.com/auth0/Auth0.swift"
+    - label: "SDK Usage Examples"
+      url: "https://github.com/auth0/Auth0.swift/blob/master/EXAMPLES.md"

@@ -1,0 +1,1 @@
+Configure your Auth0 domain, client ID, and bundle identifier. The bundle identifier is part of the custom-scheme callback URL (`%BUNDLE_ID%://%AUTH0_DOMAIN%/ios/%BUNDLE_ID%/callback`), which Auth0 uses to redirect back to your app.
