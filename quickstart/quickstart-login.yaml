@@ -1,24 +1,27 @@
 appType: "native"
 technology: "ios"
-technologyLabel: "iOS / Swift"
+technologyLabel: "iOS / macOS / visionOS"
 sdkVersion: &sdkVersion "2.22"
 outputFolderName: &outputFolderName "auth0-ios-sample"
 
 # Native: origin is the Auth0 tenant domain, not localhost.
-# Callback URL (custom scheme): {bundleId}://{domain}/ios/{bundleId}/callback
-# Callback URL (Universal Link, opt-in): https://{domain}/ios/{bundleId}/callback
+# {platform} is ios | macos | visionos (chosen via the applePlatform input).
+# Callback URL (custom scheme): {bundleId}://{domain}/{platform}/{bundleId}/callback
+# Callback URL (Universal Link, opt-in): https://{domain}/{platform}/{bundleId}/callback
 defaultAppOrigin:
   scheme: "https"
   domain:
     inputKey: "auth0Domain"
-callbackPath: "/ios/%BUNDLE_ID%/callback"
-logoutPath: "/ios/%BUNDLE_ID%/callback"
+callbackPath: "/%PLATFORM%/%BUNDLE_ID%/callback"
+logoutPath: "/%PLATFORM%/%BUNDLE_ID%/callback"
 
 inputs:
   auth0Domain:
   auth0ClientId:
+  applePlatform:
+    default: "ios"
   bundleId:
-    default: "com.auth0.samples.Auth0Sample"
+    default: "com.auth0.Sample"
   iosTeamId:
 
 placeholders:
@@ -28,7 +31,9 @@ placeholders:
   "%FOLDER_NAME%":      *outputFolderName
   "%AUTH0_DOMAIN%":     { inputKey: "auth0Domain" }
   "%AUTH0_CLIENT_ID%":  { inputKey: "auth0ClientId" }
+  "%PLATFORM%":         { inputKey: "applePlatform" }
   "%BUNDLE_ID%":        { inputKey: "bundleId" }
+  "%APPLE_TEAM_ID%":    { inputKey: "iosTeamId" }
   "%SDK_VERSION%":      *sdkVersion
 
 snippets:
@@ -52,27 +57,30 @@ tryOutStep: &tryOutStep
   - title: "Try it out"
     contentBlocks:
       - type: markdown
-        source: "quickstart/markdown/try-steps.md"
+        content: |
+          1. Tap **Sign Up** to create a new account through the Auth0 Universal Login page.
+          1. Verify your user profile is displayed, including your email and ID token claims.
+          1. Tap **Log Out** to clear the session and return to the login screen.
 
 download:
   - title: "Clone or download the sample app"
     contentBlocks:
       - type: markdown
-        source: "quickstart/markdown/git-clone.md"
+        content: "Clone the sample application with the following command."
       - type: terminal
         <<: *getApp
       - type: markdown
-        source: "quickstart/markdown/get-app.md"
+        content: "Don't have `git` at hand? [Download as ZIP](%DOWNLOAD_URL%)"
   - title: "Configure your Auth0 credentials"
     contentBlocks:
       - type: markdown
-        source: "quickstart/markdown/configure.md"
+        content: "Write your Auth0 domain and client ID into `Auth0.plist` and set the bundle identifier with the following command."
       - type: terminal
         <<: *configure
   - title: "Build and run"
     contentBlocks:
       - type: markdown
-        source: "quickstart/markdown/build-and-run.md"
+        content: "Open the project in Xcode, then select a simulator or connected device and click **Run** ▶."
       - type: terminal
         <<: *buildAndRun
   - <<: *tryOutStep
@@ -81,17 +89,21 @@ steps:
   - title: "Add the Auth0.swift SDK"
     contentBlocks:
       - type: markdown
-        source: "quickstart/markdown/install-sdk.md"
+        content: |
+          Add the [**Auth0.swift**](https://github.com/auth0/Auth0.swift) package, then add the `Auth0` product to your app target. Use either:
+
+          - **Xcode** — File ▸ Add Package Dependencies…, then enter `https://github.com/auth0/Auth0.swift`
+          - **Package.swift** — add `.package(url: "https://github.com/auth0/Auth0.swift", from: "%SDK_VERSION%.0")`
   - title: "Configure your Auth0 credentials"
     contentBlocks:
       - type: markdown
-        source: "quickstart/markdown/plist-config.md"
+        content: "Create an `Auth0.plist` in your app bundle with your Auth0 domain and client ID. Auth0.swift reads these values automatically."
       - type: snippet
         <<: *auth0Plist
   - title: "Add login and logout"
     contentBlocks:
       - type: markdown
-        source: "quickstart/markdown/add-login-logout.md"
+        content: "Use `Auth0.webAuth()` to open Universal Login. `CredentialsManager` stores the credentials in the Keychain and renews the session on launch using the refresh token (requested via the `offline_access` scope); the user profile is read directly from the ID token."
       - type: snippet
         <<: *contentView
   - <<: *tryOutStep
