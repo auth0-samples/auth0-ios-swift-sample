@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>ClientId</key>
-	<string>6aReWIQUK5jTUxCYhHgwsA3zEIOi6nih</string>
+	<string>%AUTH0_CLIENT_ID%</string>
 	<key>Domain</key>
-	<string>dev-mv2z5fwj1hg2tayg.local.dev.auth0.com</string>
+	<string>%AUTH0_DOMAIN%</string>
 	<key>UseHTTPS</key>
 	<false/>
 </dict>

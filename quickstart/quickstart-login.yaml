@@ -90,10 +90,20 @@ steps:
     contentBlocks:
       - type: markdown
         content: |
-          Add the [**Auth0.swift**](https://github.com/auth0/Auth0.swift) package, then add the `Auth0` product to your app target. Use either:
+          Add the [**Auth0.swift**](https://github.com/auth0/Auth0.swift) package, then add the `Auth0` product to your app target.
 
-          - **Xcode** — File ▸ Add Package Dependencies…, then enter `https://github.com/auth0/Auth0.swift`
-          - **Package.swift** — add `.package(url: "https://github.com/auth0/Auth0.swift", from: "%SDK_VERSION%.0")`
+          **Xcode** — open **File ▸ Add Package Dependencies…** and paste this URL:
+      - type: snippet
+        variant: "minimal"
+        language: "text"
+        content: "https://github.com/auth0/Auth0.swift"
+      - type: markdown
+        content: |
+          **Package.swift** — add this to your `dependencies` array:
+      - type: snippet
+        variant: "minimal"
+        language: "swift"
+        content: '.package(url: "https://github.com/auth0/Auth0.swift", from: "%SDK_VERSION%.0")'
   - title: "Configure your Auth0 credentials"
     contentBlocks:
       - type: markdown
