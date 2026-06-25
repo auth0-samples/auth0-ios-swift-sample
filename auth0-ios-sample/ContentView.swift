@@ -12,20 +12,20 @@ struct ContentView: View {
     @State private var errorMessage: String?
     /* highlight-end account-setup */
 
-    /* highlight-start use-https */
-    private static let useHTTPS: Bool = {
+    /* highlight-start use-universal-links */
+    private static let useUniversalLinks: Bool = {
         guard let path = Bundle.main.path(forResource: "Auth0", ofType: "plist"),
               let values = NSDictionary(contentsOfFile: path) else {
             return false
         }
-        return values["UseHTTPS"] as? Bool ?? false
+        return values["UseUniversalLinks"] as? Bool ?? false
     }()
 
     private func webAuth() -> WebAuth {
         let webAuth = Auth0.webAuth()
-        return Self.useHTTPS ? webAuth.useHTTPS() : webAuth
+        return Self.useUniversalLinks ? webAuth.useHTTPS() : webAuth
     }
-    /* highlight-end use-https */
+    /* highlight-end use-universal-links */
 
     var body: some View {
         VStack(spacing: 16) {

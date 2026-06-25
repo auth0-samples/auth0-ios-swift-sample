@@ -6,7 +6,7 @@
 	<string>%AUTH0_CLIENT_ID%</string>
 	<key>Domain</key>
 	<string>%AUTH0_DOMAIN%</string>
-	<key>UseHTTPS</key>
+	<key>UseUniversalLinks</key>
 	<false/>
 </dict>
 </plist>

@@ -40,14 +40,14 @@ By default the app uses a **custom URL scheme** callback (`{bundleId}://...`), c
 
 ### Why two callback URLs (when using Universal Links)?
 
-The default setup (above) registers only the custom-scheme URL. When you enable Universal Links you must register **both** URLs — and they are **not** redundant. With `UseHTTPS` enabled, Auth0.swift picks the redirect scheme at runtime: it uses the `https://` Universal Link on iOS 17.4+ / macOS 14.4+ and **automatically falls back** to the `{bundleId}://` custom scheme on older versions. A single build can hit either, so both must be registered as Allowed Callback / Logout URLs (`{platform}` is `ios`, `macos`, or `visionos`):
+The default setup (above) registers only the custom-scheme URL. When you enable Universal Links you must register **both** URLs — and they are **not** redundant. With `UseUniversalLinks` enabled, Auth0.swift picks the redirect scheme at runtime: it uses the `https://` Universal Link on iOS 17.4+ / macOS 14.4+ and **automatically falls back** to the `{bundleId}://` custom scheme on older versions. A single build can hit either, so both must be registered as Allowed Callback / Logout URLs (`{platform}` is `ios`, `macos`, or `visionos`):
 
 ```text
 https://YOUR_DOMAIN/{platform}/com.example.MyApp/callback
 com.example.MyApp://YOUR_DOMAIN/{platform}/com.example.MyApp/callback
 ```
 
-With `UseHTTPS` off (the default), only the custom-scheme URL is ever used.
+With `UseUniversalLinks` off (the default), only the custom-scheme URL is ever used.
 
 ### Using Universal Links (optional, requires a paid Apple Developer account)
 
@@ -61,6 +61,6 @@ swift Configure.swift \
   --team-id YOUR_TEAM_ID
 ```
 
-This sets `UseHTTPS=true` in `Auth0.plist`, sets `DEVELOPMENT_TEAM` in the Xcode project, and adds `webcredentials:YOUR_DOMAIN` to the **Associated Domains** entitlement. Only one step is left: open the project and build — automatic signing provisions the Associated Domains capability with Apple at that point. You also need to register both callback/logout URLs and the Auth0 Dashboard **Advanced > Device Settings** (Team ID + App ID); the Dashboard quickstart does this for you. Universal Links require iOS 17.4+ / macOS 14.4+; older versions fall back to the custom scheme automatically.
+This sets `UseUniversalLinks=true` in `Auth0.plist`, sets `DEVELOPMENT_TEAM` in the Xcode project, and adds `webcredentials:YOUR_DOMAIN` to the **Associated Domains** entitlement. Only one step is left: open the project and build — automatic signing provisions the Associated Domains capability with Apple at that point. You also need to register both callback/logout URLs and the Auth0 Dashboard **Advanced > Device Settings** (Team ID + App ID); the Dashboard quickstart does this for you. Universal Links require iOS 17.4+ / macOS 14.4+; older versions fall back to the custom scheme automatically.
 
 > **macOS:** the app runs sandboxed (`auth0-ios-sample.entitlements` enables App Sandbox + the outbound network client entitlement required for the web-auth session). Keep both entitlements when shipping a macOS build.

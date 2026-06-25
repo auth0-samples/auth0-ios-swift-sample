@@ -1,8 +1,8 @@
 #!/usr/bin/env swift
 // Configures the sample app with your Auth0 credentials: writes Domain and
 // ClientId into Auth0.plist, sets the bundle identifier in the Xcode project,
-// and sets UseHTTPS (true only when an Apple Team ID is supplied, which enables
-// Universal Links instead of the custom URL scheme).
+// and sets UseUniversalLinks (true only when an Apple Team ID is supplied, which
+// enables Universal Links instead of the custom URL scheme).
 //
 // When a Team ID is supplied it also wires up everything Universal Links needs
 // that lives in files: the DEVELOPMENT_TEAM build setting and the
@@ -44,7 +44,7 @@ func parseArguments() -> (domain: String, clientId: String, bundleId: String, te
 }
 
 let (domain, clientId, bundleId, teamId) = parseArguments()
-let useHTTPS = teamId != nil
+let useUniversalLinks = teamId != nil
 
 // MARK: - Auth0.plist
 
@@ -56,7 +56,7 @@ guard var plist = try PropertyListSerialization.propertyList(from: plistData, fo
 }
 plist["Domain"] = domain
 plist["ClientId"] = clientId
-plist["UseHTTPS"] = useHTTPS
+plist["UseUniversalLinks"] = useUniversalLinks
 let updatedPlist = try PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)
 try updatedPlist.write(to: URL(fileURLWithPath: plistPath))
 
@@ -110,7 +110,7 @@ Auth0 settings configured:
   Domain    = \(domain)
   ClientId  = \(clientId)
   BundleId  = \(bundleId)
-  UseHTTPS  = \(useHTTPS)
+  UseUniversalLinks = \(useUniversalLinks)
 """)
 
 // With a Team ID, everything that lives in files is now wired (DEVELOPMENT_TEAM +
@@ -120,7 +120,7 @@ Auth0 settings configured:
 if let teamId {
     print("""
 
-    UseHTTPS is on — the app uses a Universal Link callback on iOS 17.4+ / macOS
+    UseUniversalLinks is on — the app uses a Universal Link callback on iOS 17.4+ / macOS
     14.4+ (older versions fall back to the custom URL scheme automatically).
 
     Team ID \(teamId) and Associated Domain webcredentials:\(domain) are written.
