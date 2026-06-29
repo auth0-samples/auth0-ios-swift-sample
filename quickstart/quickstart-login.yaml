@@ -46,6 +46,9 @@ snippets:
   auth0-plist: &auth0Plist
     source: "auth0-ios-sample/Auth0.plist"
     language: "xml"
+  entitlements: &entitlements
+    source: "auth0-ios-sample/auth0-ios-sample.entitlements"
+    language: "xml"
   content-view: &contentView
     source: "auth0-ios-sample/ContentView.swift"
     language: "swift"
@@ -113,7 +116,7 @@ steps:
   - title: "Add login and logout"
     contentBlocks:
       - type: markdown
-        content: "Use `Auth0.webAuth()` to open Universal Login. `CredentialsManager` stores the credentials in the Keychain and renews the session on launch using the refresh token (requested via the `offline_access` scope); the user profile is read directly from the ID token."
+        content: "`Auth0.webAuth()` opens Universal Login. `CredentialsManager` stores credentials in the Keychain and renews the session on launch via the `offline_access` refresh token; the profile is read from the ID token."
       - type: snippet
         <<: *contentView
   # Shown only when an Apple Team ID was provided (Universal Links opt-in). With
@@ -123,18 +126,13 @@ steps:
     contentBlocks:
       - type: markdown
         content: |
-          You provided an Apple Team ID, so the app uses a **Universal Link** callback on iOS 17.4+ / macOS 14.4+ (older versions fall back to the custom URL scheme automatically). This is more secure than a custom scheme but needs an Associated Domain.
-
-          In Xcode, open your target's **Signing & Capabilities** tab, add the **Associated Domains** capability, and add this entry:
+          A Team ID enables a Universal Link callback (iOS 17.4+ / macOS 14.4+, older versions fall back to the custom scheme). Add the **Associated Domains** capability to your target with this entry in your `.entitlements` file:
       - type: snippet
-        variant: "minimal"
-        language: "text"
-        content: "webcredentials:%AUTH0_DOMAIN%"
+        <<: *entitlements
+        highlightId: "associated-domains"
       - type: markdown
         content: |
-          `Configure.swift` already wrote this entry and your **Team ID** into the project — building with automatic signing provisions the capability with Apple. The Auth0 Dashboard **Advanced Settings ▸ Device Settings** (Team ID + bundle identifier) is set for you by this quickstart, which adds your app to the tenant's `apple-app-site-association` file.
-
-          > Requires a paid Apple Developer account. The app must be signed with your team certificate even when building for the simulator.
+          Build with **Automatically manage signing** enabled so Xcode registers the capability with Apple (requires a paid Apple Developer account).
   - <<: *tryOutStep
 
 nextSteps:

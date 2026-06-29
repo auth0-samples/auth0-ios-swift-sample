@@ -2,8 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<!-- macOS runs sandboxed; the web-auth session needs outbound network access.
-	     Harmless on iOS/visionOS (App Sandbox is macOS-only). -->
+	<!-- highlight-start associated-domains -->
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>webcredentials:%AUTH0_DOMAIN%</string>
+	</array>
+	<!-- highlight-end -->
 	<key>com.apple.security.app-sandbox</key>
 	<true/>
 	<key>com.apple.security.network.client</key>
