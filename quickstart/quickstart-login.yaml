@@ -116,6 +116,25 @@ steps:
         content: "Use `Auth0.webAuth()` to open Universal Login. `CredentialsManager` stores the credentials in the Keychain and renews the session on launch using the refresh token (requested via the `offline_access` scope); the user profile is read directly from the ID token."
       - type: snippet
         <<: *contentView
+  # Shown only when an Apple Team ID was provided (Universal Links opt-in). With
+  # no Team ID the app uses a custom URL scheme, which needs none of this setup.
+  - title: "Enable Universal Links"
+    condition: { input: iosTeamId, state: present }
+    contentBlocks:
+      - type: markdown
+        content: |
+          You provided an Apple Team ID, so the app uses a **Universal Link** callback on iOS 17.4+ / macOS 14.4+ (older versions fall back to the custom URL scheme automatically). This is more secure than a custom scheme but needs an Associated Domain.
+
+          In Xcode, open your target's **Signing & Capabilities** tab, add the **Associated Domains** capability, and add this entry:
+      - type: snippet
+        variant: "minimal"
+        language: "text"
+        content: "webcredentials:%AUTH0_DOMAIN%"
+      - type: markdown
+        content: |
+          `Configure.swift` already wrote this entry and your **Team ID** into the project — building with automatic signing provisions the capability with Apple. The Auth0 Dashboard **Advanced Settings ▸ Device Settings** (Team ID + bundle identifier) is set for you by this quickstart, which adds your app to the tenant's `apple-app-site-association` file.
+
+          > Requires a paid Apple Developer account. The app must be signed with your team certificate even when building for the simulator.
   - <<: *tryOutStep
 
 nextSteps:
