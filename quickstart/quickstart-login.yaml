@@ -19,7 +19,6 @@ inputs:
   auth0Domain:
   auth0ClientId:
   applePlatform:
-    default: "ios"
   bundleId:
     default: "com.auth0.Sample"
   iosTeamId:
