@@ -106,36 +106,22 @@ let updatedEntitlements = try PropertyListSerialization.data(fromPropertyList: e
 try updatedEntitlements.write(to: URL(fileURLWithPath: entitlementsPath))
 
 print("""
-Auth0 settings configured:
+Auth0 configured:
   Domain    = \(domain)
   ClientId  = \(clientId)
   BundleId  = \(bundleId)
-  UseUniversalLinks = \(useUniversalLinks)
 """)
 
 // With a Team ID, everything that lives in files is now wired (DEVELOPMENT_TEAM +
 // the webcredentials Associated Domain). Only the build step is left — automatic
 // signing provisions the capability with Apple at that point.
-// {platform} below is ios | macos | visionos — Auth0.swift picks it per build target.
 if let teamId {
     print("""
+      Universal Links: on (Team \(teamId), webcredentials:\(domain))
 
-    UseUniversalLinks is on — the app uses a Universal Link callback on iOS 17.4+ / macOS
-    14.4+ (older versions fall back to the custom URL scheme automatically).
-
-    Team ID \(teamId) and Associated Domain webcredentials:\(domain) are written.
-    One step is left (paid Apple Developer account required): open the project and
-    build, so automatic signing provisions the Associated Domains capability.
-           open \(FileManager.default.currentDirectoryPath)/auth0-ios-sample.xcodeproj
-
-    The Auth0 Dashboard quickstart registers the callback/logout URLs and Device
-    Settings (Team ID + App ID). If you are configuring the app outside that flow,
-    register both URLs yourself — Auth0.swift uses the https one on the modern OS
-    and the custom scheme on older versions ({platform} is ios/macos/visionos):
-           https://\(domain)/{platform}/\(bundleId)/callback
-           \(bundleId)://\(domain)/{platform}/\(bundleId)/callback
-
-    Without a Team ID the app uses the custom URL scheme only — no signing or
-    entitlement setup needed.
+    Next: build in Xcode so automatic signing provisions Associated Domains.
+      open \(FileManager.default.currentDirectoryPath)/auth0-ios-sample.xcodeproj
     """)
+} else {
+    print("  Universal Links: off (custom URL scheme — no signing needed)")
 }
