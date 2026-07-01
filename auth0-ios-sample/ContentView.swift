@@ -50,6 +50,11 @@ struct ContentView: View {
                     .font(.title3)
                 Button("Log In") { login() }
                     .font(.title3)
+                Text(Self.useUniversalLinks
+                     ? "Using HTTPS (Universal Links) for callbacks"
+                     : "Using custom URL scheme for callbacks")
+                    .font(.footnote)
+                    .foregroundColor(.secondary)
             }
             if let errorMessage {
                 Text(errorMessage).foregroundColor(.red).font(.callout)
