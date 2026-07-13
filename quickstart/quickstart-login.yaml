@@ -22,6 +22,10 @@ inputs:
   bundleId:
     default: "com.auth0.Sample"
   iosTeamId:
+  # "universal-links" when a Team ID is supplied, else "custom-scheme". Written
+  # into Auth0.plist's CallbackMode; ContentView reads it to pick useHTTPS().
+  callbackMode:
+    default: "custom-scheme"
 
 placeholders:
   "%GIT_REMOTE%":       { environmentKey: "gitRemote" }
@@ -33,6 +37,7 @@ placeholders:
   "%PLATFORM%":         { inputKey: "applePlatform" }
   "%BUNDLE_ID%":        { inputKey: "bundleId" }
   "%APPLE_TEAM_ID%":    { inputKey: "iosTeamId" }
+  "%CALLBACK_MODE%":    { inputKey: "callbackMode" }
   "%SDK_VERSION%":      *sdkVersion
 
 snippets:

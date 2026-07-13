@@ -18,7 +18,7 @@ struct ContentView: View {
               let values = NSDictionary(contentsOfFile: path) else {
             return false
         }
-        return values["UseUniversalLinks"] as? Bool ?? false
+        return values["CallbackMode"] as? String == "universal-links"
     }()
 
     private func webAuth() -> WebAuth {

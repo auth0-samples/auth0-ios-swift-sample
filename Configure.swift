@@ -1,8 +1,8 @@
 #!/usr/bin/env swift
 // Configures the sample app with your Auth0 credentials: writes Domain and
 // ClientId into Auth0.plist, sets the bundle identifier in the Xcode project,
-// and sets UseUniversalLinks (true only when an Apple Team ID is supplied, which
-// enables Universal Links instead of the custom URL scheme).
+// and sets CallbackMode ("universal-links" only when an Apple Team ID is supplied,
+// otherwise "custom-scheme").
 //
 // When a Team ID is supplied it also wires up everything Universal Links needs
 // that lives in files: the DEVELOPMENT_TEAM build setting and the
@@ -56,7 +56,7 @@ guard var plist = try PropertyListSerialization.propertyList(from: plistData, fo
 }
 plist["Domain"] = domain
 plist["ClientId"] = clientId
-plist["UseUniversalLinks"] = useUniversalLinks
+plist["CallbackMode"] = useUniversalLinks ? "universal-links" : "custom-scheme"
 let updatedPlist = try PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)
 try updatedPlist.write(to: URL(fileURLWithPath: plistPath))
 
